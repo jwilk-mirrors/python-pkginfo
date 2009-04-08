@@ -31,14 +31,15 @@ in their ``PKG-INFO``, will map to the value ``None``::
   >>> mypackage.home_page
   None
 
-Fields which are marked "multiple use" under PEP 314 map onto sequences::
+Fields which are marked "multiple use" under PEP 314 map onto sequences;
+their names are pluralized to indicate the sequence::
 
-  >>> list(mypackage.classifier)
+  >>> list(mypackage.classifiers)
   ['Development Status :: 4 - Beta', 'Environment :: Console (Text Based)']
 
 "Multiple use" fields with no occurences in the ``PKG-INFO`` file will
 map onto an empty sequence::
 
-  >>> list(mypackage.supported_platform)
+  >>> list(mypackage.supported_platforms)
   []
 
