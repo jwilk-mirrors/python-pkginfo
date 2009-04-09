@@ -16,7 +16,7 @@ archive:
 .. doctest::
 
   >>> from pkginfo import SDist
-  >>> mypackage = SDist('tests/mypackage-0.1.tar.gz')
+  >>> mypackage = SDist('docs/examples/mypackage-0.1.tar.gz')
 
 After creation, the ``SDist`` instance will have attributes corrsponding
 the the fields defined in PEP 314, lower-cased and transliterated into valid
@@ -24,18 +24,19 @@ Python identifiers by mapping hyphens to underscores.  E.g.:
 
 .. doctest::
 
-  >>> mypackage.metadata_version
-  >>> mypackage.name
-  'mypackage'
-  >>> mypackage.version
-  '0.1'
+  >>> print mypackage.metadata_version
+  1.0
+  >>> print mypackage.name
+  mypackage
+  >>> print mypackage.version
+  0.1
 
 Fields which are optional under PEP 314, and which have no value set
 in their ``PKG-INFO``, will map to the value ``None``:
 
 .. doctest::
 
-  >>> mypackage.home_page
+  >>> print mypackage.home_page
   None
 
 Fields which are marked "multiple use" under PEP 314 map onto sequences;
@@ -43,7 +44,7 @@ their names are pluralized to indicate the sequence:
 
 .. doctest::
 
-  >>> list(mypackage.classifiers)
+  >>> print list(mypackage.classifiers)
   ['Development Status :: 4 - Beta', 'Environment :: Console (Text Based)']
 
 "Multiple use" fields with no occurences in the ``PKG-INFO`` file will
@@ -51,5 +52,5 @@ map onto an empty sequence:
 
 .. doctest::
 
-  >>> list(mypackage.supported_platforms)
+  >>> print list(mypackage.supported_platforms)
   []
