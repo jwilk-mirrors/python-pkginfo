@@ -36,7 +36,7 @@ in their ``PKG-INFO``, will map to the value ``None``:
 
 .. doctest::
 
-  >>> print mypackage.home_page
+  >>> print mypackage.keywords
   None
 
 Fields which are marked "multiple use" under PEP 314 map onto sequences;

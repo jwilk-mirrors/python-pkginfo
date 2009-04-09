@@ -8,23 +8,46 @@ HEADER_ATTRS = (
     ('Metadata-Version', 'metadata_version', False),
     ('Name', 'name', False),
     ('Version', 'version', False),
-    ('Home-Page', 'home_page', False),
-    ('Classifier', 'classifiers', True),
+    ('Platform', 'platforms', True),
     ('Supported-Platforms', 'supported_platforms', True),
+    ('Summary', 'summary', False),
+    ('Description', 'description', False),
+    ('Keywords', 'keywords', False),
+    ('Home-Page', 'home_page', False),
+    ('Download~URL', 'download_url', False),
+    ('Author', 'author', False),
+    ('Author-email', 'author_email', False),
+    ('License', 'license', False),
+    ('Classifier', 'classifiers', True),
+    ('Requires', 'requires', True),
+    ('Provides', 'provides', True),
+    ('Obsoletes', 'obsoletes', True),
 )
 
 class SDist:
     metadata_version = None
     name = None
     version = None
-    home_page = None
-    classifiers = ()
+    platforms = ()
     supported_platforms = ()
+    summary = None
+    description = None
+    keywords = None
+    home_page = None
+    download_url = None
+    author = None
+    author_email = None
+    license = None
+    classifiers = ()
+    requires = ()
+    provides = ()
+    obsoletes = ()
 
     def __init__(self, filename):
         self.filename = filename
-        data = self.extract()
-        self.read(data)
+        if filename is not None:
+            data = self.extract()
+            self.read(data)
 
     def extract(self):
         fqn = os.path.abspath(
