@@ -6,7 +6,7 @@ try:
         'test_suite': 'pkginfo.tests',
     }
 except ImportError:
-    from distutils import setup
+    from distutils.core import setup
     extras = {}
 
 here = os.path.abspath(os.path.dirname(__file__))
