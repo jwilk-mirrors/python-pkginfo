@@ -17,5 +17,21 @@ setup(
     name='pkginfo',
     version='0.1',
     description='Query PKG-INFO data from sdist archives.',
+    platform=['Unix', 'Windows'],
+    long_description='\n\n'.join([README, CHANGES]),
+    keywords='distribution sdist installed metadata',
+    url='http://pypi.python.org/pypi/pkginfo/',
+    author='Tres Seaver, Agendaless Consulting',
+    author_email='tseaver@agendaless.com',
+    license='Python',
+    classiifiers=[
+      'Intended Audience :: Developers',
+      'License :: OSI Approved :: Python Software Foundation License',
+      'Operating System :: OS Independent',
+      'Programming Language :: Python :: 2',
+      'Topic :: Software Development :: Libraries :: Python Modules',
+      'Topic :: System :: Software Distribution',
+    ],
+    packages=['pkginfo', 'pkginfo.tests'],
     **extras
 )

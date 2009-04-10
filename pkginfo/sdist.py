@@ -1,55 +1,16 @@
 import os
-import rfc822
-import StringIO
 import tarfile
 import zipfile
 
-HEADER_ATTRS = (
-    ('Metadata-Version', 'metadata_version', False),
-    ('Name', 'name', False),
-    ('Version', 'version', False),
-    ('Platform', 'platforms', True),
-    ('Supported-Platform', 'supported_platforms', True),
-    ('Summary', 'summary', False),
-    ('Description', 'description', False),
-    ('Keywords', 'keywords', False),
-    ('Home-Page', 'home_page', False),
-    ('Download-URL', 'download_url', False),
-    ('Author', 'author', False),
-    ('Author-email', 'author_email', False),
-    ('License', 'license', False),
-    ('Classifier', 'classifiers', True),
-    ('Requires', 'requires', True),
-    ('Provides', 'provides', True),
-    ('Obsoletes', 'obsoletes', True),
-)
+from pkginfo.distribution import Distribution
 
-class SDist:
-    metadata_version = None
-    name = None
-    version = None
-    platforms = ()
-    supported_platforms = ()
-    summary = None
-    description = None
-    keywords = None
-    home_page = None
-    download_url = None
-    author = None
-    author_email = None
-    license = None
-    classifiers = ()
-    requires = ()
-    provides = ()
-    obsoletes = ()
+class SDist(Distribution):
 
     def __init__(self, filename):
         self.filename = filename
-        if filename is not None:
-            data = self.extract()
-            self.read(data)
+        self.extractMetadata()
 
-    def extract(self):
+    def read(self):
         fqn = os.path.abspath(
                 os.path.normpath(self.filename))
         if not os.path.exists(fqn):
@@ -77,17 +38,3 @@ class SDist:
                 return data
 
         raise ValueError('No PKG-INFO in archive: %s' % fqn)
-
-    def read(self, data):
-        fp = StringIO.StringIO(data)
-        message = rfc822.Message(fp)
-
-        for header_name, attr_name, multiple in HEADER_ATTRS:
-            if header_name in message:
-                if multiple:
-                    values = message.getheaders(header_name)
-                    setattr(self, attr_name, values)
-                else:
-                    value = message.getheader(header_name)
-                    if value != 'UNKNOWN':
-                        setattr(self, attr_name, value)
