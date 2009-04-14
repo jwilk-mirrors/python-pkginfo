@@ -13,7 +13,7 @@ class InstalledTests(unittest.TestCase):
         self.assertEqual(installed.package.__name__, 'pkginfo')
         self.assertEqual(installed.metadata_version, '1.0')
         self.assertEqual(installed.name, 'pkginfo')
-        self.assertEqual(installed.version, '0.1.1')
+        self.assertEqual(installed.version, '0.2')
         self.assertEqual(installed.keywords,
                          'distribution sdist installed metadata' )
         self.assertEqual(list(installed.classifiers), [])

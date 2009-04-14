@@ -15,8 +15,8 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 setup(
     name='pkginfo',
-    version='0.1.1',
-    description='Query PKG-INFO data from sdists / installed packages.',
+    version='0.2',
+    description='Query metadatdata from sdists / bdists / installed packages.',
     platform=['Unix', 'Windows'],
     long_description='\n\n'.join([README, CHANGES]),
     keywords='distribution sdist installed metadata',
