@@ -1,4 +1,5 @@
 # package
-from distribution import Distribution
-from installed import Installed
-from sdist import SDist
+from pkginfo.bdist import BDist
+from pkginfo.distribution import Distribution
+from pkginfo.installed import Installed
+from pkginfo.sdist import SDist

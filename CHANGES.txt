@@ -1,10 +1,15 @@
 pkginfo Changelog
 =================
 
+After 0.1.1
+-----------
+
+- Added support for introspection of ``bdist_egg`` binary distributions.
+
 0.1.1 (2009-04-10)
 ------------------
 
-- Fix packaging errors.
+- Fixed packaging errors.
 
 
 0.1 (2009-04-10)

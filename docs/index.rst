@@ -18,6 +18,8 @@ binary distributions, and installed distributions.
   >>> from pkginfo import Distribution
   >>> from pkginfo import SDist
   >>> assert issubclass(SDist, Distribution)
+  >>> from pkginfo import BDist
+  >>> assert issubclass(BDist, Distribution)
   >>> from pkginfo import Installed
   >>> assert issubclass(Installed, Distribution)
 
@@ -69,6 +71,19 @@ map onto an empty sequence:
 
   >>> print list(mypackage.supported_platforms)
   []
+
+
+Introspecting Binary Distributions
+----------------------------------
+
+``BDist`` objects are created from the filename, which should have been
+generated via ``setup.py bdist_egg``.
+
+.. doctest::
+
+  >>> mypackage = BDist('docs/examples/mypackage-0.1-py2.6.egg')
+
+After that, they have the same metadata as other ``Distribution`` objects,
 
 
 Introspecting Installed Packages
