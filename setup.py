@@ -13,9 +13,12 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
+import pkginfo
+ver = pkginfo.__version__
+
 setup(
     name='pkginfo',
-    version='0.2',
+    version=ver,
     description='Query metadatdata from sdists / bdists / installed packages.',
     platform=['Unix', 'Windows'],
     long_description='\n\n'.join([README, CHANGES]),
@@ -24,7 +27,7 @@ setup(
     author='Tres Seaver, Agendaless Consulting',
     author_email='tseaver@agendaless.com',
     license='Python',
-    classiifiers=[
+    classifiers=[
       'Intended Audience :: Developers',
       'License :: OSI Approved :: Python Software Foundation License',
       'Operating System :: OS Independent',
