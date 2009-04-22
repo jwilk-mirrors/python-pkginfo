@@ -35,6 +35,11 @@ setup(
       'Topic :: Software Development :: Libraries :: Python Modules',
       'Topic :: System :: Software Distribution',
     ],
+    entry_points={
+      'console_scripts': [
+        ['pkginfo = pkginfo.commandline:main']
+      ]
+    },
     packages=['pkginfo', 'pkginfo.tests'],
     **extras
 )
