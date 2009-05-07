@@ -9,21 +9,15 @@ class InstalledTests(unittest.TestCase):
     def _makeOne(self, filename=None):
         return self._getTargetClass()(filename)
 
-    def _checkSample(self, installed):
-        self.assertEqual(installed.package.__name__, 'pkginfo')
-        self.assertEqual(installed.metadata_version, '1.0')
-        self.assertEqual(installed.name, 'pkginfo')
-        self.assertEqual(installed.version, '0.2')
-        self.assertEqual(installed.keywords,
-                         'distribution sdist installed metadata' )
-        self.assertEqual(list(installed.classifiers), [])
-        self.assertEqual(list(installed.supported_platforms), [])
-
     def test_ctor_w_package(self):
         import pkginfo
+        from pkginfo.tests import _checkSample
         installed = self._makeOne(pkginfo)
-        self._checkSample(installed)
+        self.assertEqual(installed.package.__name__, 'pkginfo')
+        _checkSample(self, installed)
 
     def test_ctor_w_name(self):
+        from pkginfo.tests import _checkSample
         installed = self._makeOne('pkginfo')
-        self._checkSample(installed)
+        self.assertEqual(installed.package.__name__, 'pkginfo')
+        _checkSample(self, installed)
