@@ -1,8 +1,8 @@
 pkginfo Changelog
 =================
 
-After 0.3
----------
+0.4 (2009-05-07)
+----------------
 
 - Extended the console script to allow output as CSV or INI.  Also, added
   arguments to specify the metadata version and other parsing / output

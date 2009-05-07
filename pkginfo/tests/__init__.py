@@ -8,7 +8,7 @@ def additional_tests():
 
 def _checkSample(testcase, installed):
     testcase.assertEqual(installed.name, 'pkginfo')
-    testcase.assertEqual(installed.version, '0.4dev')
+    testcase.assertEqual(installed.version, '0.4')
     testcase.assertEqual(installed.keywords,
                         'distribution sdist installed metadata' )
     testcase.assertEqual(list(installed.supported_platforms), [])
