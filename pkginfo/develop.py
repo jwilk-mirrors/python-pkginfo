@@ -7,10 +7,11 @@ from pkginfo.distribution import Distribution
 
 class Develop(Distribution):
 
-    def __init__(self, path):
+    def __init__(self, path, metadata_version=None):
         self.path = os.path.abspath(
                         os.path.normpath(
                             os.path.expanduser(path)))
+        self.metadata_version = metadata_version
         self.extractMetadata()
 
     def read(self):

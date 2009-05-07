@@ -25,7 +25,6 @@ binary distributions, installed pakcages, and development checkouts.
   >>> from pkginfo import Develop
   >>> assert issubclass(Develop, Distribution)
 
-
 Introspecting Source Distributions
 ----------------------------------
 
@@ -38,8 +37,9 @@ distutils:
   >>> mypackage = SDist('docs/examples/mypackage-0.1.tar.gz')
 
 After creation, the ``SDist`` instance will have attributes corrsponding
-the the fields defined in PEP 314, lower-cased and transliterated into valid
-Python identifiers by mapping hyphens to underscores.  E.g.:
+the the fields defined in the PEP corresponding to the metadata version,
+lower-cased and transliterated into valid Python identifiers by mapping
+hyphens to underscores.  E.g.:
 
 .. doctest::
 
@@ -50,7 +50,7 @@ Python identifiers by mapping hyphens to underscores.  E.g.:
   >>> print mypackage.version
   0.1
 
-Fields which are optional under PEP 314, and which have no value set
+Fields which are optional under the PEP, and which have no value set
 in their ``PKG-INFO``, will map to the value ``None``:
 
 .. doctest::
@@ -58,21 +58,17 @@ in their ``PKG-INFO``, will map to the value ``None``:
   >>> print mypackage.keywords
   None
 
-Fields which are marked "multiple use" under PEP 314 map onto sequences;
-their names are pluralized to indicate the sequence:
-
-.. doctest::
-
-  >>> print list(mypackage.classifiers)
-  ['Development Status :: 4 - Beta', 'Environment :: Console (Text Based)']
-
-"Multiple use" fields with no occurences in the ``PKG-INFO`` file will
-map onto an empty sequence:
+Fields which are marked "multiple use" under the PEP map onto sequences;
+their names are pluralized to indicate the sequence.  "Multiple use" fields
+with no occurences in the ``PKG-INFO`` file will map onto an empty sequence:
 
 .. doctest::
 
   >>> print list(mypackage.supported_platforms)
   []
+
+See `Metadata Versions`_ below for an example with a non-empty,
+"multiple-use" field.
 
 
 Introspecting Binary Distributions
@@ -120,3 +116,28 @@ setuptools.
   >>> develop = Develop('.')
 
 After that, they have the same metadata as other ``Distribution`` objects.
+
+Metadata Versions
+-----------------
+
+The allowed ``PKG-INFO`` fields and their semantics are defined in a series
+of PEPs, each of which updates the metadata version field.
+
+- Metadata version 1.0 is specified in PEP 241.
+- Metadata version 1.1 is specified in PEP 314.
+- Metadata version 1.2 is specified in PEP 345 (still in draft).
+
+A given ``Distribution`` object parses / exposes the attributes which
+correspond to the metadata version specified in its ``PKG-INFO``.
+
+You can override the metadata version stored in a given distribution by
+passing the specific version (as a string) to its constructor. E.g.,
+updating the metadata version here in order to expose the classifiers,
+which were not defined under version '1.0':
+
+.. doctest::
+
+  >>> mypackage = SDist('docs/examples/mypackage-0.1.tar.gz',
+  ...                   metadata_version='1.1')
+  >>> print list(mypackage.classifiers)
+  ['Development Status :: 4 - Beta', 'Environment :: Console (Text Based)']

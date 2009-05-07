@@ -6,11 +6,14 @@ class DistributionTests(unittest.TestCase):
         from pkginfo.distribution import Distribution
         return Distribution
 
-    def _makeOne(self):
-        return self._getTargetClass()()
+    def _makeOne(self, metadata_version='1.0'):
+        dist = self._getTargetClass()()
+        if metadata_version is not None:
+            dist.metadata_version = metadata_version
+        return dist
 
     def test_ctor_defaults(self):
-        sdist = self._makeOne()
+        sdist = self._makeOne(None)
         self.assertEqual(sdist.metadata_version, None)
         self.assertEqual(sdist.name, None)
         self.assertEqual(sdist.version, None)
@@ -28,11 +31,27 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(sdist.requires, ())
         self.assertEqual(sdist.provides, ())
         self.assertEqual(sdist.obsoletes, ())
+        self.assertEqual(sdist.maintainer, None)
+        self.assertEqual(sdist.maintainer_email, None)
+        self.assertEqual(sdist.requires_python, None)
+        self.assertEqual(sdist.requires_external, ())
+        self.assertEqual(sdist.requires_dist, ())
+        self.assertEqual(sdist.provides_dist, ())
+        self.assertEqual(sdist.obsoletes_dist, ())
 
-    def test_parse_Metadata_Version(self):
-        dist = self._makeOne()
+    def test_parse_Metadata_Version_1_0(self):
+        from pkginfo.distribution import HEADER_ATTRS_1_0
+        dist = self._makeOne(None)
+        dist.parse('Metadata-Version: 1.0')
+        self.assertEqual(dist.metadata_version, '1.0')
+        self.assertEqual(list(dist),
+                         [x[1] for x in HEADER_ATTRS_1_0])
+
+    def test_parse_Metadata_Version_unknown(self):
+        dist = self._makeOne(None)
         dist.parse('Metadata-Version: 1.3')
         self.assertEqual(dist.metadata_version, '1.3')
+        self.assertEqual(list(dist), [])
 
     def test_parse_Name(self):
         dist = self._makeOne()
@@ -89,13 +108,6 @@ class DistributionTests(unittest.TestCase):
         dist.parse('Home-page: http://example.com/package')
         self.assertEqual(dist.home_page, 'http://example.com/package')
 
-    def test_parse_Download_URL(self):
-        dist = self._makeOne()
-        dist.parse('Download-URL: '
-                   'http://example.com/package/mypackage-0.1.zip')
-        self.assertEqual(dist.download_url,
-                         'http://example.com/package/mypackage-0.1.zip')
-
     def test_parse_Author(self):
         dist = self._makeOne()
         dist.parse('Author: J. Phredd Bloggs')
@@ -111,30 +123,38 @@ class DistributionTests(unittest.TestCase):
         dist.parse('License: Poetic')
         self.assertEqual(dist.license, 'Poetic')
 
+    # Metadata version 1.1, defined in PEP 314.
     def test_parse_Classifier_single(self):
-        dist = self._makeOne()
+        dist = self._makeOne('1.1')
         dist.parse('Classifier: Some :: Silly Thing')
         self.assertEqual(list(dist.classifiers), ['Some :: Silly Thing'])
 
     def test_parse_Classifier_multiple(self):
-        dist = self._makeOne()
+        dist = self._makeOne('1.1')
         dist.parse('Classifier: Some :: Silly Thing\n'
                    'Classifier: Or :: Other')
         self.assertEqual(list(dist.classifiers),
                          ['Some :: Silly Thing', 'Or :: Other'])
 
+    def test_parse_Download_URL(self):
+        dist = self._makeOne('1.1')
+        dist.parse('Download-URL: '
+                   'http://example.com/package/mypackage-0.1.zip')
+        self.assertEqual(dist.download_url,
+                         'http://example.com/package/mypackage-0.1.zip')
+
     def test_parse_Requires_single_wo_version(self):
-        dist = self._makeOne()
+        dist = self._makeOne('1.1')
         dist.parse('Requires: SpanishInquisition')
         self.assertEqual(list(dist.requires), ['SpanishInquisition'])
 
     def test_parse_Requires_single_w_version(self):
-        dist = self._makeOne()
+        dist = self._makeOne('1.1')
         dist.parse('Requires: SpanishInquisition (>=1.3)')
         self.assertEqual(list(dist.requires), ['SpanishInquisition (>=1.3)'])
 
     def test_parse_Requires_multiple(self):
-        dist = self._makeOne()
+        dist = self._makeOne('1.1')
         dist.parse('Requires: SpanishInquisition\n'
                    'Requires: SillyWalks (1.4)\n'
                    'Requires: kniggits (>=2.3,<3.0)')
@@ -145,17 +165,17 @@ class DistributionTests(unittest.TestCase):
                          ])
 
     def test_parse_Provides_single_wo_version(self):
-        dist = self._makeOne()
+        dist = self._makeOne('1.1')
         dist.parse('Provides: SillyWalks')
         self.assertEqual(list(dist.provides), ['SillyWalks'])
 
     def test_parse_Provides_single_w_version(self):
-        dist = self._makeOne()
+        dist = self._makeOne('1.1')
         dist.parse('Provides: SillyWalks (1.4)')
         self.assertEqual(list(dist.provides), ['SillyWalks (1.4)'])
 
     def test_parse_Provides_multiple(self):
-        dist = self._makeOne()
+        dist = self._makeOne('1.1')
         dist.parse('Provides: SillyWalks\n'
                    'Provides: DeadlyJoke (3.1.4)')
         self.assertEqual(list(dist.provides),
@@ -164,20 +184,119 @@ class DistributionTests(unittest.TestCase):
                          ])
 
     def test_parse_Obsoletes_single_no_version(self):
-        dist = self._makeOne()
+        dist = self._makeOne('1.1')
         dist.parse('Obsoletes: SillyWalks')
         self.assertEqual(list(dist.obsoletes), ['SillyWalks'])
 
     def test_parse_Obsoletes_single_w_version(self):
-        dist = self._makeOne()
+        dist = self._makeOne('1.1')
         dist.parse('Obsoletes: SillyWalks (<=1.3)')
         self.assertEqual(list(dist.obsoletes), ['SillyWalks (<=1.3)'])
 
     def test_parse_Obsoletes_multiple(self):
-        dist = self._makeOne()
+        dist = self._makeOne('1.1')
         dist.parse('Obsoletes: kniggits\n'
                    'Obsoletes: SillyWalks (<=2.0)')
         self.assertEqual(list(dist.obsoletes),
+                         ['kniggits',
+                          'SillyWalks (<=2.0)',
+                         ])
+
+
+    # Metadata version 1.2, defined in PEP 345.
+    def test_parse_Maintainer(self):
+        dist = self._makeOne(metadata_version='1.2')
+        dist.parse('Maintainer: J. Phredd Bloggs')
+        self.assertEqual(dist.maintainer, 'J. Phredd Bloggs')
+
+    def test_parse_Maintainer_Email(self):
+        dist = self._makeOne(metadata_version='1.2')
+        dist.parse('Maintainer-email: phreddy@example.com')
+        self.assertEqual(dist.maintainer_email, 'phreddy@example.com')
+
+    def test_parse_Requires_Python_single_spec(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Requires-Python: >2.4')
+        self.assertEqual(dist.requires_python, '>2.4')
+
+    def test_parse_Requires_External_single_wo_version(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Requires-External: libfoo')
+        self.assertEqual(list(dist.requires_external), ['libfoo'])
+
+    def test_parse_Requires_External_single_w_version(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Requires-External: libfoo (>=1.3)')
+        self.assertEqual(list(dist.requires_external), ['libfoo (>=1.3)'])
+
+    def test_parse_Requires_External_multiple(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Requires-External: libfoo\n'
+                   'Requires-External: libbar (1.4)\n'
+                   'Requires-External: libbaz (>=2.3,<3.0)')
+        self.assertEqual(list(dist.requires_external),
+                         ['libfoo',
+                          'libbar (1.4)',
+                          'libbaz (>=2.3,<3.0)',
+                         ])
+
+
+    def test_parse_Requires_single_wo_version(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Requires-Dist: SpanishInquisition')
+        self.assertEqual(list(dist.requires_dist), ['SpanishInquisition'])
+
+    def test_parse_Requires_single_w_version(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Requires-Dist: SpanishInquisition (>=1.3)')
+        self.assertEqual(list(dist.requires_dist),
+                         ['SpanishInquisition (>=1.3)'])
+
+    def test_parse_Requires_multiple(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Requires-Dist: SpanishInquisition\n'
+                   'Requires-Dist: SillyWalks (1.4)\n'
+                   'Requires-Dist: kniggits (>=2.3,<3.0)')
+        self.assertEqual(list(dist.requires_dist),
+                         ['SpanishInquisition',
+                          'SillyWalks (1.4)',
+                          'kniggits (>=2.3,<3.0)',
+                         ])
+
+    def test_parse_Provides_single_wo_version(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Provides-Dist: SillyWalks')
+        self.assertEqual(list(dist.provides_dist), ['SillyWalks'])
+
+    def test_parse_Provides_single_w_version(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Provides-Dist: SillyWalks (1.4)')
+        self.assertEqual(list(dist.provides_dist), ['SillyWalks (1.4)'])
+
+    def test_parse_Provides_multiple(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Provides-Dist: SillyWalks\n'
+                   'Provides-Dist: DeadlyJoke (3.1.4)')
+        self.assertEqual(list(dist.provides_dist),
+                         ['SillyWalks',
+                          'DeadlyJoke (3.1.4)',
+                         ])
+
+    def test_parse_Obsoletes_single_no_version(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Obsoletes-Dist: SillyWalks')
+        self.assertEqual(list(dist.obsoletes_dist), ['SillyWalks'])
+
+    def test_parse_Obsoletes_single_w_version(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Obsoletes-Dist: SillyWalks (<=1.3)')
+        self.assertEqual(list(dist.obsoletes_dist), ['SillyWalks (<=1.3)'])
+
+    def test_parse_Obsoletes_multiple(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Obsoletes-Dist: kniggits\n'
+                   'Obsoletes-Dist: SillyWalks (<=2.0)')
+        self.assertEqual(list(dist.obsoletes_dist),
                          ['kniggits',
                           'SillyWalks (<=2.0)',
                          ])

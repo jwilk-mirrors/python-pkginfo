@@ -7,7 +7,7 @@ from pkginfo.distribution import Distribution
 from pkginfo.installed import Installed
 from pkginfo.sdist import SDist
 
-def get_metadata(path_or_module):
+def get_metadata(path_or_module, metadata_version=None):
     """ Try to create a Distribution 'path_or_module'.
     
     o 'path_or_module' may be a module object.
@@ -20,7 +20,7 @@ def get_metadata(path_or_module):
     """
     if isinstance(path_or_module, ModuleType):
         try:
-            return Installed(path_or_module)
+            return Installed(path_or_module, metadata_version)
         except (ValueError, IOError):
             pass
 
@@ -30,23 +30,23 @@ def get_metadata(path_or_module):
         pass
     else:
         try:
-            return Installed(path_or_module)
+            return Installed(path_or_module, metadata_version)
         except (ValueError, IOError):
             pass
 
     if os.path.isfile(path_or_module):
         try:
-            return SDist(path_or_module)
+            return SDist(path_or_module, metadata_version)
         except (ValueError, IOError):
             pass
 
         try:
-            return BDist(path_or_module)
+            return BDist(path_or_module, metadata_version)
         except (ValueError, IOError):
             pass
 
     if os.path.isdir(path_or_module):
         try:
-            return Develop(path_or_module)
+            return Develop(path_or_module, metadata_version)
         except (ValueError, IOError):
             pass

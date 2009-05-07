@@ -1,6 +1,15 @@
 pkginfo Changelog
 =================
 
+After 0.3
+---------
+
+- Added support for the different metadata versions specified in PEPs
+  241, 314, and 345.  Distributions now parse and expose only the attributes
+  corresponding to their metadata version, which defaults to the version
+  parsed from the ``PKG-INFO`` file.  The programmer can override that version
+  when creating the distribution object.
+
 0.3 (2009-05-07)
 ----------------
 

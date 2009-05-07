@@ -6,7 +6,9 @@ class BDistTests(unittest.TestCase):
         from pkginfo.bdist import BDist
         return BDist
 
-    def _makeOne(self, filename=None):
+    def _makeOne(self, filename=None, metadata_version=None):
+        if metadata_version is not None:
+            return self._getTargetClass()(filename, metadata_version)
         return self._getTargetClass()(filename)
 
     def _checkSample(self, bdist, filename):
@@ -15,6 +17,8 @@ class BDistTests(unittest.TestCase):
         self.assertEqual(bdist.name, 'mypackage')
         self.assertEqual(bdist.version, '0.1')
         self.assertEqual(bdist.keywords, None)
+
+    def _checkClassifiers(self, bdist):
         self.assertEqual(list(bdist.classifiers),
                          ['Development Status :: 4 - Beta',
                           'Environment :: Console (Text Based)',
@@ -27,3 +31,11 @@ class BDistTests(unittest.TestCase):
         filename = '%s/../../docs/examples/mypackage-0.1-py2.6.egg' % d
         bdist = self._makeOne(filename)
         self._checkSample(bdist, filename)
+
+    def test_ctor_w_egg_and_metadata_version(self):
+        import os
+        d, _ = os.path.split(__file__)
+        filename = '%s/../../docs/examples/mypackage-0.1-py2.6.egg' % d
+        bdist = self._makeOne(filename, metadata_version='1.1')
+        self._checkSample(bdist, filename)
+        self._checkClassifiers(bdist)

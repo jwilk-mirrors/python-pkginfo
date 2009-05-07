@@ -6,11 +6,12 @@ from pkginfo.distribution import Distribution
 
 class Installed(Distribution):
 
-    def __init__(self, package):
+    def __init__(self, package, metadata_version=None):
         if isinstance(package, basestring):
             __import__(package)
             package = sys.modules[package]
         self.package = package
+        self.metadata_version = metadata_version
         self.extractMetadata()
 
     def read(self):

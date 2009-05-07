@@ -6,8 +6,9 @@ from pkginfo.distribution import Distribution
 
 class SDist(Distribution):
 
-    def __init__(self, filename):
+    def __init__(self, filename, metadata_version=None):
         self.filename = filename
+        self.metadata_version = metadata_version
         self.extractMetadata()
 
     def read(self):
