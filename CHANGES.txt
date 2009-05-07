@@ -1,7 +1,7 @@
 pkginfo Changelog
 =================
 
-0.3 (unreleased)
+0.3 (2009-05-07)
 ----------------
 
 - Added support for introspection of "development eggs" (checkouts with
