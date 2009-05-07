@@ -88,6 +88,10 @@ class Distribution(object):
             metadata_version = self.metadata_version = value
 
         for header_name, attr_name, multiple in self._getHeaderAttrs():
+
+            if attr_name == 'metadata_version':
+                continue
+
             if header_name in message:
                 if multiple:
                     values = message.getheaders(header_name)

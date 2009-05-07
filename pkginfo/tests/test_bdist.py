@@ -13,7 +13,6 @@ class BDistTests(unittest.TestCase):
 
     def _checkSample(self, bdist, filename):
         self.assertEqual(bdist.filename, filename)
-        self.assertEqual(bdist.metadata_version, '1.0')
         self.assertEqual(bdist.name, 'mypackage')
         self.assertEqual(bdist.version, '0.1')
         self.assertEqual(bdist.keywords, None)
@@ -30,6 +29,7 @@ class BDistTests(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1-py2.6.egg' % d
         bdist = self._makeOne(filename)
+        self.assertEqual(bdist.metadata_version, '1.0')
         self._checkSample(bdist, filename)
 
     def test_ctor_w_egg_and_metadata_version(self):
@@ -37,5 +37,6 @@ class BDistTests(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1-py2.6.egg' % d
         bdist = self._makeOne(filename, metadata_version='1.1')
+        self.assertEqual(bdist.metadata_version, '1.1')
         self._checkSample(bdist, filename)
         self._checkClassifiers(bdist)

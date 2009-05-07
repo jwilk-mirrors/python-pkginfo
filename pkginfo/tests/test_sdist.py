@@ -13,7 +13,6 @@ class SDistTests(unittest.TestCase):
 
     def _checkSample(self, sdist, filename):
         self.assertEqual(sdist.filename, filename)
-        self.assertEqual(sdist.metadata_version, '1.0')
         self.assertEqual(sdist.name, 'mypackage')
         self.assertEqual(sdist.version, '0.1')
         self.assertEqual(sdist.keywords, None)
@@ -30,6 +29,7 @@ class SDistTests(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1.tar.gz' % d
         sdist = self._makeOne(filename)
+        self.assertEqual(sdist.metadata_version, '1.0')
         self._checkSample(sdist, filename)
 
     def test_ctor_w_gztar_and_metadata_version(self):
@@ -38,6 +38,7 @@ class SDistTests(unittest.TestCase):
         filename = '%s/../../docs/examples/mypackage-0.1.tar.gz' % d
         sdist = self._makeOne(filename, metadata_version='1.1')
         self._checkSample(sdist, filename)
+        self.assertEqual(sdist.metadata_version, '1.1')
         self._checkClassifiers(sdist)
 
     def test_ctor_w_bztar(self):
@@ -45,6 +46,7 @@ class SDistTests(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1.tar.bz2' % d
         sdist = self._makeOne(filename)
+        self.assertEqual(sdist.metadata_version, '1.0')
         self._checkSample(sdist, filename)
 
     def test_ctor_w_bztar_and_metadata_version(self):
@@ -52,6 +54,7 @@ class SDistTests(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1.tar.bz2' % d
         sdist = self._makeOne(filename, metadata_version='1.1')
+        self.assertEqual(sdist.metadata_version, '1.1')
         self._checkSample(sdist, filename)
         self._checkClassifiers(sdist)
 
@@ -60,6 +63,7 @@ class SDistTests(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1.zip' % d
         sdist = self._makeOne(filename)
+        self.assertEqual(sdist.metadata_version, '1.0')
         self._checkSample(sdist, filename)
 
     def test_ctor_w_zip_and_metadata_version(self):
@@ -67,13 +71,6 @@ class SDistTests(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1.zip' % d
         sdist = self._makeOne(filename, metadata_version='1.1')
-        self._checkSample(sdist, filename)
-        self._checkClassifiers(sdist)
-
-    def test_ctor_w_zip_and_metadata_version(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.zip' % d
-        sdist = self._makeOne(filename, metadata_version='1.1')
+        self.assertEqual(sdist.metadata_version, '1.1')
         self._checkSample(sdist, filename)
         self._checkClassifiers(sdist)

@@ -53,6 +53,11 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(dist.metadata_version, '1.3')
         self.assertEqual(list(dist), [])
 
+    def test_parse_Metadata_Version_override(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Metadata-Version: 1.0')
+        self.assertEqual(dist.metadata_version, '1.2')
+
     def test_parse_Name(self):
         dist = self._makeOne()
         dist.parse('Name: foobar')

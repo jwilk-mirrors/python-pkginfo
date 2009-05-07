@@ -10,7 +10,6 @@ class Test_get_metadata(unittest.TestCase):
 
     def _checkMyPackage(self, dist, filename):
         self.assertEqual(dist.filename, filename)
-        self.assertEqual(dist.metadata_version, '1.0')
         self.assertEqual(dist.name, 'mypackage')
         self.assertEqual(dist.version, '0.1')
         self.assertEqual(dist.keywords, None)
@@ -27,6 +26,7 @@ class Test_get_metadata(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1.tar.gz' % d
         dist = self._callFUT(filename)
+        self.assertEqual(dist.metadata_version, '1.0')
         self._checkMyPackage(dist, filename)
 
     def test_w_gztar_and_metadata_version(self):
@@ -34,6 +34,7 @@ class Test_get_metadata(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1.tar.gz' % d
         dist = self._callFUT(filename, metadata_version='1.1')
+        self.assertEqual(dist.metadata_version, '1.1')
         self._checkMyPackage(dist, filename)
         self._checkClassifiers(dist)
 
@@ -42,6 +43,7 @@ class Test_get_metadata(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1.tar.bz2' % d
         dist = self._callFUT(filename)
+        self.assertEqual(dist.metadata_version, '1.0')
         self._checkMyPackage(dist, filename)
 
     def test_w_bztar_and_metadata_version(self):
@@ -49,6 +51,7 @@ class Test_get_metadata(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1.tar.bz2' % d
         dist = self._callFUT(filename, metadata_version='1.1')
+        self.assertEqual(dist.metadata_version, '1.1')
         self._checkMyPackage(dist, filename)
         self._checkClassifiers(dist)
 
@@ -57,6 +60,7 @@ class Test_get_metadata(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1.zip' % d
         dist = self._callFUT(filename)
+        self.assertEqual(dist.metadata_version, '1.0')
         self._checkMyPackage(dist, filename)
 
     def test_w_zip_and_metadata_version(self):
@@ -64,6 +68,7 @@ class Test_get_metadata(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1.zip' % d
         dist = self._callFUT(filename, metadata_version='1.1')
+        self.assertEqual(dist.metadata_version, '1.1')
         self._checkMyPackage(dist, filename)
         self._checkClassifiers(dist)
 
@@ -72,6 +77,7 @@ class Test_get_metadata(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1-py2.6.egg' % d
         dist = self._callFUT(filename)
+        self.assertEqual(dist.metadata_version, '1.0')
         self._checkMyPackage(dist, filename)
 
     def test_w_egg_and_metadata_version(self):
@@ -79,6 +85,7 @@ class Test_get_metadata(unittest.TestCase):
         d, _ = os.path.split(__file__)
         filename = '%s/../../docs/examples/mypackage-0.1-py2.6.egg' % d
         dist = self._callFUT(filename, metadata_version='1.1')
+        self.assertEqual(dist.metadata_version, '1.1')
         self._checkMyPackage(dist, filename)
         self._checkClassifiers(dist)
 
@@ -86,24 +93,28 @@ class Test_get_metadata(unittest.TestCase):
         import pkginfo
         from pkginfo.tests import _checkSample
         dist = self._callFUT(pkginfo)
+        self.assertEqual(dist.metadata_version, '1.0')
         _checkSample(self, dist)
 
     def test_w_module_and_metadata_version(self):
         import pkginfo
         from pkginfo.tests import _checkSample
         from pkginfo.tests import _checkClassifiers
-        dist = self._callFUT(pkginfo, metadata_version='1.1')
+        dist = self._callFUT(pkginfo, metadata_version='1.2')
+        self.assertEqual(dist.metadata_version, '1.2')
         _checkSample(self, dist)
         _checkClassifiers(self, dist)
 
     def test_w_package_name(self):
         from pkginfo.tests import _checkSample
         dist = self._callFUT('pkginfo')
+        self.assertEqual(dist.metadata_version, '1.0')
         _checkSample(self, dist)
 
     def test_w_package_name_and_metadata_version(self):
         from pkginfo.tests import _checkSample
         from pkginfo.tests import _checkClassifiers
-        dist = self._callFUT('pkginfo', metadata_version='1.1')
+        dist = self._callFUT('pkginfo', metadata_version='1.2')
+        self.assertEqual(dist.metadata_version, '1.2')
         _checkSample(self, dist)
         _checkClassifiers(self, dist)
