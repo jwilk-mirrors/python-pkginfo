@@ -9,9 +9,12 @@ def additional_tests():
 def _checkSample(testcase, installed):
     testcase.assertEqual(installed.metadata_version, '1.0')
     testcase.assertEqual(installed.name, 'pkginfo')
-    testcase.assertEqual(installed.version, '0.3')
+    testcase.assertEqual(installed.version, '0.4dev')
     testcase.assertEqual(installed.keywords,
                         'distribution sdist installed metadata' )
+    testcase.assertEqual(list(installed.supported_platforms), [])
+
+def _checkClassifiers(testcase, installed):
     testcase.assertEqual(list(installed.classifiers),
                          [
       'Intended Audience :: Developers',
@@ -21,4 +24,3 @@ def _checkSample(testcase, installed):
       'Topic :: Software Development :: Libraries :: Python Modules',
       'Topic :: System :: Software Distribution',
     ])
-    testcase.assertEqual(list(installed.supported_platforms), [])
