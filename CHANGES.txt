@@ -1,6 +1,12 @@
 pkginfo Changelog
 =================
 
+After 0.4
+---------
+
+- Fixed bugs in handling of installed packages which lack ``__file__``
+  or ``PKG-INFO``.
+
 0.4 (2009-05-07)
 ----------------
 
