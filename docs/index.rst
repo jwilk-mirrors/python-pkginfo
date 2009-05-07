@@ -11,7 +11,7 @@ Distribution Types
 
 The fundamental abstraction provided by this pacakge is the ``Distribution``
 base class.  Implementations exist for specific cases:  source distributions,
-binary distributions, and installed distributions.
+binary distributions, installed pakcages, and development checkouts.
 
 .. doctest::
 
@@ -22,6 +22,8 @@ binary distributions, and installed distributions.
   >>> assert issubclass(BDist, Distribution)
   >>> from pkginfo import Installed
   >>> assert issubclass(Installed, Distribution)
+  >>> from pkginfo import Develop
+  >>> assert issubclass(Develop, Distribution)
 
 
 Introspecting Source Distributions
@@ -104,3 +106,17 @@ assuming that the package on which they were based has a discoverable
 either be located inside the package (e.g., created via ``setup.py develop``
 under setuptools), or adjacent to the package (e.g., created via
 ``setup.py instlall``).
+
+
+Introspecting Development Checkouts
+-----------------------------------
+
+``Develop`` objects are created from a path to a checkout containing
+a ``PKG-iNFO`` file, e.g., created by running ``setup.py develop`` under
+setuptools.
+
+.. doctest::
+
+  >>> develop = Develop('.')
+
+After that, they have the same metadata as other ``Distribution`` objects.

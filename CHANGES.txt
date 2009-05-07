@@ -1,6 +1,23 @@
 pkginfo Changelog
 =================
 
+0.3 (unreleased)
+----------------
+
+- Added support for introspection of "development eggs" (checkouts with
+  ``PKG-INFO``, perhaps created via ``setup.py develop``).
+
+- Added a console script, ``pkginfo``, which takes one or more paths
+  on the command line and writes out the associated information.
+
+- Added 'get_metadata' helper function, which dispatches a given path or
+  module across the available distribution types, and returns a distribution
+  object.
+
+- Made distribution objects support iteration over the metadata fields.
+
+- Made Distribution and subclasses new-style classes.
+
 0.2 (2009-04-14)
 ----------------
 
