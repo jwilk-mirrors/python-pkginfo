@@ -21,7 +21,7 @@ HEADER_ATTRS = (
     ('Obsoletes', 'obsoletes', True),
 )
 
-class Distribution:
+class Distribution(object):
     metadata_version = None
     name = None
     version = None
@@ -60,3 +60,10 @@ class Distribution:
                     value = message.getheader(header_name)
                     if value != 'UNKNOWN':
                         setattr(self, attr_name, value)
+                        
+    def __iter__(self):
+        for header_name, attr_name, multiple in HEADER_ATTRS:
+            yield attr_name
+
+    iterkeys = __iter__
+    
