@@ -4,6 +4,10 @@ pkginfo Changelog
 After 0.3
 ---------
 
+- Extended the console script to allow output as CSV or INI.  Also, added
+  arguments to specify the metadata version and other parsing / output
+  policies.
+
 - Added support for the different metadata versions specified in PEPs
   241, 314, and 345.  Distributions now parse and expose only the attributes
   corresponding to their metadata version, which defaults to the version
