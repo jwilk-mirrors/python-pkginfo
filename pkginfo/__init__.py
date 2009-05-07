@@ -4,9 +4,6 @@ from pkginfo.distribution import Distribution
 from pkginfo.installed import Installed
 from pkginfo.sdist import SDist
 
-__all__ = ["BDist", "SDist", "Installed", "get_metadata"]
-__version__ = "0.3"
-
 def get_metadata(path):
     """Try to get metadata from path, which may be an sdist, bdist or
     installed package. If it's not possible to parse as either, returns

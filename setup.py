@@ -13,12 +13,9 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
-import pkginfo
-ver = pkginfo.__version__
-
 setup(
     name='pkginfo',
-    version=ver,
+    version='0.3dev',
     description='Query metadatdata from sdists / bdists / installed packages.',
     platform=['Unix', 'Windows'],
     long_description='\n\n'.join([README, CHANGES]),
