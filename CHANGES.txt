@@ -1,6 +1,13 @@
 pkginfo Changelog
 =================
 
+Unreleased
+----------
+
+- Added ``download_url_prefix`` argument to ``pkginfo`` script.  If passed,
+  the script will use the prefix to synthesize a ``download_url`` for
+  distributions which do not supply that value directly.
+
 0.4.1 (2009-05-07)
 ------------------
 

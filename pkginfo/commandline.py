@@ -19,6 +19,7 @@ o an installed package:  in this case, 'path' should be the importable name
 from ConfigParser import ConfigParser
 from csv import writer
 import optparse
+import os
 import sys
 
 from pkginfo import get_metadata
@@ -33,6 +34,11 @@ def _parse_options():
 
     parser.add_option("-f", "--field", dest="fields", action="append",
                       help="Specify an output field (repeatable)",
+                      )
+
+    parser.add_option("-d", "--download-url-prefix",
+                      dest="download_url_prefix", 
+                      help="Download URL prefix",
                       )
 
     parser.add_option("--simple", dest="output", action="store_const",
@@ -185,6 +191,12 @@ def main():
         meta = get_metadata(path, options.metadata_version)
         if meta is None:
             continue
+
+        if options.download_url_prefix:
+            if meta.download_url is None:
+                filename = os.path.basename(path)
+                meta.download_url = '%s/%s' % (options.download_url_prefix,
+                                               filename)
 
         formatter(meta)
 
