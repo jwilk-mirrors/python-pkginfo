@@ -8,4 +8,4 @@ Contents:
 
    distributions
    metadata
-
+   indexes

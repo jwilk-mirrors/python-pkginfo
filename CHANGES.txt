@@ -4,6 +4,8 @@ pkginfo Changelog
 Unreleased
 ----------
 
+- Added ``Index`` class as an abstraction over a collection of distributions.
+
 - Added ``download_url_prefix`` argument to ``pkginfo`` script.  If passed,
   the script will use the prefix to synthesize a ``download_url`` for
   distributions which do not supply that value directly.

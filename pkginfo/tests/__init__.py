@@ -10,6 +10,8 @@ def additional_tests():
                                 module_relative=True),
         doctest.DocFileSuite('../../docs/metadata.rst',
                                 module_relative=True),
+        doctest.DocFileSuite('../../docs/indexes.rst',
+                                module_relative=True),
     ))
 
 
