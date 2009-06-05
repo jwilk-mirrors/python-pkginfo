@@ -18,6 +18,7 @@ which were not defined under version '1.0':
 
 .. doctest::
 
+  >>> from pkginfo import SDist
   >>> mypackage = SDist('docs/examples/mypackage-0.1.tar.gz',
   ...                   metadata_version='1.1')
   >>> print list(mypackage.classifiers)

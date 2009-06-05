@@ -2,9 +2,16 @@
 
 def additional_tests():
     import doctest
-    return doctest.DocFileSuite('../../docs/index.rst',
-                                module_relative=True,
-                               )
+    import unittest
+    return unittest.TestSuite((
+        doctest.DocFileSuite('../../docs/index.rst',
+                                module_relative=True),
+        doctest.DocFileSuite('../../docs/distributions.rst',
+                                module_relative=True),
+        doctest.DocFileSuite('../../docs/metadata.rst',
+                                module_relative=True),
+    ))
+
 
 def _checkSample(testcase, installed):
     testcase.assertEqual(installed.name, 'pkginfo')
