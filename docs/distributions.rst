@@ -80,13 +80,16 @@ Introspecting Installed Packages
 --------------------------------
 
 ``Installed`` objects are created from either a module object or its
-dotted name.
+dotted name.  Note that this feature only works in Python 2.6 or later:
+earlier Python versions did not record ``PKG-INFO`` for installed packages.
 
 .. doctest::
 
-  >>> dotted = Installed('pkginfo')
-  >>> import pkginfo
-  >>> direct = Installed(pkginfo)
+  >>> import sys
+  >>> if sys.version_info >= (2,6):
+  ...    dotted = Installed('pkginfo')
+  ...    import pkginfo
+  ...    direct = Installed(pkginfo)
 
 After that, they have the same metadata as other ``Distribution`` objects,
 assuming that the package on which they were based has a discoverable

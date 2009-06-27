@@ -90,31 +90,39 @@ class Test_get_metadata(unittest.TestCase):
         self._checkClassifiers(dist)
 
     def test_w_module(self):
-        import pkginfo
-        from pkginfo.tests import _checkSample
-        dist = self._callFUT(pkginfo)
-        self.assertEqual(dist.metadata_version, '1.0')
-        _checkSample(self, dist)
+        import sys
+        if sys.version_info >= (2, 6):
+            import pkginfo
+            from pkginfo.tests import _checkSample
+            dist = self._callFUT(pkginfo)
+            self.assertEqual(dist.metadata_version, '1.0')
+            _checkSample(self, dist)
 
     def test_w_module_and_metadata_version(self):
-        import pkginfo
-        from pkginfo.tests import _checkSample
-        from pkginfo.tests import _checkClassifiers
-        dist = self._callFUT(pkginfo, metadata_version='1.2')
-        self.assertEqual(dist.metadata_version, '1.2')
-        _checkSample(self, dist)
-        _checkClassifiers(self, dist)
+        import sys
+        if sys.version_info >= (2, 6):
+            import pkginfo
+            from pkginfo.tests import _checkSample
+            from pkginfo.tests import _checkClassifiers
+            dist = self._callFUT(pkginfo, metadata_version='1.2')
+            self.assertEqual(dist.metadata_version, '1.2')
+            _checkSample(self, dist)
+            _checkClassifiers(self, dist)
 
     def test_w_package_name(self):
-        from pkginfo.tests import _checkSample
-        dist = self._callFUT('pkginfo')
-        self.assertEqual(dist.metadata_version, '1.0')
-        _checkSample(self, dist)
+        import sys
+        if sys.version_info >= (2, 6):
+            from pkginfo.tests import _checkSample
+            dist = self._callFUT('pkginfo')
+            self.assertEqual(dist.metadata_version, '1.0')
+            _checkSample(self, dist)
 
     def test_w_package_name_and_metadata_version(self):
-        from pkginfo.tests import _checkSample
-        from pkginfo.tests import _checkClassifiers
-        dist = self._callFUT('pkginfo', metadata_version='1.2')
-        self.assertEqual(dist.metadata_version, '1.2')
-        _checkSample(self, dist)
-        _checkClassifiers(self, dist)
+        import sys
+        if sys.version_info >= (2, 6):
+            from pkginfo.tests import _checkSample
+            from pkginfo.tests import _checkClassifiers
+            dist = self._callFUT('pkginfo', metadata_version='1.2')
+            self.assertEqual(dist.metadata_version, '1.2')
+            _checkSample(self, dist)
+            _checkClassifiers(self, dist)

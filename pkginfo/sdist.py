@@ -22,7 +22,7 @@ class SDist(Distribution):
             names = archive.namelist()
             def read_file(name):
                 return archive.read(name)
-        elif fqn.endswith(('.bz2', '.gz')):
+        elif fqn.endswith('gz') or fqn.endswith('bz2'):
             archive = tarfile.TarFile.open(fqn)
             names = archive.getnames()
             def read_file(name):

@@ -4,6 +4,11 @@ pkginfo Changelog
 Unreleased
 ----------
 
+- Restored compatibility with Python 2.4.
+
+- Noted that the introspectino of installed packages / modules works only
+  in Python 2.6 or later.
+
 - Added ``Index`` class as an abstraction over a collection of distributions.
 
 - Added ``download_url_prefix`` argument to ``pkginfo`` script.  If passed,
