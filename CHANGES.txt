@@ -4,6 +4,10 @@ pkginfo Changelog
 Unreleased
 ----------
 
+- Marked package as non-zip-safe.
+
+- Fixed Trove metadata misspelling.
+
 - Restored compatibility with Python 2.4.
 
 - Noted that the introspectino of installed packages / modules works only

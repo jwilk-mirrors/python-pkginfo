@@ -4,6 +4,7 @@ try:
     extras = {
         'tests_require': ['zope.testing'],
         'test_suite': 'pkginfo.tests',
+        'zip_safe': False,
     }
 except ImportError:
     from distutils.core import setup
@@ -17,7 +18,7 @@ setup(
     name='pkginfo',
     version='0.4.1',
     description='Query metadatdata from sdists / bdists / installed packages.',
-    platform=['Unix', 'Windows'],
+    platforms=['Unix', 'Windows'],
     long_description='\n\n'.join([README, CHANGES]),
     keywords='distribution sdist installed metadata',
     url='http://pypi.python.org/pypi/pkginfo/',
