@@ -1,8 +1,8 @@
 pkginfo Changelog
 =================
 
-Unreleased
-----------
+0.5 (2009-09-11)
+----------------
 
 - Marked package as non-zip-safe.
 
