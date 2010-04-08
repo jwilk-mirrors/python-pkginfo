@@ -246,18 +246,18 @@ class DistributionTests(unittest.TestCase):
                          ])
 
 
-    def test_parse_Requires_single_wo_version(self):
+    def test_parse_Requires_Dist_single_wo_version(self):
         dist = self._makeOne('1.2')
         dist.parse('Requires-Dist: SpanishInquisition')
         self.assertEqual(list(dist.requires_dist), ['SpanishInquisition'])
 
-    def test_parse_Requires_single_w_version(self):
+    def test_parse_Requires_Dist_single_w_version(self):
         dist = self._makeOne('1.2')
         dist.parse('Requires-Dist: SpanishInquisition (>=1.3)')
         self.assertEqual(list(dist.requires_dist),
                          ['SpanishInquisition (>=1.3)'])
 
-    def test_parse_Requires_multiple(self):
+    def test_parse_Requires_Dist_multiple(self):
         dist = self._makeOne('1.2')
         dist.parse('Requires-Dist: SpanishInquisition\n'
                    'Requires-Dist: SillyWalks (1.4)\n'
@@ -268,17 +268,17 @@ class DistributionTests(unittest.TestCase):
                           'kniggits (>=2.3,<3.0)',
                          ])
 
-    def test_parse_Provides_single_wo_version(self):
+    def test_parse_Provides_Dist_single_wo_version(self):
         dist = self._makeOne('1.2')
         dist.parse('Provides-Dist: SillyWalks')
         self.assertEqual(list(dist.provides_dist), ['SillyWalks'])
 
-    def test_parse_Provides_single_w_version(self):
+    def test_parse_Provides_Dist_single_w_version(self):
         dist = self._makeOne('1.2')
         dist.parse('Provides-Dist: SillyWalks (1.4)')
         self.assertEqual(list(dist.provides_dist), ['SillyWalks (1.4)'])
 
-    def test_parse_Provides_multiple(self):
+    def test_parse_Provides_Dist_multiple(self):
         dist = self._makeOne('1.2')
         dist.parse('Provides-Dist: SillyWalks\n'
                    'Provides-Dist: DeadlyJoke (3.1.4)')
@@ -287,17 +287,17 @@ class DistributionTests(unittest.TestCase):
                           'DeadlyJoke (3.1.4)',
                          ])
 
-    def test_parse_Obsoletes_single_no_version(self):
+    def test_parse_Obsoletes_Dist_single_no_version(self):
         dist = self._makeOne('1.2')
         dist.parse('Obsoletes-Dist: SillyWalks')
         self.assertEqual(list(dist.obsoletes_dist), ['SillyWalks'])
 
-    def test_parse_Obsoletes_single_w_version(self):
+    def test_parse_Obsoletes_Dist_single_w_version(self):
         dist = self._makeOne('1.2')
         dist.parse('Obsoletes-Dist: SillyWalks (<=1.3)')
         self.assertEqual(list(dist.obsoletes_dist), ['SillyWalks (<=1.3)'])
 
-    def test_parse_Obsoletes_multiple(self):
+    def test_parse_Obsoletes_Dist_multiple(self):
         dist = self._makeOne('1.2')
         dist.parse('Obsoletes-Dist: kniggits\n'
                    'Obsoletes-Dist: SillyWalks (<=2.0)')
