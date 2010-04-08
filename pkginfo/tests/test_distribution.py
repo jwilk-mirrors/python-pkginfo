@@ -38,6 +38,7 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(sdist.requires_dist, ())
         self.assertEqual(sdist.provides_dist, ())
         self.assertEqual(sdist.obsoletes_dist, ())
+        self.assertEqual(sdist.project_urls, ())
 
     def test_parse_Metadata_Version_1_0(self):
         from pkginfo.distribution import HEADER_ATTRS_1_0
@@ -304,4 +305,19 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(list(dist.obsoletes_dist),
                          ['kniggits',
                           'SillyWalks (<=2.0)',
+                         ])
+
+    def test_parse_Project_URL_single_no_version(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Project-URL: Bug tracker, http://bugs.example.com/grail')
+        self.assertEqual(list(dist.project_urls),
+                         ['Bug tracker, http://bugs.example.com/grail'])
+
+    def test_parse_Project_URL_multiple(self):
+        dist = self._makeOne('1.2')
+        dist.parse('Project-URL: Bug tracker, http://bugs.example.com/grail\n'
+                   'Project-URL: Repository, http://svn.example.com/grail')
+        self.assertEqual(list(dist.project_urls),
+                         ['Bug tracker, http://bugs.example.com/grail',
+                          'Repository, http://svn.example.com/grail',
                          ])

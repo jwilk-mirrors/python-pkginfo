@@ -1,6 +1,13 @@
 pkginfo Changelog
 =================
 
+After 0.5 (unreleased)
+----------------------
+
+- Added 'Project-URL' for '1.2' PKG-INFO metdata (defined in the accepted
+  version of PEP 345).
+
+
 0.5 (2009-09-11)
 ----------------
 

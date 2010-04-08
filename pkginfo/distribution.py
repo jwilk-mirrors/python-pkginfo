@@ -32,6 +32,7 @@ HEADER_ATTRS_1_2 = HEADER_ATTRS_1_1 + ( # PEP 345
     ('Requires-Dist', 'requires_dist', True),
     ('Provides-Dist', 'provides_dist', True),
     ('Obsoletes-Dist', 'obsoletes_dist', True),
+    ('Project-URL', 'project_urls', True),
 )
 
 HEADER_ATTRS = {
@@ -68,6 +69,7 @@ class Distribution(object):
     requires_dist = ()
     provides_dist = ()
     obsoletes_dist = ()
+    project_urls = ()
 
     def extractMetadata(self):
         data = self.read()
