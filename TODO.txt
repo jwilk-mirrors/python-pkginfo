@@ -6,3 +6,7 @@ TODOs
       o Project-Url header
 
       o "environment markers"
+
+- [_] Allow the ``pkginfo`` script to process URLs.
+
+- [_] Allow the ``pkginfo`` script to process requirements specs.
