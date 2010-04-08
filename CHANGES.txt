@@ -10,7 +10,7 @@ pkginfo Changelog
 
 - Restored compatibility with Python 2.4.
 
-- Noted that the introspectino of installed packages / modules works only
+- Noted that the introspection of installed packages / modules works only
   in Python 2.6 or later.
 
 - Added ``Index`` class as an abstraction over a collection of distributions.
