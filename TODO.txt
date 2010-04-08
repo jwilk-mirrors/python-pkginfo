@@ -7,6 +7,9 @@ TODOs
 
       * "environment markers"
 
+- [_] Add APIs to ``Distribution`` which expose the semantics of the
+      requirement versions and environment markers.
+
 - [_] Allow the ``pkginfo`` script to process URLs.
 
 - [_] Allow the ``pkginfo`` script to process requirements specs.
