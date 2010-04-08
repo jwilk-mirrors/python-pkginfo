@@ -258,15 +258,22 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(list(dist.requires_dist),
                          ['SpanishInquisition (>=1.3)'])
 
+    def test_parse_Requires_Dist_single_w_env_marker(self):
+        dist = self._makeOne('1.2')
+        dist.parse("Requires-Dist: SpanishInquisition; "
+                        "python_version == '1.4'")
+        self.assertEqual(list(dist.requires_dist),
+                         ["SpanishInquisition; python_version == '1.4'"])
+
     def test_parse_Requires_Dist_multiple(self):
         dist = self._makeOne('1.2')
-        dist.parse('Requires-Dist: SpanishInquisition\n'
-                   'Requires-Dist: SillyWalks (1.4)\n'
-                   'Requires-Dist: kniggits (>=2.3,<3.0)')
+        dist.parse("Requires-Dist: SpanishInquisition\n"
+                   "Requires-Dist: SillyWalks; python_version == '1.4'\n"
+                   "Requires-Dist: kniggits (>=2.3,<3.0)")
         self.assertEqual(list(dist.requires_dist),
-                         ['SpanishInquisition',
-                          'SillyWalks (1.4)',
-                          'kniggits (>=2.3,<3.0)',
+                         ["SpanishInquisition",
+                          "SillyWalks; python_version == '1.4'",
+                          "kniggits (>=2.3,<3.0)",
                          ])
 
     def test_parse_Provides_Dist_single_wo_version(self):
@@ -279,13 +286,21 @@ class DistributionTests(unittest.TestCase):
         dist.parse('Provides-Dist: SillyWalks (1.4)')
         self.assertEqual(list(dist.provides_dist), ['SillyWalks (1.4)'])
 
+    def test_parse_Provides_Dist_single_w_env_marker(self):
+        dist = self._makeOne('1.2')
+        dist.parse("Provides-Dist: SillyWalks; sys.platform == 'os2'")
+        self.assertEqual(list(dist.provides_dist),
+                         ["SillyWalks; sys.platform == 'os2'"])
+
     def test_parse_Provides_Dist_multiple(self):
         dist = self._makeOne('1.2')
-        dist.parse('Provides-Dist: SillyWalks\n'
-                   'Provides-Dist: DeadlyJoke (3.1.4)')
+        dist.parse("Provides-Dist: SillyWalks\n"
+                   "Provides-Dist: SpanishInquisition; sys.platform == 'os2'\n"
+                   "Provides-Dist: DeadlyJoke (3.1.4)")
         self.assertEqual(list(dist.provides_dist),
-                         ['SillyWalks',
-                          'DeadlyJoke (3.1.4)',
+                         ["SillyWalks",
+                          "SpanishInquisition; sys.platform == 'os2'",
+                          "DeadlyJoke (3.1.4)",
                          ])
 
     def test_parse_Obsoletes_Dist_single_no_version(self):
@@ -298,13 +313,22 @@ class DistributionTests(unittest.TestCase):
         dist.parse('Obsoletes-Dist: SillyWalks (<=1.3)')
         self.assertEqual(list(dist.obsoletes_dist), ['SillyWalks (<=1.3)'])
 
+    def test_parse_Obsoletes_Dist_single_w_env_marker(self):
+        dist = self._makeOne('1.2')
+        dist.parse("Obsoletes-Dist: SillyWalks; sys.platform == 'os2'")
+        self.assertEqual(list(dist.obsoletes_dist),
+                         ["SillyWalks; sys.platform == 'os2'"])
+
     def test_parse_Obsoletes_Dist_multiple(self):
         dist = self._makeOne('1.2')
-        dist.parse('Obsoletes-Dist: kniggits\n'
-                   'Obsoletes-Dist: SillyWalks (<=2.0)')
+        dist.parse("Obsoletes-Dist: kniggits\n"
+                   "Obsoletes-Dist: SillyWalks; sys.platform == 'os2'\n"
+                   "Obsoletes-Dist: DeadlyJoke (<=2.0)\n"
+                  )
         self.assertEqual(list(dist.obsoletes_dist),
-                         ['kniggits',
-                          'SillyWalks (<=2.0)',
+                         ["kniggits",
+                          "SillyWalks; sys.platform == 'os2'",
+                          "DeadlyJoke (<=2.0)",
                          ])
 
     def test_parse_Project_URL_single_no_version(self):

@@ -1,11 +1,11 @@
 TODOs
 =====
 
-- [_] Catch up to latest changes in PEP345:
+- [X] Catch up to latest changes in PEP345:
 
-      o Project-Url header
+      * Project-URL header
 
-      o "environment markers"
+      * "environment markers"
 
 - [_] Allow the ``pkginfo`` script to process URLs.
 

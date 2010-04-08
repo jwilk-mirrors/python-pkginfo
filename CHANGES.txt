@@ -4,6 +4,9 @@ pkginfo Changelog
 After 0.5 (unreleased)
 ----------------------
 
+- Added tests that the "environment markers" spelled out in the approved
+  PEP 345 are captured.
+
 - Added 'Project-URL' for '1.2' PKG-INFO metdata (defined in the accepted
   version of PEP 345).
 
