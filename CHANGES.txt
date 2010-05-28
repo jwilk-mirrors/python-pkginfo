@@ -4,6 +4,8 @@ pkginfo Changelog
 After 0.5 (unreleased)
 ----------------------
 
+- Removed bogus testing dependency on ``zope.testing``.
+
 - Added tests that the "environment markers" spelled out in the approved
   PEP 345 are captured.
 

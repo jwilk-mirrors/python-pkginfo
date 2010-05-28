@@ -1,8 +1,8 @@
 import os
+
 try:
     from setuptools import setup
     extras = {
-        'tests_require': ['zope.testing'],
         'test_suite': 'pkginfo.tests',
         'zip_safe': False,
     }
