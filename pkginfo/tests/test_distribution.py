@@ -98,11 +98,27 @@ class DistributionTests(unittest.TestCase):
 
     def test_parse_Description(self):
         dist = self._makeOne()
+        dist.parse('Description: This package enables integration with '
+                   'foo servers.')
+        self.assertEqual(dist.description,
+                         'This package enables integration with '
+                         'foo servers.')
+
+    def test_parse_Description_multiline(self):
+        dist = self._makeOne()
+        dist.parse('Description: This package enables integration with\n'
+                   ' foo servers.')
+        self.assertEqual(dist.description,
+                         'This package enables integration with '
+                         'foo servers.')
+
+    def test_parse_Description_multiline_extra_leading_ws(self):
+        dist = self._makeOne()
         dist.parse('Description: This package enables integration with\n'
                    '       foo servers.')
         self.assertEqual(dist.description,
-                         'This package enables integration with\n'
-                         ' foo servers.')
+                         'This package enables integration with '
+                         'foo servers.')
 
     def test_parse_Keywords(self):
         dist = self._makeOne()

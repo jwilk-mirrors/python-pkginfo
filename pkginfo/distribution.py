@@ -5,22 +5,19 @@ except ImportError:
     def parse(fp):
         return rfc822.Message(fp)
     def get(msg, header):
-        return msg.getheader(header)
+        return _collapse_leading_ws(msg.getheader(header))
     def get_all(msg, header):
-        return msg.getheaders(header)
+        return [_collapse_leading_ws(x) for x in msg.getheaders(header)]
 else:
-    def _collapse_leading_ws(txt):
-        lines = txt.splitlines()
-        fixed = lines[:1]
-        for line in lines[1:]:
-            fixed.append(' ' + line.lstrip())
-        return '\n'.join(fixed)
     def parse(fp):
         return Parser().parse(fp)
     def get(msg, header):
         return _collapse_leading_ws(msg.get(header))
     def get_all(msg, header):
         return [_collapse_leading_ws(x) for x in msg.get_all(header)]
+
+def _collapse_leading_ws(txt):
+    return ' '.join([x.strip() for x in txt.splitlines()])
 
 try:
     from StringIO import StringIO

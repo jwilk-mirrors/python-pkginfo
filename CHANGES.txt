@@ -8,8 +8,9 @@ After 0.5 (unreleased)
   (Python >= 2.6).
 
 - Replaced use of ``rfc822`` stdlib module with ``email.parser``, when
-  available (Python >= 2.5).  Note that we preserve the older module's
-  collapse of excess leading whitespace on continuation lines.
+  available (Python >= 2.5).  Ensured that distributions "unfold" wrapped
+  continuation lines, stripping any leading / trailing whitespace, no matter
+  which module was used for parsing.
 
 - Removed bogus testing dependency on ``zope.testing``.
 
