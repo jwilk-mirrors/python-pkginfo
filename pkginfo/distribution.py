@@ -1,5 +1,32 @@
-import rfc822
-import StringIO
+try:
+    from email.parser import Parser
+except ImportError:
+    import rfc822
+    def parse(fp):
+        return rfc822.Message(fp)
+    def get(msg, header):
+        return msg.getheader(header)
+    def get_all(msg, header):
+        return msg.getheaders(header)
+else:
+    def _collapse_leading_ws(txt):
+        lines = txt.splitlines()
+        fixed = lines[:1]
+        for line in lines[1:]:
+            fixed.append(' ' + line.lstrip())
+        return '\n'.join(fixed)
+    def parse(fp):
+        return Parser().parse(fp)
+    def get(msg, header):
+        return _collapse_leading_ws(msg.get(header))
+    def get_all(msg, header):
+        return [_collapse_leading_ws(x) for x in msg.get_all(header)]
+
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+    
 
 HEADER_ATTRS_1_0 = ( # PEP 241
     ('Metadata-Version', 'metadata_version', False),
@@ -82,11 +109,11 @@ class Distribution(object):
         return HEADER_ATTRS.get(self.metadata_version, [])
 
     def parse(self, data):
-        fp = StringIO.StringIO(data)
-        message = rfc822.Message(fp)
+        fp = StringIO(data)
+        msg = parse(fp)
 
-        if 'Metadata-Version' in message and self.metadata_version is None:
-            value = message.getheader('Metadata-Version')
+        if 'Metadata-Version' in msg and self.metadata_version is None:
+            value = get(msg, 'Metadata-Version')
             metadata_version = self.metadata_version = value
 
         for header_name, attr_name, multiple in self._getHeaderAttrs():
@@ -94,12 +121,12 @@ class Distribution(object):
             if attr_name == 'metadata_version':
                 continue
 
-            if header_name in message:
+            if header_name in msg:
                 if multiple:
-                    values = message.getheaders(header_name)
+                    values = get_all(msg, header_name)
                     setattr(self, attr_name, values)
                 else:
-                    value = message.getheader(header_name)
+                    value = get(msg, header_name)
                     if value != 'UNKNOWN':
                         setattr(self, attr_name, value)
                         
@@ -108,4 +135,3 @@ class Distribution(object):
             yield attr_name
 
     iterkeys = __iter__
- 

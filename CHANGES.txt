@@ -4,6 +4,13 @@ pkginfo Changelog
 After 0.5 (unreleased)
 ----------------------
 
+- Replaced use of ``StringIO.StringIO`` with ``io.StringIO``, where available
+  (Python >= 2.6).
+
+- Replaced use of ``rfc822`` stdlib module with ``email.parser``, when
+  available (Python >= 2.5).  Note that we preserve the older module's
+  collapse of excess leading whitespace on continuation lines.
+
 - Removed bogus testing dependency on ``zope.testing``.
 
 - Added tests that the "environment markers" spelled out in the approved
