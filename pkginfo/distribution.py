@@ -20,9 +20,9 @@ def _collapse_leading_ws(txt):
     return ' '.join([x.strip() for x in txt.splitlines()])
 
 try:
-    from StringIO import StringIO
-except ImportError: # Python >= 3.0
     from io import StringIO
+except ImportError: # Python < 2.6
+    from StringIO import StringIO
  
 
 HEADER_ATTRS_1_0 = ( # PEP 241
