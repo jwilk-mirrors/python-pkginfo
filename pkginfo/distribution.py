@@ -1,6 +1,6 @@
 try:
     from email.parser import Parser
-except ImportError:
+except ImportError: # Python < 2.5
     import rfc822
     def parse(fp):
         return rfc822.Message(fp)
@@ -8,7 +8,7 @@ except ImportError:
         return _collapse_leading_ws(msg.getheader(header))
     def get_all(msg, header):
         return [_collapse_leading_ws(x) for x in msg.getheaders(header)]
-else:
+else: # Python >= 2.5
     def parse(fp):
         return Parser().parse(fp)
     def get(msg, header):
@@ -20,10 +20,10 @@ def _collapse_leading_ws(txt):
     return ' '.join([x.strip() for x in txt.splitlines()])
 
 try:
-    from StringIO import StringIO
-except ImportError:
     from io import StringIO
-    
+except ImportError: # Python < 2.6
+    from StringIO import StringIO
+ 
 
 HEADER_ATTRS_1_0 = ( # PEP 241
     ('Metadata-Version', 'metadata_version', False),
