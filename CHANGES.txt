@@ -4,6 +4,9 @@ pkginfo Changelog
 Unreleased
 ----------
 
+- Preserve newlines in the ``description`` field.  Thanks to Sridhar
+  Ratnakumar for the patch.
+
 - 100% test coverage.
 
 

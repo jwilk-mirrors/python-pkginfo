@@ -6,19 +6,27 @@ except ImportError: #pragma NO COVER
     def parse(fp):
         return rfc822.Message(fp)
     def get(msg, header):
-        return _collapse_leading_ws(msg.getheader(header))
+        return _collapse_leading_ws(header, msg.getheader(header))
     def get_all(msg, header):
-        return [_collapse_leading_ws(x) for x in msg.getheaders(header)]
+        return [_collapse_leading_ws(header, x)
+                    for x in msg.getheaders(header)]
 else: # Python >= 2.5
     def parse(fp):
         return Parser().parse(fp)
     def get(msg, header):
-        return _collapse_leading_ws(msg.get(header))
+        return _collapse_leading_ws(header, msg.get(header))
     def get_all(msg, header):
-        return [_collapse_leading_ws(x) for x in msg.get_all(header)]
+        return [_collapse_leading_ws(header, x) for x in msg.get_all(header)]
 
-def _collapse_leading_ws(txt):
-    return ' '.join([x.strip() for x in txt.splitlines()])
+def _collapse_leading_ws(header, txt):
+    """
+    ``Description`` header must preserve newlines; all others need not
+    """
+    if header.lower() == 'description':  # preserve newlines
+        return '\n'.join([x[8:] if x.startswith(' ' * 8) else x
+                          for x in txt.strip().splitlines()])
+    else:
+        return ' '.join([x.strip() for x in txt.splitlines()])
 
 try:
     from io import StringIO
