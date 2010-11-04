@@ -1,6 +1,12 @@
 pkginfo Changelog
 =================
 
+Unreleased
+----------
+
+- 100% test coverage.
+
+
 0.6 (2010-06-01)
 ----------------
 
