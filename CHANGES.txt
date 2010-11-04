@@ -1,8 +1,8 @@
 pkginfo Changelog
 =================
 
-Unreleased
-----------
+0.7 (2010-11-04)
+----------------
 
 - Preserve newlines in the ``description`` field.  Thanks to Sridhar
   Ratnakumar for the patch.
