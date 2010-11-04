@@ -21,7 +21,7 @@ def get_metadata(path_or_module, metadata_version=None):
     if isinstance(path_or_module, ModuleType):
         try:
             return Installed(path_or_module, metadata_version)
-        except (ValueError, IOError):
+        except (ValueError, IOError): #pragma NO COVER
             pass
 
     try:
@@ -31,7 +31,7 @@ def get_metadata(path_or_module, metadata_version=None):
     else:
         try:
             return Installed(path_or_module, metadata_version)
-        except (ValueError, IOError):
+        except (ValueError, IOError): #pragma NO COVER
             pass
 
     if os.path.isfile(path_or_module):
@@ -42,11 +42,11 @@ def get_metadata(path_or_module, metadata_version=None):
 
         try:
             return BDist(path_or_module, metadata_version)
-        except (ValueError, IOError):
+        except (ValueError, IOError): #pragma NO COVER
             pass
 
     if os.path.isdir(path_or_module):
         try:
             return Develop(path_or_module, metadata_version)
-        except (ValueError, IOError):
+        except (ValueError, IOError): #pragma NO COVER
             pass
