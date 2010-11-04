@@ -88,3 +88,9 @@ if sys.version_info >= (2, 6):  # no PKG-INFO installed in earlier Pythons
             finally:
                 warnings.filters[:] = old_filters
 
+        def test_ctor_w_egg_info_as_file(self):
+            import pkginfo.tests.funny
+            installed = self._makeOne('pkginfo.tests.funny')
+            self.assertEqual(installed.metadata_version, '1.0')
+            self.assertEqual(installed.package, pkginfo.tests.funny)
+            self.assertEqual(installed.package_name, 'pkginfo.tests.funny')
