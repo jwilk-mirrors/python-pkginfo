@@ -40,7 +40,6 @@ if sys.version_info >= (2, 6):  # no PKG-INFO installed in earlier Pythons
         def test_ctor_w_package_no_PKG_INFO(self):
             import types
             import warnings
-            from pkginfo.tests import _checkSample
             old_filters = warnings.filters[:]
             warnings.filterwarnings('ignore')
             try:
@@ -78,8 +77,14 @@ if sys.version_info >= (2, 6):  # no PKG-INFO installed in earlier Pythons
             _checkSample(self, installed)
 
         def test_ctor_w_invalid_name(self):
-            installed = self._makeOne('nonesuch')
-            self.assertEqual(installed.package, None)
-            self.assertEqual(installed.package_name, 'nonesuch')
-            self.assertEqual(installed.metadata_version, None)
+            import warnings
+            old_filters = warnings.filters[:]
+            warnings.filterwarnings('ignore')
+            try:
+                installed = self._makeOne('nonesuch')
+                self.assertEqual(installed.package, None)
+                self.assertEqual(installed.package_name, 'nonesuch')
+                self.assertEqual(installed.metadata_version, None)
+            finally:
+                warnings.filters[:] = old_filters
 
