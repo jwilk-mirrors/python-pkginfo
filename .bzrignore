@@ -3,3 +3,4 @@
 ./docs/.build/doctrees
 ./build
 ./dist
+.coverage
