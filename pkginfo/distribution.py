@@ -1,6 +1,7 @@
 try:
     from email.parser import Parser
-except ImportError: # Python < 2.5
+except ImportError: #pragma NO COVER
+    # Python < 2.5
     import rfc822
     def parse(fp):
         return rfc822.Message(fp)
@@ -21,7 +22,8 @@ def _collapse_leading_ws(txt):
 
 try:
     from io import StringIO
-except ImportError: # Python < 2.6
+except ImportError: #pragma NO COVER
+    # Python < 2.6
     from StringIO import StringIO
  
 

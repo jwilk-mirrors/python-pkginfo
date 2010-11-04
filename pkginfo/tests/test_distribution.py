@@ -40,6 +40,16 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(sdist.obsoletes_dist, ())
         self.assertEqual(sdist.project_urls, ())
 
+    def test_extractMetadata_raises_NotImplementedError(self):
+        # 'extractMetadata' calls 'read', which subclasses must override.
+        dist = self._makeOne(None)
+        self.assertRaises(NotImplementedError, dist.extractMetadata)
+
+    def test_read_raises_NotImplementedError(self):
+        # Subclasses must override 'read'.
+        dist = self._makeOne(None)
+        self.assertRaises(NotImplementedError, dist.read)
+
     def test_parse_Metadata_Version_1_0(self):
         from pkginfo.distribution import HEADER_ATTRS_1_0
         dist = self._makeOne(None)
