@@ -24,6 +24,24 @@ class BDistTests(unittest.TestCase):
                          ])
         self.assertEqual(list(bdist.supported_platforms), [])
 
+    def test_ctor_w_bogus_filename(self):
+        import os
+        d, _ = os.path.split(__file__)
+        filename = '%s/../../docs/examples/nonesuch-0.1-py2.6.egg' % d
+        self.assertRaises(ValueError, self._makeOne, filename)
+
+    def test_ctor_w_non_egg(self):
+        import os
+        d, _ = os.path.split(__file__)
+        filename = '%s/../../docs/examples/mypackage-0.1.zip' % d
+        self.assertRaises(ValueError, self._makeOne, filename)
+
+    def test_ctor_wo_PKG_INFO(self):
+        import os
+        d, _ = os.path.split(__file__)
+        filename = '%s/../../docs/examples/nopkginfo-0.1.egg' % d
+        self.assertRaises(ValueError, self._makeOne, filename)
+
     def test_ctor_w_egg(self):
         import os
         d, _ = os.path.split(__file__)
