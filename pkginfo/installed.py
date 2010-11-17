@@ -25,6 +25,8 @@ class Installed(Distribution):
     def read(self):
         if self.package is not None:
             package = self.package.__package__
+            if package is None:
+                package = self.package.__name__
             pattern = '%s*.egg-info' % package
             file = getattr(self.package, '__file__', None)
             if file is not None:

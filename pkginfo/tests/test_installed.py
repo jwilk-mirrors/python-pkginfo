@@ -37,6 +37,13 @@ if sys.version_info >= (2, 6):  # no PKG-INFO installed in earlier Pythons
             self.assertEqual(installed.metadata_version, '1.0')
             _checkSample(self, installed)
 
+        def test_ctor_w_no___package___falls_back_to___name__(self):
+            import wsgiref
+            installed = self._makeOne(wsgiref)
+            self.assertEqual(installed.package, wsgiref)
+            self.assertEqual(installed.package_name, 'wsgiref')
+            self.assertEqual(installed.metadata_version, '1.0')
+
         def test_ctor_w_package_no_PKG_INFO(self):
             import types
             import warnings
