@@ -29,7 +29,7 @@ def _collapse_leading_ws(header, txt):
         return ' '.join([x.strip() for x in txt.splitlines()])
 
 try:
-    from io import StringIO
+    from io import BytesIO as StringIO
 except ImportError: #pragma NO COVER
     # Python < 2.6
     from StringIO import StringIO

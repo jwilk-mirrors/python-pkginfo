@@ -4,6 +4,9 @@ pkginfo Changelog
 After 0.7 (unreleased)
 ----------------------
 
+- Work around Python 2.7's breakage of StringIO.  Fixes
+  https://bugs.launchpad.net/pkginfo/+bug/733827
+
 - Fixed bug in introspection of installed packages missing the
   ``__package__`` attribute.
   
