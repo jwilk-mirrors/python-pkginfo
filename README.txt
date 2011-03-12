@@ -1,5 +1,5 @@
-pkginfo README
-==============
+``pkginfo`` README
+==================
 
 This package provides an API for querying the distutils metadata written in
 the ``PKG-INFO`` file inside a source distriubtion (an ``sdist``), or into

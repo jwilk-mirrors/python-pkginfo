@@ -1,8 +1,9 @@
-pkginfo Changelog
-=================
+``pkginfo`` Changelog
+=====================
 
-After 0.7 (unreleased)
-----------------------
+
+0.8 (2011-03-12)
+----------------
 
 - Work around Python 2.7's breakage of StringIO.  Fixes
   https://bugs.launchpad.net/pkginfo/+bug/733827
