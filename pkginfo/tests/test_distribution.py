@@ -363,3 +363,13 @@ class DistributionTests(unittest.TestCase):
                          ['Bug tracker, http://bugs.example.com/grail',
                           'Repository, http://svn.example.com/grail',
                          ])
+
+    def test_parse_given_unicode(self):
+        dist = self._makeOne()
+        dist.parse(u'Metadata-Version: 1.0\nName: lp722928_c3') # no raise
+
+    def test_parse_given_non_encodable_unicode(self):
+        dist = self._makeOne()
+        self.assertRaises(UnicodeEncodeError, dist.parse,
+                            u'Metadata-Version: 1.0\nName: lp722928_c3\n'
+                            u'Description: tr\u00E9s mal')

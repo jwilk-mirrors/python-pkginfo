@@ -116,6 +116,8 @@ class Distribution(object):
         return HEADER_ATTRS.get(self.metadata_version, [])
 
     def parse(self, data):
+        if isinstance(data, unicode):
+            data = str(data)  # caller has to give us encodable text.
         fp = StringIO(data)
         msg = parse(fp)
 
