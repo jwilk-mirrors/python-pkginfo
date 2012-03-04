@@ -1,0 +1,4 @@
+THIS IS NOT A PYTHON PACKAGE!!!!
+
+It is meant to be added to sys.path for testing introspection of namespace
+packages installed via setuptools.
