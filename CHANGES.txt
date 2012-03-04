@@ -5,6 +5,10 @@
 After 0.8 (unreleased)
 ----------------------
 
+- Fix introspection of installed namespace packages.
+  They may be installed as eggs or via dist-installed 'egg-info' files.
+  https://bugs.launchpad.net/pkginfo/+bug/934311
+
 - Avoid a regression in 0.8 under Python 2.6 / 2.7 when parsing unicode.
   https://bugs.launchpad.net/pkginfo/+bug/733827/comments/3
 

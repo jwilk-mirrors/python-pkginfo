@@ -101,3 +101,40 @@ if sys.version_info >= (2, 6):  # no PKG-INFO installed in earlier Pythons
             self.assertEqual(installed.metadata_version, '1.0')
             self.assertEqual(installed.package, pkginfo.tests.funny)
             self.assertEqual(installed.package_name, 'pkginfo.tests.funny')
+
+        def test_namespaced_pkg_installed_via_setuptools(self):
+            import os
+            import sys
+            where, _ = os.path.split(__file__)
+            wonky = os.path.join(where, 'wonky')
+            oldpath = sys.path[:]
+            try:
+                sys.path.append(wonky)
+                import namespaced.wonky
+                installed = self._makeOne('namespaced.wonky')
+                self.assertEqual(installed.metadata_version, '1.0')
+                self.assertEqual(installed.package, namespaced.wonky)
+                self.assertEqual(installed.package_name, 'namespaced.wonky')
+            finally:
+                sys.path[:] = oldpath
+                sys.modules.pop('namespaced.wonky', None)
+                sys.modules.pop('namespaced', None)
+
+        def test_namespaced_pkg_installed_via_pth(self):
+            # E.g., installed by a Linux distro
+            import os
+            import sys
+            where, _ = os.path.split(__file__)
+            manky = os.path.join(where, 'manky')
+            oldpath = sys.path[:]
+            try:
+                sys.path.append(manky)
+                import namespaced.manky
+                installed = self._makeOne('namespaced.manky')
+                self.assertEqual(installed.metadata_version, '1.0')
+                self.assertEqual(installed.package, namespaced.manky)
+                self.assertEqual(installed.package_name, 'namespaced.manky')
+            finally:
+                sys.path[:] = oldpath
+                sys.modules.pop('namespaced.manky', None)
+                sys.modules.pop('namespaced', None)
