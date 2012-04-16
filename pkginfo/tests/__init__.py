@@ -1,5 +1,4 @@
 # requirements
-import pkg_resources
 
 def additional_tests():
     import doctest
@@ -17,9 +16,14 @@ def additional_tests():
 
 
 def _checkSample(testcase, installed):
-    version = pkg_resources.require('pkginfo')[0].version
+    try:
+        import pkg_resources
+    except ImportError: # no setuptools :(
+        pass
+    else:
+        version = pkg_resources.require('pkginfo')[0].version
+        testcase.assertEqual(installed.version, version)
     testcase.assertEqual(installed.name, 'pkginfo')
-    testcase.assertEqual(installed.version, version)
     testcase.assertEqual(installed.keywords,
                         'distribution sdist installed metadata' )
     testcase.assertEqual(list(installed.supported_platforms), [])
