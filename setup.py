@@ -2,13 +2,14 @@ import os
 
 try:
     from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+    extras = {}
+else:
     extras = {
         'test_suite': 'pkginfo.tests',
         'zip_safe': False,
     }
-except ImportError:
-    from distutils.core import setup
-    extras = {}
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.txt')).read()
