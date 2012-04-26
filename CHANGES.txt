@@ -2,8 +2,8 @@
 =====================
 
 
-After 0.8 (unreleased)
-----------------------
+0.9 (2012-04-25)
+----------------
 
 - Fix introspection of installed namespace packages.
   They may be installed as eggs or via dist-installed 'egg-info' files.
