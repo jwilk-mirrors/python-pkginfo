@@ -31,10 +31,11 @@ if sys.version_info >= (2, 6):  # no PKG-INFO installed in earlier Pythons
         def test_ctor_w_package(self):
             import pkginfo
             from pkginfo.tests import _checkSample
+            EXPECTED =  sys.version_info >= (2, 7) and '1.1' or '1.0'
             installed = self._makeOne(pkginfo)
             self.assertEqual(installed.package, pkginfo)
             self.assertEqual(installed.package_name, 'pkginfo')
-            self.assertEqual(installed.metadata_version, '1.0')
+            self.assertEqual(installed.metadata_version, EXPECTED)
             _checkSample(self, installed)
 
         def test_ctor_w_no___package___falls_back_to___name__(self):
@@ -68,8 +69,9 @@ if sys.version_info >= (2, 6):  # no PKG-INFO installed in earlier Pythons
         def test_ctor_w_name(self):
             import pkginfo
             from pkginfo.tests import _checkSample
+            EXPECTED =  sys.version_info >= (2, 7) and '1.1' or '1.0'
             installed = self._makeOne('pkginfo')
-            self.assertEqual(installed.metadata_version, '1.0')
+            self.assertEqual(installed.metadata_version, EXPECTED)
             self.assertEqual(installed.package, pkginfo)
             self.assertEqual(installed.package_name, 'pkginfo')
             _checkSample(self, installed)

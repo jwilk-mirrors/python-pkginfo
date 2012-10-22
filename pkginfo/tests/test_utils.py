@@ -92,10 +92,11 @@ class Test_get_metadata(unittest.TestCase):
     def test_w_module(self):
         import sys
         if sys.version_info >= (2, 6):
+            EXPECTED =  sys.version_info >= (2, 7) and '1.1' or '1.0'
             import pkginfo
             from pkginfo.tests import _checkSample
             dist = self._callFUT(pkginfo)
-            self.assertEqual(dist.metadata_version, '1.0')
+            self.assertEqual(dist.metadata_version, EXPECTED)
             _checkSample(self, dist)
 
     def test_w_module_and_metadata_version(self):
@@ -112,9 +113,10 @@ class Test_get_metadata(unittest.TestCase):
     def test_w_package_name(self):
         import sys
         if sys.version_info >= (2, 6):
+            EXPECTED =  sys.version_info >= (2, 7) and '1.1' or '1.0'
             from pkginfo.tests import _checkSample
             dist = self._callFUT('pkginfo')
-            self.assertEqual(dist.metadata_version, '1.0')
+            self.assertEqual(dist.metadata_version, EXPECTED)
             _checkSample(self, dist)
 
     def test_w_package_name_and_metadata_version(self):
