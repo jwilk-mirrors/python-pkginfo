@@ -4,6 +4,8 @@
 Unreleased
 ----------
 
+- Suppress resource warning leaks reported against clients.
+
 - Fix 'commandline' module under Py3k.
 
 1.0b1 (2012-12-28)
