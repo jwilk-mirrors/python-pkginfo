@@ -1,4 +1,9 @@
 try:
+    STRING_TYPES = (str, unicode)
+except NameError: #pragma NO COVER Python >= 3.0
+    STRING_TYPES = (str,)
+
+try:
     u = unicode
 except NameError: #pragma NO COVER Python >= 3.0
     u = str

@@ -4,11 +4,12 @@ import sys
 import warnings
 
 from pkginfo.distribution import Distribution
+from pkginfo._compat import STRING_TYPES
 
 class Installed(Distribution):
 
     def __init__(self, package, metadata_version=None):
-        if isinstance(package, basestring):
+        if isinstance(package, STRING_TYPES):
             self.package_name = package
             try:
                 __import__(package)
