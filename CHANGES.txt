@@ -1,8 +1,8 @@
 ``pkginfo`` Changelog
 =====================
 
-Unreleased
-----------
+1.0b2 (2012-12-28)
+------------------
 
 - Suppress resource warning leaks reported against clients.
 
