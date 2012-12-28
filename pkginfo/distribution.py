@@ -1,4 +1,9 @@
 from email.parser import Parser
+
+from pkginfo._compat import StringIO
+from pkginfo._compat import must_encode
+
+
 def parse(fp):
     return Parser().parse(fp)
 def get(msg, header):
@@ -16,7 +21,6 @@ def _collapse_leading_ws(header, txt):
     else:
         return ' '.join([x.strip() for x in txt.splitlines()])
 
-from io import BytesIO
 
 HEADER_ATTRS_1_0 = ( # PEP 241
     ('Metadata-Version', 'metadata_version', False),
@@ -99,9 +103,8 @@ class Distribution(object):
         return HEADER_ATTRS.get(self.metadata_version, [])
 
     def parse(self, data):
-        if isinstance(data, unicode):
-            data = str(data)  # caller has to give us encodable text.
-        fp = BytesIO(data)
+        data = must_encode(data) # caller has to give us encodable text.
+        fp = StringIO(data)
         msg = parse(fp)
 
         if 'Metadata-Version' in msg and self.metadata_version is None:
