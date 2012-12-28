@@ -35,7 +35,7 @@ class SDist(Distribution):
         for path in [x[1] for x in schwarz]:
             candidate = '/'.join(path)
             data = read_file(candidate)
-            if 'Metadata-Version' in data:
+            if b'Metadata-Version' in data:
                 return data
 
         raise ValueError('No PKG-INFO in archive: %s' % fqn)
