@@ -32,6 +32,7 @@ def _checkClassifiers(testcase, installed):
 def _defaultMetadataVersion():
     import platform
     import sys
-    if platform.python_implementation() == 'PyPy':
-        return '1.0'
-    return  sys.version_info >= (2, 7) and '1.1' or '1.0'
+    if platform.python_implementation() != 'PyPy':
+        if sys.version_info[:2] > (2, 6):
+            return '1.1'
+    return '1.0'
