@@ -4,6 +4,8 @@
 Unreleased
 ----------
 
+- Add support for Python 3.2, including testing it under ``tox``.
+
 - Add support for PyPy, including testing it under ``tox``.
 
 - Test supported Python versions under ``tox``.
