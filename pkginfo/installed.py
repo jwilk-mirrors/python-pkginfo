@@ -48,5 +48,6 @@ class Installed(Distribution):
                     else:
                         path = candidate
                     if os.path.exists(path):
-                        return open(path).read()
+                        with open(path) as f:
+                            return f.read()
         warnings.warn('No PKG-INFO found for package: %s' % self.package_name)

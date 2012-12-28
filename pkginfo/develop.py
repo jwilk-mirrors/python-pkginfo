@@ -22,5 +22,6 @@ class Develop(Distribution):
             if os.path.isdir(candidate):
                 path = os.path.join(candidate, 'PKG-INFO')
                 if os.path.exists(path):
-                    return open(path).read()
+                    with open(path) as f:
+                        return f.read()
         warnings.warn('No PKG-INFO found for path: %s' % self.path)
