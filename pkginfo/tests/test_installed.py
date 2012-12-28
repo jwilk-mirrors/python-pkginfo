@@ -36,13 +36,18 @@ class InstalledTests(unittest.TestCase):
         _checkSample(self, installed)
 
     def test_ctor_w_no___package___falls_back_to___name__(self):
+        import sys
         import wsgiref
         installed = self._makeOne(wsgiref)
         self.assertEqual(installed.package, wsgiref)
         self.assertEqual(installed.package_name, 'wsgiref')
-        self.assertEqual(installed.metadata_version, '1.0')
+        if sys.version_info[:2] == (3, 3):
+            self.assertEqual(installed.metadata_version, None)
+        else:
+            self.assertEqual(installed.metadata_version, '1.0')
 
     def test_ctor_w_package_no_PKG_INFO(self):
+        import sys
         import types
         import warnings
         old_filters = warnings.filters[:]
@@ -51,7 +56,10 @@ class InstalledTests(unittest.TestCase):
             installed = self._makeOne(types)
             self.assertEqual(installed.package, types)
             self.assertEqual(installed.package_name, 'types')
-            self.assertEqual(installed.metadata_version, None)
+            if sys.version_info[:2] == (3, 3):
+                self.assertEqual(installed.metadata_version, '1.1')
+            else:
+                self.assertEqual(installed.metadata_version, None)
         finally:
             warnings.filters[:] = old_filters
 
