@@ -105,7 +105,7 @@ class Simple(Base):
         for field in self._fields or list(meta):
             value = getattr(meta, field)
             if (not self._skip) or (value is not None and value!=()):
-                print "%s: %s" % (field, value)
+                print("%s: %s" % (field, value))
 
 class SingleLine(Base):
     _fields = None
@@ -125,7 +125,7 @@ class SingleLine(Base):
             else:
                 value = str(value)
             values.append(value)
-        print self._item_delim.join(values)
+        print(self._item_delim.join(values))
 
 class CSV(Base):
     _wrote_headers = False
