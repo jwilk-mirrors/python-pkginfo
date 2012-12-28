@@ -1,22 +1,10 @@
-try:
-    from email.parser import Parser
-except ImportError: #pragma NO COVER
-    # Python < 2.5
-    import rfc822
-    def parse(fp):
-        return rfc822.Message(fp)
-    def get(msg, header):
-        return _collapse_leading_ws(header, msg.getheader(header))
-    def get_all(msg, header):
-        return [_collapse_leading_ws(header, x)
-                    for x in msg.getheaders(header)]
-else: # Python >= 2.5
-    def parse(fp):
-        return Parser().parse(fp)
-    def get(msg, header):
-        return _collapse_leading_ws(header, msg.get(header))
-    def get_all(msg, header):
-        return [_collapse_leading_ws(header, x) for x in msg.get_all(header)]
+from email.parser import Parser
+def parse(fp):
+    return Parser().parse(fp)
+def get(msg, header):
+    return _collapse_leading_ws(header, msg.get(header))
+def get_all(msg, header):
+    return [_collapse_leading_ws(header, x) for x in msg.get_all(header)]
 
 def _collapse_leading_ws(header, txt):
     """
@@ -28,12 +16,7 @@ def _collapse_leading_ws(header, txt):
     else:
         return ' '.join([x.strip() for x in txt.splitlines()])
 
-try:
-    from io import BytesIO as StringIO
-except ImportError: #pragma NO COVER
-    # Python < 2.6
-    from StringIO import StringIO
- 
+from io import BytesIO
 
 HEADER_ATTRS_1_0 = ( # PEP 241
     ('Metadata-Version', 'metadata_version', False),
@@ -118,7 +101,7 @@ class Distribution(object):
     def parse(self, data):
         if isinstance(data, unicode):
             data = str(data)  # caller has to give us encodable text.
-        fp = StringIO(data)
+        fp = BytesIO(data)
         msg = parse(fp)
 
         if 'Metadata-Version' in msg and self.metadata_version is None:
