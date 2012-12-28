@@ -39,3 +39,8 @@ def _checkClassifiers(testcase, installed):
       'Topic :: Software Development :: Libraries :: Python Modules',
       'Topic :: System :: Software Distribution',
     ])
+
+
+def _defaultMetadataVersion():
+    import sys
+    return  sys.version_info >= (2, 7) and '1.1' or '1.0'
