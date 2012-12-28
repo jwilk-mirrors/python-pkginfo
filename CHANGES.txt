@@ -4,6 +4,8 @@
 Unreleased
 ----------
 
+- Add support for PyPy, including testing it under ``tox``.
+
 - Test supported Python versions under ``tox``.
 
 - Drop support for Python 2.5.
