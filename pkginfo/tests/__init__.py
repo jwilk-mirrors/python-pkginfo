@@ -38,9 +38,14 @@ def _checkClassifiers(testcase, installed):
       'Programming Language :: Python :: 2.7',
       'Topic :: Software Development :: Libraries :: Python Modules',
       'Topic :: System :: Software Distribution',
+      'Programming Language :: Python :: Implementation :: CPython',
+      'Programming Language :: Python :: Implementation :: PyPy',
     ])
 
 
 def _defaultMetadataVersion():
+    import platform
     import sys
+    if platform.python_implementation() == 'PyPy':
+        return '1.0'
     return  sys.version_info >= (2, 7) and '1.1' or '1.0'
