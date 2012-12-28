@@ -45,7 +45,7 @@ class IndexTests(unittest.TestCase):
         index = self._makeOne()
         dummy = self._makeDummy()
         index['dummy-1.0'] = dummy
-        self.failUnless(index['dummy-1.0'] is dummy)
+        self.assertTrue(index['dummy-1.0'] is dummy)
         self.assertEqual(len(index), 1)
         self.assertEqual(len(index.keys()), 1)
         self.assertEqual(list(index.keys())[0], 'dummy-1.0')
@@ -66,7 +66,7 @@ class IndexTests(unittest.TestCase):
         index = self._makeOne()
         dummy = self._makeDummy()
         index.add(dummy)
-        self.failUnless(index['dummy-1.0'] is dummy)
+        self.assertTrue(index['dummy-1.0'] is dummy)
         self.assertEqual(len(index), 1)
         self.assertEqual(len(index.keys()), 1)
         self.assertEqual(list(index.keys())[0], 'dummy-1.0')
