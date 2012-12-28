@@ -4,6 +4,8 @@
 Unreleased
 ----------
 
+- Drop support for Python 2.5.
+
 - Add a ``setup.py dev`` alias:  runs ``setup.py develop`` and installs
   testing extras (``nose`` and ``coverage``).
 
