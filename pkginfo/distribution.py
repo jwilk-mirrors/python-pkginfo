@@ -1,7 +1,7 @@
 from email.parser import Parser
 
 from pkginfo._compat import StringIO
-from pkginfo._compat import must_encode
+from pkginfo._compat import must_decode
 
 
 def parse(fp):
@@ -103,8 +103,7 @@ class Distribution(object):
         return HEADER_ATTRS.get(self.metadata_version, [])
 
     def parse(self, data):
-        data = must_encode(data) # caller has to give us encodable text.
-        fp = StringIO(data)
+        fp = StringIO(must_decode(data))
         msg = parse(fp)
 
         if 'Metadata-Version' in msg and self.metadata_version is None:
