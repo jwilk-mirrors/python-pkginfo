@@ -1,6 +1,12 @@
 ``pkginfo`` Changelog
 =====================
 
+Unreleased
+----------
+
+- Add a ``setup.py dev`` alias:  runs ``setup.py develop`` and installs
+  testing extras (``nose`` and ``coverage``).
+
 0.9.1 (2012-10-22)
 ------------------
 

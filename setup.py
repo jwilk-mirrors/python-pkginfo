@@ -9,6 +9,9 @@ else:
     extras = {
         'test_suite': 'pkginfo.tests',
         'zip_safe': False,
+        'extras_require': {
+            'testing': ['nose', 'coverage'],
+        },
     }
 
 here = os.path.abspath(os.path.dirname(__file__))
