@@ -3,7 +3,6 @@ from types import ModuleType
 
 from pkginfo.bdist import BDist
 from pkginfo.develop import Develop
-from pkginfo.distribution import Distribution
 from pkginfo.installed import Installed
 from pkginfo.sdist import SDist
 
