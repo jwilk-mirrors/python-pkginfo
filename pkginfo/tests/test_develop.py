@@ -14,9 +14,17 @@ class DevelopTests(unittest.TestCase):
         develop = self._makeOne('.')
         _checkSample(self, develop)
 
+    def test_ctor_w_path_nested_egg_info(self):
+        import os
+        dir, name = os.path.split(__file__)
+        subdir = os.path.join(dir, 'sneaky')
+        develop = self._makeOne(subdir)
+        self.assertEqual(develop.metadata_version, '1.0')
+        self.assertEqual(develop.name, 'namespaced.sneaky')
+        self.assertEqual(develop.version, '0.1')
+
     def test_ctor_w_invalid_path(self):
         import warnings 
-        from pkginfo.tests import _checkSample
         old_filters = warnings.filters[:]
         warnings.filterwarnings('ignore')
         try:
