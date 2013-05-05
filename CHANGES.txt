@@ -1,6 +1,11 @@
 ``pkginfo`` Changelog
 =====================
 
+Unreleased
+----------
+
+- Add support for "unpacked SDists" (thanks to Mike Lundy for the patch).
+
 1.0 (2013-05-05)
 ----------------
 

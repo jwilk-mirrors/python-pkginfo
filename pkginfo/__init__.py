@@ -4,4 +4,5 @@ from pkginfo.distribution import Distribution
 from pkginfo.index import Index
 from pkginfo.installed import Installed
 from pkginfo.sdist import SDist
+from pkginfo.sdist import UnpackedSDist
 from pkginfo.utils import get_metadata

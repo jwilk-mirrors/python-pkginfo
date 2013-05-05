@@ -1,3 +1,5 @@
+import shutil
+import tempfile
 import unittest
 
 class SDistTests(unittest.TestCase):
@@ -86,3 +88,55 @@ class SDistTests(unittest.TestCase):
         self.assertEqual(sdist.metadata_version, '1.1')
         self._checkSample(sdist, filename)
         self._checkClassifiers(sdist)
+
+
+class UnpackedMixin(object):
+    def setUp(self):
+        super(UnpackedMixin, self).setUp()
+        self.__tmpdir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.__tmpdir)
+        super(UnpackedMixin, self).tearDown()
+
+    def _getTargetClass(self):
+        from pkginfo.sdist import UnpackedSDist
+        return UnpackedSDist
+
+    def _getTopDirectory(self):
+        import os
+        topnames = os.listdir(self.__tmpdir)
+        if len(topnames) == 1:
+            return os.path.join(self.__tmpdir, topnames[0])
+        else:
+            return self.__tmpdir
+
+    def _getLoadFilename(self):
+        return self._getTopDirectory()
+
+    def _makeOne(self, filename=None, metadata_version=None):
+
+        archive, _, _ = self._getTargetClass()._get_archive(filename)
+        try:
+            archive.extractall(self.__tmpdir)
+        finally:
+            archive.close()
+
+        load_filename = self._getLoadFilename()
+
+        if metadata_version is not None:
+            return self._getTargetClass()(load_filename, metadata_version)
+        return self._getTargetClass()(load_filename)
+
+    def _checkSample(self, sdist, filename):
+        filename = self._getTopDirectory()
+        super(UnpackedMixin, self)._checkSample(sdist, filename)
+
+
+class UnpackedSDistGivenDirectoryTests(UnpackedMixin, SDistTests):
+    pass
+
+class UnpackedSDistGivenFileSDistTests(UnpackedMixin, SDistTests):
+    def _getLoadFilename(self):
+        import os
+        return os.path.join(self._getTopDirectory(), 'setup.py')

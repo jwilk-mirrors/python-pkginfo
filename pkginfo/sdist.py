@@ -11,9 +11,8 @@ class SDist(Distribution):
         self.metadata_version = metadata_version
         self.extractMetadata()
 
-    def read(self):
-        fqn = os.path.abspath(
-                os.path.normpath(self.filename))
+    @classmethod
+    def _get_archive(cls, fqn):
         if not os.path.exists(fqn):
             raise ValueError('No such file: %s' % fqn)
 
@@ -30,6 +29,15 @@ class SDist(Distribution):
         else:
             raise ValueError('Not a known archive format: %s' % fqn)
 
+        return archive, names, read_file
+
+
+    def read(self):
+        fqn = os.path.abspath(
+                os.path.normpath(self.filename))
+
+        archive, names, read_file = self._get_archive(fqn)
+
         try:
             tuples = [x.split('/') for x in names if 'PKG-INFO' in x]
             schwarz = sorted([(len(x), x) for x in tuples])
@@ -42,3 +50,24 @@ class SDist(Distribution):
             archive.close()
 
         raise ValueError('No PKG-INFO in archive: %s' % fqn)
+
+
+class UnpackedSDist(SDist):
+    def __init__(self, filename, metadata_version=None):
+        if os.path.isdir(filename):
+            pass
+        elif os.path.isfile(filename):
+            filename = os.path.dirname(filename)
+        else:
+            raise ValueError('No such file: %s' % filename)
+
+        super(UnpackedSDist, self).__init__(
+                filename, metadata_version=metadata_version)
+
+    def read(self):
+        try:
+            with open(os.path.join(self.filename, 'PKG-INFO')) as f:
+                return f.read()
+        except Exception as e:
+            raise ValueError('Could not load %s as an unpacked sdist: %s'
+                                % (self.filename, e))

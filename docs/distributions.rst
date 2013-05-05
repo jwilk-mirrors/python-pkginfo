@@ -10,6 +10,8 @@ binary distributions, installed pakcages, and development checkouts.
   >>> from pkginfo import Distribution
   >>> from pkginfo import SDist
   >>> assert issubclass(SDist, Distribution)
+  >>> from pkginfo import UnpackedSDist
+  >>> assert issubclass(UnpackedSDist, SDist)
   >>> from pkginfo import BDist
   >>> assert issubclass(BDist, Distribution)
   >>> from pkginfo import Installed
@@ -62,6 +64,41 @@ with no occurences in the ``PKG-INFO`` file will map onto an empty sequence:
 See `Metadata Versions <metadata.html>`_ for an example with a non-empty,
 "multiple-use" field.
 
+Introspecting Unpacked Source Distributions
+-------------------------------------------
+
+You can also introspect a previously-unpacked package with ``UnpackedSDist``
+either by passing it the path to the unpacked package, or by passing it the
+setup.py at the top level:
+
+.. doctest::
+
+  >>> mypackage = UnpackedSDist('docs/examples/mypackage-0.1')
+  >>> print mypackage.name
+  mypackage
+  >>> myotherpackage = UnpackedSDist('docs/examples/mypackage-0.1/setup.py')
+  >>> print myotherpackage.name
+  mypackage
+
+``UnpackedSDist`` objects are most useful in conjuction with distutils to
+produce sdists that want complex behavior for determining what metadata to use;
+these sdists normally break when installed with ``pip``, because metadata in an
+sdist is regenerated when pip installed. You can achieve this in your
+`setup.py` as follows:
+
+.. code::
+
+  >>> from setuptools import dist, setup
+  >>> dist.Distribution(dict(setup_requires='pkginfo'))
+  >>> from pkginfo import UnpackedSDist
+
+  >>> try:
+  ...     d = UnpackedSDist(__file__)
+  ...     VERSION = d.version
+  ... except ValueError:
+  ...     VERSION = (version_from_source_control() or
+  ...                os.getenv('VERSION', '1.0'))
+  >>> setup(name='mypackage', version=VERSION)
 
 Introspecting Binary Distributions
 ----------------------------------
