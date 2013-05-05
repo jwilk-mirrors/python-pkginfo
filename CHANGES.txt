@@ -4,8 +4,8 @@
 Unreleased
 ----------
 
-- Add support for "develop" packages which keep their ``*.egg-info`` in a
-  subdirectory.  See https://bugs.launchpad.net/pkginfo/+bug/919147.
+- Support "develop" packages which keep their ``*.egg-info`` in a subdirectory.
+  See https://bugs.launchpad.net/pkginfo/+bug/919147.
 
 - Add support for "unpacked SDists" (thanks to Mike Lundy for the patch).
 
