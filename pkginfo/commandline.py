@@ -23,7 +23,6 @@ import os
 import sys
 
 from pkginfo import get_metadata
-from pkginfo.distribution import HEADER_ATTRS
 
 
 def _parse_options():

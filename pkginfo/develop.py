@@ -1,6 +1,5 @@
 import glob
 import os
-import sys
 import warnings
 
 from pkginfo.distribution import Distribution
