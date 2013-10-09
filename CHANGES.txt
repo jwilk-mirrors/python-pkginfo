@@ -1,6 +1,11 @@
 ``pkginfo`` Changelog
 =====================
 
+1.1 (2013-10-09)
+----------------
+
+- Fix tests to pass with current PyPy releases.
+
 1.1b1 (2013-05-05)
 ------------------
 
