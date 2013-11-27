@@ -14,6 +14,8 @@ binary distributions, installed pakcages, and development checkouts.
   >>> assert issubclass(UnpackedSDist, SDist)
   >>> from pkginfo import BDist
   >>> assert issubclass(BDist, Distribution)
+  >>> from pkginfo import Wheel
+  >>> assert issubclass(Wheel, Distribution)
   >>> from pkginfo import Installed
   >>> assert issubclass(Installed, Distribution)
   >>> from pkginfo import Develop
@@ -109,6 +111,18 @@ generated via ``setup.py bdist_egg``.
 .. doctest::
 
   >>> mypackage = BDist('docs/examples/mypackage-0.1-py2.6.egg')
+
+After that, they have the same metadata as other ``Distribution`` objects,
+
+Introspecting Wheels
+--------------------
+
+``Wheel`` objects are created from the filename, which should have been
+generated via ``setup.py bdist_wheel``.
+
+.. doctest::
+
+  >>> mypackage = Wheel('docs/examples/mypackage-0.1-cp26-none-linux_x86_64.whl')
 
 After that, they have the same metadata as other ``Distribution`` objects,
 
