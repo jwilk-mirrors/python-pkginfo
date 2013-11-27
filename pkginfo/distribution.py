@@ -56,10 +56,13 @@ HEADER_ATTRS_1_2 = HEADER_ATTRS_1_1 + ( # PEP 345
     ('Project-URL', 'project_urls', True),
 )
 
+HEADER_ATTRS_2_0 = HEADER_ATTRS_1_2  #XXX PEP 426?
+
 HEADER_ATTRS = {
     '1.0': HEADER_ATTRS_1_0,
     '1.1': HEADER_ATTRS_1_1,
     '1.2': HEADER_ATTRS_1_2,
+    '2.0': HEADER_ATTRS_2_0,
 }
 
 class Distribution(object):

@@ -89,6 +89,25 @@ class Test_get_metadata(unittest.TestCase):
         self._checkMyPackage(dist, filename)
         self._checkClassifiers(dist)
 
+    def test_w_wheel(self):
+        import os
+        d, _ = os.path.split(__file__)
+        filename = ('%s/../../docs/examples/'
+                    'mypackage-0.1-cp26-none-linux_x86_64.whl') % d
+        dist = self._callFUT(filename)
+        self.assertEqual(dist.metadata_version, '2.0')
+        self._checkMyPackage(dist, filename)
+
+    def test_w_wheel_and_metadata_version(self):
+        import os
+        d, _ = os.path.split(__file__)
+        filename = ('%s/../../docs/examples/'
+                    'mypackage-0.1-cp26-none-linux_x86_64.whl') % d
+        dist = self._callFUT(filename, metadata_version='1.1')
+        self.assertEqual(dist.metadata_version, '1.1')
+        self._checkMyPackage(dist, filename)
+        self._checkClassifiers(dist)
+
     def test_w_module(self):
         from pkginfo.tests import _defaultMetadataVersion
         EXPECTED =  _defaultMetadataVersion()

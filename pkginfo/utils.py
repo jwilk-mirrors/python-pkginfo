@@ -5,6 +5,7 @@ from pkginfo.bdist import BDist
 from pkginfo.develop import Develop
 from pkginfo.installed import Installed
 from pkginfo.sdist import SDist
+from pkginfo.wheel import Wheel
 
 def get_metadata(path_or_module, metadata_version=None):
     """ Try to create a Distribution 'path_or_module'.
@@ -41,6 +42,11 @@ def get_metadata(path_or_module, metadata_version=None):
 
         try:
             return BDist(path_or_module, metadata_version)
+        except (ValueError, IOError): #pragma NO COVER
+            pass
+
+        try:
+            return Wheel(path_or_module, metadata_version)
         except (ValueError, IOError): #pragma NO COVER
             pass
 

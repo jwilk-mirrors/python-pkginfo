@@ -6,3 +6,4 @@ from pkginfo.installed import Installed
 from pkginfo.sdist import SDist
 from pkginfo.sdist import UnpackedSDist
 from pkginfo.utils import get_metadata
+from pkginfo.wheel import Wheel
