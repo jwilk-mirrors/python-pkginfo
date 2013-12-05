@@ -1,8 +1,8 @@
 ``pkginfo`` Changelog
 =====================
 
-Unreleased
-----------
+1.2b1 (2013-12-05)
+------------------
 
 - Added support for the "wheel" distribution format, along with minimal
   metadata 2.0 support (not including new PEP 426 JSON properties).
