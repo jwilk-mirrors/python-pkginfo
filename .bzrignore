@@ -1,6 +1,4 @@
 *.egg-info
-./docs/.build/html
-./docs/.build/doctrees
 ./build
 ./dist
 .coverage
