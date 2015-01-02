@@ -16,7 +16,10 @@ o a "develop" checkout:  in ths case,  'path' should point to a directory
 o an installed package:  in this case, 'path' should be the importable name
   of the package.
 """
-from ConfigParser import ConfigParser
+try:
+    from configparser import ConfigParser
+except ImportError:  # pragma: NO COVER
+    from ConfigParser import ConfigParser
 from csv import writer
 import optparse
 import os
@@ -25,7 +28,7 @@ import sys
 from pkginfo import get_metadata
 
 
-def _parse_options():
+def _parse_options(args=None):
     parser = optparse.OptionParser(usage=__doc__)
 
     parser.add_option("-m", "--metadata-version", default=None,
@@ -79,7 +82,7 @@ def _parse_options():
                       help="Output as INI",
                       )
 
-    options, args = parser.parse_args()
+    options, args = parser.parse_args(args)
 
     if len(args)==0:
         parser.error("Pass one or more files or directories as arguments.")
@@ -92,7 +95,7 @@ class Base(object):
         if options.fields:
             self._fields = options.fields
 
-    def finish(self):
+    def finish(self):  # pragma: NO COVER
         pass
 
 class Simple(Base):
@@ -127,19 +130,18 @@ class SingleLine(Base):
         print(self._item_delim.join(values))
 
 class CSV(Base):
-    _wrote_headers = False
+    _writer = None
     def __init__(self, options):
         super(CSV, self).__init__(options)
-        self._writer = writer(sys.stdout)
         self._sequence_delim = options.sequence_delim
 
     def __call__(self, meta):
         if self._fields is None:
             self._fields = list(meta) # first dist wins
         fields = self._fields
-        if not self._wrote_headers: # latch
+        if self._writer is None:
+            self._writer = writer(sys.stdout)
             self._writer.writerow(fields)
-            self._wrote_headers = True
         values = []
         for field in fields:
             value = getattr(meta, field)
@@ -170,7 +172,7 @@ class INI(Base):
             self._parser.set(section, field, value)
 
     def finish(self):
-        self._parser.write(sys.stdout)
+        self._parser.write(sys.stdout)  # pragma: NO COVER
 
 _FORMATTERS = {
     'simple': Simple,
@@ -179,10 +181,10 @@ _FORMATTERS = {
     'ini': INI,
 }
 
-def main():
+def main(args=None):
     """Entry point for pkginfo tool
     """
-    options, paths = _parse_options()
+    options, paths = _parse_options(args)
     format = getattr(options, 'output', 'simple')
     formatter = _FORMATTERS[format](options)
 
