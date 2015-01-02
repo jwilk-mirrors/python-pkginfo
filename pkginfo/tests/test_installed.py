@@ -14,15 +14,11 @@ class InstalledTests(unittest.TestCase):
     def test_ctor_w_package_no___file__(self):
         import sys
         import warnings
-        old_filters = warnings.filters[:]
-        warnings.filterwarnings('ignore')
-        try:
+        with warnings.catch_warnings(record=True):
             installed = self._makeOne(sys)
             self.assertEqual(installed.package, sys)
             self.assertEqual(installed.package_name, 'sys')
             self.assertEqual(installed.metadata_version, None)
-        finally:
-            warnings.filters[:] = old_filters
 
     def test_ctor_w_package(self):
         import pkginfo
@@ -38,30 +34,28 @@ class InstalledTests(unittest.TestCase):
     def test_ctor_w_no___package___falls_back_to___name__(self):
         import sys
         import wsgiref
-        installed = self._makeOne(wsgiref)
-        self.assertEqual(installed.package, wsgiref)
-        self.assertEqual(installed.package_name, 'wsgiref')
-        if sys.version_info[:2] == (3, 3):
-            self.assertEqual(installed.metadata_version, None)
-        else:
-            self.assertEqual(installed.metadata_version, '1.0')
+        import warnings
+        with warnings.catch_warnings(record=True):
+            installed = self._makeOne(wsgiref)
+            self.assertEqual(installed.package, wsgiref)
+            self.assertEqual(installed.package_name, 'wsgiref')
+            if sys.version_info[:2] >= (3, 3):
+                self.assertEqual(installed.metadata_version, None)
+            else:
+                self.assertEqual(installed.metadata_version, '1.0')
 
     def test_ctor_w_package_no_PKG_INFO(self):
         import sys
         import types
         import warnings
-        old_filters = warnings.filters[:]
-        warnings.filterwarnings('ignore')
-        try:
+        with warnings.catch_warnings(record=True):
             installed = self._makeOne(types)
             self.assertEqual(installed.package, types)
             self.assertEqual(installed.package_name, 'types')
-            if sys.version_info[:2] == (3, 3):
+            if sys.version_info[:2] >= (3, 3):
                 self.assertEqual(installed.metadata_version, '1.1')
             else:
                 self.assertEqual(installed.metadata_version, None)
-        finally:
-            warnings.filters[:] = old_filters
 
     def test_ctor_w_package_and_metadata_version(self):
         import pkginfo
@@ -93,15 +87,11 @@ class InstalledTests(unittest.TestCase):
 
     def test_ctor_w_invalid_name(self):
         import warnings
-        old_filters = warnings.filters[:]
-        warnings.filterwarnings('ignore')
-        try:
+        with warnings.catch_warnings(record=True):
             installed = self._makeOne('nonesuch')
             self.assertEqual(installed.package, None)
             self.assertEqual(installed.package_name, 'nonesuch')
             self.assertEqual(installed.metadata_version, None)
-        finally:
-            warnings.filters[:] = old_filters
 
     def test_ctor_w_egg_info_as_file(self):
         import pkginfo.tests.funny
