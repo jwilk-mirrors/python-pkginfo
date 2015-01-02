@@ -1,6 +1,11 @@
 ``pkginfo`` Changelog
 =====================
 
+1.2.1 (2014-01-02)
+------------------
+
+- Add overlooked Trove classifier for Python 3.4.
+
 1.2 (2014-01-02)
 ----------------
 

@@ -20,7 +20,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 setup(
     name='pkginfo',
-    version='1.2',
+    version='1.2.1',
     description='Query metadatdata from sdists / bdists / installed packages.',
     platforms=['Unix', 'Windows'],
     long_description='\n\n'.join([README, CHANGES]),
@@ -37,6 +37,7 @@ setup(
       'Programming Language :: Python :: 2.7',
       'Programming Language :: Python :: 3.2',
       'Programming Language :: Python :: 3.3',
+      'Programming Language :: Python :: 3.4',
       'Programming Language :: Python :: Implementation :: CPython',
       'Programming Language :: Python :: Implementation :: PyPy',
       'Topic :: Software Development :: Libraries :: Python Modules',
