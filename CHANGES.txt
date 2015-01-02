@@ -4,6 +4,8 @@
 1.2 (unreleased)
 ----------------
 
+- Add support for Python 3.4, PyPy3.
+
 - Add 100% coverage for ``pkginfo.commandline`` module.
 
 1.2b1 (2013-12-05)
