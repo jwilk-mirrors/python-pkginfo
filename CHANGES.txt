@@ -1,7 +1,7 @@
 ``pkginfo`` Changelog
 =====================
 
-1.2 (unreleased)
+1.2 (2014-01-02)
 ----------------
 
 - Add support for Python 3.4, PyPy3.
