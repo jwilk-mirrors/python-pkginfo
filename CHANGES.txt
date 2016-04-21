@@ -1,6 +1,13 @@
 ``pkginfo`` Changelog
 =====================
 
+1.2.2 (unreleased)
+------------------
+
+- Update homepage URL to point to Launchpad, rather than PyPI.
+
+- Add support for building wheels.
+
 1.2.1 (2014-01-02)
 ------------------
 
