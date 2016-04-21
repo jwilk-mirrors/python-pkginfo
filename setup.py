@@ -25,7 +25,7 @@ setup(
     platforms=['Unix', 'Windows'],
     long_description='\n\n'.join([README, CHANGES]),
     keywords='distribution sdist installed metadata',
-    url='http://pypi.python.org/pypi/pkginfo/',
+    url='https://code.launchpad.net/~tseaver/pkginfo/trunk',
     author='Tres Seaver, Agendaless Consulting',
     author_email='tseaver@agendaless.com',
     license='Python',
