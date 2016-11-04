@@ -1,8 +1,8 @@
 ``pkginfo`` Changelog
 =====================
 
-Unreleased
-----------
+1.4.0 (2016-11-04)
+------------------
 
 - Relicense under MIT license:  the PSF license is not suitable for
   third-party libraries.
