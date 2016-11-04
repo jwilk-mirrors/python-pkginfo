@@ -28,10 +28,10 @@ setup(
     url='https://code.launchpad.net/~tseaver/pkginfo/trunk',
     author='Tres Seaver, Agendaless Consulting',
     author_email='tseaver@agendaless.com',
-    license='Python',
+    license='MIT',
     classifiers=[
       'Intended Audience :: Developers',
-      'License :: OSI Approved :: Python Software Foundation License',
+      'License :: OSI Approved :: MIT License',
       'Operating System :: OS Independent',
       'Programming Language :: Python :: 2.7',
       'Programming Language :: Python :: 3.3',

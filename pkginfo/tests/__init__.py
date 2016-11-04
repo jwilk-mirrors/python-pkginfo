@@ -18,7 +18,7 @@ def _checkClassifiers(testcase, installed):
     testcase.assertEqual(list(installed.classifiers),
                          [
       'Intended Audience :: Developers',
-      'License :: OSI Approved :: Python Software Foundation License',
+      'License :: OSI Approved :: MIT License',
       'Operating System :: OS Independent',
       'Programming Language :: Python :: 2.7',
       'Programming Language :: Python :: 3.3',
