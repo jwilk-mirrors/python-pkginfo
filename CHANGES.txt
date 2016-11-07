@@ -1,6 +1,11 @@
 ``pkginfo`` Changelog
 =====================
 
+1.4.1 (2016-11-07)
+------------------
+
+- Packaging only change (invalid sdist bulit for 1.4.0).
+
 1.4.0 (2016-11-04)
 ------------------
 
