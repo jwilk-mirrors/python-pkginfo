@@ -1,4 +1,4 @@
-from pkginfo.distribution import Distribution
+from .distribution import Distribution
 
 class Index(dict):
 

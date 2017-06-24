@@ -25,7 +25,7 @@ import optparse
 import os
 import sys
 
-from pkginfo import get_metadata
+from .utils import get_metadata
 
 
 def _parse_options(args=None):
@@ -39,7 +39,7 @@ def _parse_options(args=None):
                       )
 
     parser.add_option("-d", "--download-url-prefix",
-                      dest="download_url_prefix", 
+                      dest="download_url_prefix",
                       help="Download URL prefix",
                       )
 

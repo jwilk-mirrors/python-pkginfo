@@ -1,7 +1,7 @@
 from email.parser import Parser
 
-from pkginfo._compat import StringIO
-from pkginfo._compat import must_decode
+from ._compat import StringIO
+from ._compat import must_decode
 
 
 def parse(fp):
@@ -126,7 +126,7 @@ class Distribution(object):
                     value = get(msg, header_name)
                     if value != 'UNKNOWN':
                         setattr(self, attr_name, value)
-                        
+
     def __iter__(self):
         for header_name, attr_name, multiple in self._getHeaderAttrs():
             yield attr_name
