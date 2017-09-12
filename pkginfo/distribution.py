@@ -54,6 +54,9 @@ HEADER_ATTRS_1_2 = HEADER_ATTRS_1_1 + ( # PEP 345
     ('Provides-Dist', 'provides_dist', True),
     ('Obsoletes-Dist', 'obsoletes_dist', True),
     ('Project-URL', 'project_urls', True),
+) + ( # https://packaging.python.org/specifications/
+    ('Provides-Extra', 'provides_extras', True),
+    ('Description-Content-Type', 'description_content_type', False)
 )
 
 HEADER_ATTRS_2_0 = HEADER_ATTRS_1_2  #XXX PEP 426?
