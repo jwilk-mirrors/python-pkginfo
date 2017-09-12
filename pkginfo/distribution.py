@@ -97,6 +97,8 @@ class Distribution(object):
     provides_dist = ()
     obsoletes_dist = ()
     project_urls = ()
+    provides_extras = ()
+    description_content_type = None
 
     def extractMetadata(self):
         data = self.read()
