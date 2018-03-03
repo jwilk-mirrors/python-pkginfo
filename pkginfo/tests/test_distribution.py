@@ -74,6 +74,14 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(list(dist),
                          [x[1] for x in HEADER_ATTRS_1_2])
 
+    def test_parse_Metadata_Version_2_1(self):
+        from pkginfo.distribution import HEADER_ATTRS_2_1
+        dist = self._makeOne(None)
+        dist.parse('Metadata-Version: 2.1')
+        self.assertEqual(dist.metadata_version, '2.1')
+        self.assertEqual(list(dist),
+                         [x[1] for x in HEADER_ATTRS_2_1])
+
     def test_parse_Metadata_Version_unknown(self):
         dist = self._makeOne(None)
         dist.parse('Metadata-Version: 1.3')
@@ -134,6 +142,16 @@ class DistributionTests(unittest.TestCase):
         dist = self._makeOne()
         dist.parse('Description: This package enables integration with\n'
                    '        foo servers.')
+        self.assertEqual(dist.description,
+                         'This package enables integration with\n'
+                         'foo servers.')
+
+    def test_parse_Description_in_payload(self):
+        dist = self._makeOne()
+        dist.parse('Foo: Bar\n'
+                   '\n'
+                   'This package enables integration with\n'
+                   'foo servers.')
         self.assertEqual(dist.description,
                          'This package enables integration with\n'
                          'foo servers.')
