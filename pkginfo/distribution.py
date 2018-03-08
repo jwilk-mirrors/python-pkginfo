@@ -58,11 +58,17 @@ HEADER_ATTRS_1_2 = HEADER_ATTRS_1_1 + ( # PEP 345
 
 HEADER_ATTRS_2_0 = HEADER_ATTRS_1_2  #XXX PEP 426?
 
+HEADER_ATTRS_2_1 = HEADER_ATTRS_1_2 + ( # PEP 566
+    ('Provides-Extra', 'provides_extras', True),
+    ('Description-Content-Type', 'description_content_type', False)
+)
+
 HEADER_ATTRS = {
     '1.0': HEADER_ATTRS_1_0,
     '1.1': HEADER_ATTRS_1_1,
     '1.2': HEADER_ATTRS_1_2,
     '2.0': HEADER_ATTRS_2_0,
+    '2.1': HEADER_ATTRS_2_1,
 }
 
 class Distribution(object):
@@ -94,6 +100,9 @@ class Distribution(object):
     provides_dist = ()
     obsoletes_dist = ()
     project_urls = ()
+    # version 2.1
+    provides_extras = ()
+    description_content_type = None
 
     def extractMetadata(self):
         data = self.read()
@@ -126,7 +135,11 @@ class Distribution(object):
                     value = get(msg, header_name)
                     if value != 'UNKNOWN':
                         setattr(self, attr_name, value)
-                        
+
+        body = msg.get_payload()
+        if body:
+            setattr(self, 'description', body)
+
     def __iter__(self):
         for header_name, attr_name, multiple in self._getHeaderAttrs():
             yield attr_name
