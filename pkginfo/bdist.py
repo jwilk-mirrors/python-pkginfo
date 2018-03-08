@@ -1,7 +1,7 @@
 import os
 import zipfile
 
-from pkginfo.distribution import Distribution
+from .distribution import Distribution
 
 class BDist(Distribution):
 

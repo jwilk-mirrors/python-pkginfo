@@ -2,7 +2,7 @@ import os
 import sys
 import warnings
 
-from pkginfo.distribution import Distribution
+from .distribution import Distribution
 
 def _gather_py2(top, candidates): #pragma NO COVER Py3k
     def _filter(candidates, dirname, fnames):

@@ -2,7 +2,7 @@ import os
 import tarfile
 import zipfile
 
-from pkginfo.distribution import Distribution
+from .distribution import Distribution
 
 class SDist(Distribution):
 

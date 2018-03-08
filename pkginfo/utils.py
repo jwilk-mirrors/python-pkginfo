@@ -1,21 +1,21 @@
 import os
 from types import ModuleType
 
-from pkginfo.bdist import BDist
-from pkginfo.develop import Develop
-from pkginfo.installed import Installed
-from pkginfo.sdist import SDist
-from pkginfo.wheel import Wheel
+from .bdist import BDist
+from .develop import Develop
+from .installed import Installed
+from .sdist import SDist
+from .wheel import Wheel
 
 def get_metadata(path_or_module, metadata_version=None):
     """ Try to create a Distribution 'path_or_module'.
-    
+
     o 'path_or_module' may be a module object.
 
     o If a string, 'path_or_module' may point to an sdist file, a bdist
       file, an installed package, or a working checkout (if it contains
       PKG-INFO).
-    
+
     o Return None if 'path_or_module' can't be parsed.
     """
     if isinstance(path_or_module, ModuleType):

@@ -1,7 +1,7 @@
 from email.parser import Parser
 
-from pkginfo._compat import StringIO
-from pkginfo._compat import must_decode
+from ._compat import StringIO
+from ._compat import must_decode
 
 
 def parse(fp):
