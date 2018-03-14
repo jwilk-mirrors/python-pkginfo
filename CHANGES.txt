@@ -1,10 +1,22 @@
 ``pkginfo`` Changelog
 =====================
 
+1.4.2 (unreleased)
+------------------
+
+- Use relative imports in pkginfo modules.  Supports vendoring of the
+  package into setuptools.
+
+- Add support for ``Provides-Extra`` and ``Description-Content-Type`` fields.
+  Per https://packaging.python.org/specifications/.  See:  PEP 566.
+
+- Remove support for old setuptools leaving ``PKG-INFO`` in the root of
+  the project directory.
+
 1.4.1 (2016-11-07)
 ------------------
 
-- Packaging only change (invalid sdist bulit for 1.4.0).
+- Packaging only change (invalid sdist built for 1.4.0).
 
 1.4.0 (2016-11-04)
 ------------------
