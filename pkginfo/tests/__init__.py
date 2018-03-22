@@ -32,7 +32,4 @@ def _checkClassifiers(testcase, installed):
 
 
 def _defaultMetadataVersion():
-    import sys
-    if sys.version_info[:2] > (2, 6):
-        return '1.1'
-    return '1.0'
+    return '2.1'

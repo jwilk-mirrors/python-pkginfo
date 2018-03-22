@@ -53,7 +53,7 @@ class InstalledTests(unittest.TestCase):
             self.assertEqual(installed.package, types)
             self.assertEqual(installed.package_name, 'types')
             if sys.version_info[:2] >= (3, 3):
-                self.assertEqual(installed.metadata_version, '1.1')
+                self.assertEqual(installed.metadata_version, '2.1')
             else:
                 self.assertEqual(installed.metadata_version, None)
 
