@@ -10,8 +10,8 @@ o a source distribution:  in this case, 'path' should point to an existing
 o a binary distribution:  in this case, 'path' should point to an existing
   archive file (.egg)
 
-o a "develop" checkout:  in ths case,  'path' should point to a directory
-  intialized via 'setup.py develop' (under setuptools).
+o a "develop" checkout:  in this case,  'path' should point to a directory
+  initialized via 'setup.py develop' (under setuptools).
 
 o an installed package:  in this case, 'path' should be the importable name
   of the package.
