@@ -1,3 +1,4 @@
+import io
 import os
 import tarfile
 import zipfile
@@ -66,7 +67,8 @@ class UnpackedSDist(SDist):
 
     def read(self):
         try:
-            with open(os.path.join(self.filename, 'PKG-INFO')) as f:
+            pkg_info = os.path.join(self.filename, 'PKG-INFO')
+            with io.open(pkg_info, errors='ignore') as f:
                 return f.read()
         except Exception as e:
             raise ValueError('Could not load %s as an unpacked sdist: %s'

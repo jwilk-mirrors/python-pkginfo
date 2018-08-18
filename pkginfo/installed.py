@@ -1,4 +1,5 @@
 import glob
+import io
 import os
 import sys
 import warnings
@@ -48,6 +49,6 @@ class Installed(Distribution):
                     else:
                         path = candidate
                     if os.path.exists(path):
-                        with open(path) as f:
+                        with io.open(path, errors='ignore') as f:
                             return f.read()
         warnings.warn('No PKG-INFO found for package: %s' % self.package_name)

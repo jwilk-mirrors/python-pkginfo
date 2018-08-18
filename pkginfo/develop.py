@@ -1,3 +1,4 @@
+import io
 import os
 import sys
 import warnings
@@ -40,6 +41,6 @@ class Develop(Distribution):
         for candidate in candidates:
             path = os.path.join(candidate, 'PKG-INFO')
             if os.path.exists(path):
-                with open(path) as f:
+                with io.open(path, errors='ignore') as f:
                     return f.read()
         warnings.warn('No PKG-INFO found for path: %s' % self.path)
