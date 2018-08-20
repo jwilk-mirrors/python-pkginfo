@@ -62,3 +62,25 @@ class WheelTests(unittest.TestCase):
         self._checkSample(wheel, filename)
         self._checkClassifiers(wheel)
 
+    def test_ctor_w_valid_installed_wheel(self):
+        import os
+        import shutil
+        import tempfile
+        import zipfile
+
+        d, _ = os.path.split(__file__)
+        filename = ('%s/../../docs/examples/'
+                    'mypackage-0.1-cp26-none-linux_x86_64.whl') % d
+
+        try:
+            # note: we mock a wheel installation by unzipping
+            test_dir = tempfile.mkdtemp()
+            with zipfile.ZipFile(filename) as zipf:
+                zipf.extractall(test_dir)
+            wheel = self._makeOne(filename)
+            self.assertEqual(wheel.metadata_version, '2.0')
+            self._checkSample(wheel, filename)
+            self._checkClassifiers(wheel)
+        finally:
+            if os.path.exists(test_dir):
+                shutil.rmtree(test_dir)

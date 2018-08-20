@@ -1,8 +1,11 @@
+from io import StringIO
 import os
 import zipfile
 
 
 from .distribution import Distribution
+from .distribution import must_decode
+from .distribution import parse
 
 
 class Wheel(Distribution):
@@ -23,8 +26,21 @@ class Wheel(Distribution):
 
             def read_file(name):
                 return archive.read(name)
+
+            close = archive.close
+
+        elif fqn.endswith('.dist-info'):
+            names = [os.path.join(fqn, p) for p in os.listdir(fqn)]
+
+            def read_file(name):
+                with open(name) as inf:
+                    return inf.read()
+
+            close = lambda : None
+
         else:
-            raise ValueError('Not a known archive format: %s' % fqn)
+            raise ValueError('Not a known wheel archive format or '
+                             'installed .dist-info: %s' % fqn)
 
         try:
             tuples = [x.split('/') for x in names if 'METADATA' in x]
@@ -35,6 +51,12 @@ class Wheel(Distribution):
                 if b'Metadata-Version' in data:
                     return data
         finally:
-            archive.close()
+            close()
 
         raise ValueError('No METADATA in archive: %s' % fqn)
+
+    def parse(self, data):
+        super(Wheel, self).parse(data)
+        fp = StringIO(must_decode(data))
+        msg = parse(fp)
+        self.description = msg.get_payload()
