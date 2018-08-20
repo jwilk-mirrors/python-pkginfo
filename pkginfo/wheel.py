@@ -1,4 +1,4 @@
-from io import StringIO
+import io
 import os
 import zipfile
 
@@ -33,7 +33,7 @@ class Wheel(Distribution):
             names = [os.path.join(fqn, p) for p in os.listdir(fqn)]
 
             def read_file(name):
-                with open(name) as inf:
+                with io.open(name, errors='ignore') as inf:
                     return inf.read()
 
             close = lambda : None
@@ -57,6 +57,6 @@ class Wheel(Distribution):
 
     def parse(self, data):
         super(Wheel, self).parse(data)
-        fp = StringIO(must_decode(data))
+        fp = io.StringIO(must_decode(data))
         msg = parse(fp)
         self.description = msg.get_payload()
