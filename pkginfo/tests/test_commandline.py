@@ -196,6 +196,62 @@ class INITests(unittest.TestCase, _FormatterBase):
         self.assertEqual(cp.get('foo-0.1', 'foo'), 'Foo')
         self.assertEqual(cp.get('foo-0.1', 'bar'), 'Bar1\n\tBar2')
 
+class JSONtests(unittest.TestCase, _FormatterBase):
+
+    def _getTargetClass(self):
+        from pkginfo.commandline import JSON
+        return JSON
+
+    def _makeOne(self, options):
+        return self._getTargetClass()(options)
+
+    def test___call___duplicate_with_meta_and_fields(self):
+        json = self._makeOne(_Options(fields=('name',)))
+        meta = _Meta(name='foo', version='0.1', foo='Foo')
+        json._mapping['name'] = 'foo'
+        self.assertRaises(ValueError, json, meta)
+
+    def test___call___duplicate_with_meta_wo_fields(self):
+        json = self._makeOne(_Options(fields=None))
+        meta = _Meta(name='foo', version='0.1', foo='Foo')
+        json._mapping['name'] = 'foo'
+        self.assertRaises(ValueError, json, meta)
+
+    def test___call___wo_fields_wo_list(self):
+        from collections import OrderedDict
+
+        json = self._makeOne(_Options(fields=None))
+        meta = _Meta(name='foo', version='0.1', foo='Foo')
+        json(meta)
+        expected = OrderedDict([
+            ('foo', 'Foo'), ('name', 'foo'), ('version', '0.1')])
+        self.assertEqual(expected, json._mapping)
+
+    def test___call___w_fields_w_list(self):
+        from collections import OrderedDict
+
+        json = self._makeOne(_Options(fields=('foo', 'bar')))
+        meta = _Meta(name='foo', version='0.1',
+                     foo='Foo', bar=['Bar1', 'Bar2'], baz='Baz')
+        json(meta)
+        expected = OrderedDict([
+            ('foo', 'Foo'), ('bar', ['Bar1', 'Bar2'])])
+        self.assertEqual(expected, json._mapping)
+
+    def test___call___output(self):
+        from collections import OrderedDict
+        import json as json_parser
+
+        json = self._makeOne(_Options(fields=None))
+        meta = _Meta(name='foo', version='0.1', foo='Foo')
+        json(meta)
+        output = self._capture_output(json.finish)
+        output = json_parser.loads(
+            output, object_pairs_hook=OrderedDict)
+        expected = OrderedDict([
+            ('foo', 'Foo'), ('name', 'foo'), ('version', '0.1')])
+        self.assertEqual(expected, output)
+
 class Test_main(unittest.TestCase):
 
     def _callFUT(self, args, monkey='simple'):

@@ -20,7 +20,9 @@ try:
     from configparser import ConfigParser
 except ImportError:  # pragma: NO COVER
     from ConfigParser import ConfigParser
+from collections import OrderedDict
 from csv import writer
+import json
 import optparse
 import os
 import sys
@@ -80,6 +82,11 @@ def _parse_options(args=None):
     parser.add_option("--ini", dest="output", action="store_const",
                       const='ini',
                       help="Output as INI",
+                      )
+
+    parser.add_option("--json", dest="output", action="store_const",
+                      const='json',
+                      help="Output as JSON",
                       )
 
     options, args = parser.parse_args(args)
@@ -174,11 +181,32 @@ class INI(Base):
     def finish(self):
         self._parser.write(sys.stdout)  # pragma: NO COVER
 
+class JSON(Base):
+    _fields = None
+    def __init__(self, options):
+        super(JSON, self).__init__(options)
+        self._mapping = OrderedDict()
+
+    def __call__(self, meta):
+        if self._fields is None:
+            self._fields = list(meta)
+        for field in self._fields:
+            value = getattr(meta, field)
+            if value and not isinstance(value, (tuple, list)):
+                value = str(value)
+            if field in self._mapping:
+                raise ValueError('Duplicate field: %(field)r' % locals())
+            self._mapping[field] = value
+
+    def finish(self):
+        json.dump(self._mapping, sys.stdout, indent=2)
+
 _FORMATTERS = {
     'simple': Simple,
     'single': SingleLine,
     'csv': CSV,
     'ini': INI,
+    'json': JSON,
 }
 
 def main(args=None):
