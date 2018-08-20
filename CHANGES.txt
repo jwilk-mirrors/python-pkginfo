@@ -4,6 +4,10 @@
 1.5.0 (unreleased)
 ------------------
 
+- Add support for JSON output from the CLI.
+
+- Add support for installed wheels.  E.g., 'dist-info/' dirs.
+
 - Add support for Python 3.6 and 3.7.
 
 1.4.2 (2018-03-14)
