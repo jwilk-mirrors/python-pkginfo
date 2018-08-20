@@ -52,6 +52,11 @@ def get_metadata(path_or_module, metadata_version=None):
 
     if os.path.isdir(path_or_module):
         try:
+            return Wheel(path_or_module, metadata_version)
+        except (ValueError, IOError): #pragma NO COVER
+            pass
+
+        try:
             return Develop(path_or_module, metadata_version)
         except (ValueError, IOError): #pragma NO COVER
             pass
