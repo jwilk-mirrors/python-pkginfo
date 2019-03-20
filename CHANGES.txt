@@ -16,9 +16,9 @@
 
 - Fix 'console_scripts' entry point syntax. LP #1810734.
 
-- Add support for JSON output from the CLI.
+- Add support for JSON output from the CLI.  LP #1700580.
 
-- Add support for installed wheels.  E.g., 'dist-info/' dirs.
+- Add support for installed wheels.  E.g., 'dist-info/' dirs.  LP #1700200.
 
 - Add support for Python 3.6 and 3.7.
 
