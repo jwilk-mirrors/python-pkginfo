@@ -9,16 +9,18 @@
 1.5.0.1 (2019-01-08)
 --------------------
 
-- Fix broken 'sdist'. LP #1639585.
+- Fix broken 'sdist'.  LP #1639585.
 
 1.5.0 (2019-01-07)
 ------------------
 
-- Fix 'console_scripts' entry point syntax. LP #1810734.
+- Fix 'console_scripts' entry point syntax.  LP #1810734.
 
 - Add support for JSON output from the CLI.  LP #1700580.
 
 - Add support for installed wheels.  E.g., 'dist-info/' dirs.  LP #1700200.
+
+- Harden metadata extraction against unexpected encodings.  LP #1780454.
 
 - Add support for Python 3.6 and 3.7.
 
