@@ -22,6 +22,9 @@
 
 - Harden metadata extraction against unexpected encodings.  LP #1780454.
 
+- Update tests to match pip/setuptools' use of new metadata version.
+  LP #1772274.
+
 - Add support for Python 3.6 and 3.7.
 
 - Drop support for Python 3.3.
