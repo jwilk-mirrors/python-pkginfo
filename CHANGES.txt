@@ -4,7 +4,9 @@
 1.5.1 (unreleased)
 ------------------
 
-- TBD
+- Update tests to match setuptools' change, no longer reporting metadata
+  version for installed packages w/o explicit metadata.
+  LP #1870197.
 
 1.5.0.1 (2019-01-08)
 --------------------
