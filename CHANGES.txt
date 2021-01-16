@@ -1,6 +1,13 @@
 ``pkginfo`` Changelog
 =====================
 
+1.7.0 (2021-01-16)
+------------------
+
+- Add support for Python 3.9
+
+- Drop support for Python 3.5.
+
 1.6.1 (2020-10-26)
 ------------------
 
