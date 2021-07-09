@@ -1,6 +1,13 @@
 ``pkginfo`` Changelog
 =====================
 
+1.7.1 (2021-07-09)
+------------------
+
+- Use Python3 to build docs, and fix doctest examples to use Python3-
+  compatible syntax.
+  LP #1933322
+
 1.7.0 (2021-01-16)
 ------------------
 
