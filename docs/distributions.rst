@@ -39,11 +39,11 @@ hyphens to underscores.  E.g.:
 
 .. doctest::
 
-  >>> print mypackage.metadata_version
+  >>> print(mypackage.metadata_version)
   1.0
-  >>> print mypackage.name
+  >>> print(mypackage.name)
   mypackage
-  >>> print mypackage.version
+  >>> print(mypackage.version)
   0.1
 
 Fields which are optional under the PEP, and which have no value set
@@ -51,7 +51,7 @@ in their ``PKG-INFO``, will map to the value ``None``:
 
 .. doctest::
 
-  >>> print mypackage.keywords
+  >>> print(mypackage.keywords)
   None
 
 Fields which are marked "multiple use" under the PEP map onto sequences;
@@ -60,7 +60,7 @@ with no occurences in the ``PKG-INFO`` file will map onto an empty sequence:
 
 .. doctest::
 
-  >>> print list(mypackage.supported_platforms)
+  >>> print(list(mypackage.supported_platforms))
   []
 
 See `Metadata Versions <metadata.html>`_ for an example with a non-empty,
@@ -76,10 +76,10 @@ setup.py at the top level:
 .. doctest::
 
   >>> mypackage = UnpackedSDist('docs/examples/mypackage-0.1')
-  >>> print mypackage.name
+  >>> print(mypackage.name)
   mypackage
   >>> myotherpackage = UnpackedSDist('docs/examples/mypackage-0.1/setup.py')
-  >>> print myotherpackage.name
+  >>> print(myotherpackage.name)
   mypackage
 
 ``UnpackedSDist`` objects are most useful in conjuction with distutils to

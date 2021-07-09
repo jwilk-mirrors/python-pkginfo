@@ -173,8 +173,7 @@ htmlhelp_basename = 'pkginfodoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, document class [howto/manual]).
 latex_documents = [
-  ('index', 'pkginfo.tex', ur'pkginfo Documentation',
-   ur'Tres Seaver', 'manual'),
+  ('index', 'pkginfo.tex', u'pkginfo Documentation', u'Tres Seaver', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

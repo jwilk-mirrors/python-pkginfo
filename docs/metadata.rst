@@ -21,7 +21,7 @@ which were not defined under version '1.0':
   >>> from pkginfo import SDist
   >>> mypackage = SDist('docs/examples/mypackage-0.1.tar.gz',
   ...                   metadata_version='1.1')
-  >>> print [str(x) for x in mypackage.classifiers]
+  >>> print([str(x) for x in mypackage.classifiers])
   ['Development Status :: 4 - Beta', 'Environment :: Console (Text Based)']
 
 .. _`PEP 241`: http://svn.python.org/projects/peps/trunk/pep-0241.txt
