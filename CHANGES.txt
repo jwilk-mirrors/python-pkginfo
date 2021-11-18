@@ -4,6 +4,8 @@
 1.8.0 (unreleased)
 ------------------
 
+- Support new standard metadata location for installed dists. LP #1865286.
+
 - Don't overwrite header-based 'description' with empty payload. LP #1885458.
 
 - Add support for Metadata-Version 2.2. LP #1928729.
