@@ -1,7 +1,7 @@
 ``pkginfo`` Changelog
 =====================
 
-1.8.0 (unreleased)
+1.8.0 (2021-11-18)
 ------------------
 
 - Support new standard metadata location for installed dists. LP #1865286.
