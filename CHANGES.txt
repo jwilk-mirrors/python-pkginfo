@@ -4,9 +4,11 @@
 1.8.0 (unreleased)
 ------------------
 
+- Don't overwrite header-based 'description' with empty payload. LP #1885458.
+
 - Add support for Metadata-Version 2.2. LP #1928729.
 
-- Add support for uncompressed tarballs for sdists.  LP #1951457
+- Add support for uncompressed tarballs for sdists.  LP #1951457.
 
 - Add support for Python 3.10.
 
@@ -14,7 +16,7 @@
 ------------------
 
 - Use Python3 to build docs, and fix doctest examples to use Python3-
-  compatible syntax.  LP #1933322
+  compatible syntax.  LP #1933322.
 
 1.7.0 (2021-01-16)
 ------------------
@@ -26,7 +28,7 @@
 1.6.1 (2020-10-26)
 ------------------
 
-- Adjust test classifiers to match supported Python versions. LP #1901127
+- Adjust test classifiers to match supported Python versions. LP #1901127.
 
 1.6.0 (2020-10-20)
 ------------------
