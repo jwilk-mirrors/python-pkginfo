@@ -1,17 +1,25 @@
 ``pkginfo`` Changelog
 =====================
 
+1.8.0 (unreleased)
+------------------
+
+- Add support for Metadata-Version 2.2. LP #1928729.
+
+- Add support for uncompressed tarballs for sdists.  LP #1951457
+
+- Add support for Python 3.10.
+
 1.7.1 (2021-07-09)
 ------------------
 
 - Use Python3 to build docs, and fix doctest examples to use Python3-
-  compatible syntax.
-  LP #1933322
+  compatible syntax.  LP #1933322
 
 1.7.0 (2021-01-16)
 ------------------
 
-- Add support for Python 3.9
+- Add support for Python 3.9.
 
 - Drop support for Python 3.5.
 
@@ -29,8 +37,7 @@
 - Drop support for Python 3.4.
 
 - Update tests to match setuptools' change, no longer reporting metadata
-  version for installed packages w/o explicit metadata.
-  LP #1870197.
+  version for installed packages w/o explicit metadata.  LP #1870197.
 
 1.5.0.1 (2019-01-08)
 --------------------
