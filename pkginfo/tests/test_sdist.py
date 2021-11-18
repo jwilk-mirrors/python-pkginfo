@@ -97,6 +97,14 @@ class SDistTests(unittest.TestCase):
         self._checkSample(sdist, filename)
         self._checkClassifiers(sdist)
 
+    def test_ctor_w_bogus(self):
+        import os
+        d, _ = os.path.split(__file__)
+        filename = '%s/../../docs/examples/mypackage-0.1.bogus' % d
+
+        with self.assertRaises(ValueError):
+            self._makeOne(filename, metadata_version='1.1')
+
 
 class UnpackedMixin(object):
     def setUp(self):
