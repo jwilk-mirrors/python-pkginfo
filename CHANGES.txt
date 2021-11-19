@@ -1,7 +1,7 @@
 ``pkginfo`` Changelog
 =====================
 
-1.8.1 (unreleased)
+1.8.1 (2021-11-19)
 ------------------
 
 - Add 'MANIFEST.in' to ensure example files used by tests are included
