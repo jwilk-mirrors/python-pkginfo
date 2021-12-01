@@ -28,7 +28,7 @@ class Installed(Distribution):
         opj = os.path.join
         if self.package is not None:
             package = self.package.__package__
-            if package is None:
+            if package in ('', None):
                 package = self.package.__name__
             egg_pattern = '%s*.egg-info' % package
             dist_pattern = '%s*.dist-info' % package
