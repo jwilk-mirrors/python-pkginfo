@@ -1,7 +1,7 @@
 ``pkginfo`` Changelog
 =====================
 
-1.8.2 (unreleased)
+1.8.2 (2021-12-01)
 ------------------
 
 - Add fix for installed distributions with '__package__' set to an empty
