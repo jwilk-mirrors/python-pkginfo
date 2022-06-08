@@ -17,6 +17,7 @@ else:
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
+EXCLUDED_PY3_VERSIONS = ', '.join('!=3.%d.*' % i for i in range(6))
 
 setup(
     name='pkginfo',
@@ -50,5 +51,6 @@ setup(
         ]
     },
     packages=['pkginfo', 'pkginfo.tests'],
+    python_requires='>=2.7, ' + EXCLUDED_PY3_VERSIONS,
     **extras
 )

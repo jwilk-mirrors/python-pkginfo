@@ -1,6 +1,12 @@
 ``pkginfo`` Changelog
 =====================
 
+1.8.3 (unreleased)
+------------------
+
+- Specify supported Python versions in 'setup.py' using 'python_requires'.
+  LP #1977981.
+
 1.8.2 (2021-12-01)
 ------------------
 
