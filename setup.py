@@ -21,7 +21,7 @@ EXCLUDED_PY3_VERSIONS = ', '.join('!=3.%d.*' % i for i in range(6))
 
 setup(
     name='pkginfo',
-    version='1.8.2',
+    version='1.8.3',
     description='Query metadatdata from sdists / bdists / installed packages.',
     platforms=['Unix', 'Windows'],
     long_description='\n\n'.join([README, CHANGES]),
