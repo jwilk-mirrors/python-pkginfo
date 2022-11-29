@@ -1,6 +1,11 @@
 ``pkginfo`` Changelog
 =====================
 
+1.8.4 (unreleased)
+------------------
+
+- Switch to use 'pytest' vs. 'nose', which doesn't support Python > 3.9.
+
 1.8.3 (2022-06-08)
 ------------------
 

@@ -5,6 +5,6 @@
 __pycache__
 .tox
 coverage.xml
-nosetests.xml
+.pytest_cache/
 docs/_build
 .coverage-*
