@@ -1,6 +1,11 @@
 ``pkginfo`` Changelog
 =====================
 
+1.9.1 (2022-11-29)
+------------------
+
+- Repair unit tests broken by dropping Python 2.7 classifier.
+
 1.9.0 (2022-11-29)
 ------------------
 
