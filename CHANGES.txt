@@ -4,6 +4,10 @@
 1.9.1 (2022-11-29)
 ------------------
 
+- Restore a deprecated alias for the '_must_decode' helper function, moved
+  from 'pkginfo._compat.must_decode' to 'pkginfo.distribution._must_decode'
+  in 1.90.
+
 - Repair unit tests broken by dropping Python 2.7 classifier.
 
 1.9.0 (2022-11-29)

@@ -9,6 +9,9 @@ def _must_decode(value):
             return value.decode('latin1')
     return value
 
+must_decode = _must_decode # deprecated compatibility alias FBO twine.
+
+
 def parse(fp):
     return Parser().parse(fp)
 def get(msg, header):
