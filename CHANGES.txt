@@ -1,6 +1,12 @@
 ``pkginfo`` Changelog
 =====================
 
+1.9.2 (2022-11-29)
+------------------
+
+- Drop "universal" wheel support (should be redundant with
+  `python_requires >= 3.6`, but just in case.  LP #1998258.
+
 1.9.1 (2022-11-29)
 ------------------
 
