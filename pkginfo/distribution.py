@@ -1,8 +1,13 @@
+import io
 from email.parser import Parser
 
-from ._compat import StringIO
-from ._compat import must_decode
-
+def _must_decode(value):
+    if type(value) is bytes:
+        try:
+            return value.decode('utf-8')
+        except UnicodeDecodeError:
+            return value.decode('latin1')
+    return value
 
 def parse(fp):
     return Parser().parse(fp)
@@ -122,7 +127,7 @@ class Distribution(object):
         return HEADER_ATTRS.get(self.metadata_version, [])
 
     def parse(self, data):
-        fp = StringIO(must_decode(data))
+        fp = io.StringIO(_must_decode(data))
         msg = parse(fp)
 
         if 'Metadata-Version' in msg and self.metadata_version is None:

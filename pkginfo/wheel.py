@@ -4,7 +4,6 @@ import zipfile
 
 
 from .distribution import Distribution
-from .distribution import must_decode
 from .distribution import parse
 
 

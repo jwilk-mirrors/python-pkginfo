@@ -1,5 +1,33 @@
 import unittest
 
+class Test__must_decode(unittest.TestCase):
+
+    def _callFUT(self, arg):
+        from pkginfo.distribution import _must_decode
+        return _must_decode(arg)
+
+    def test_w_bytes_latin1(self):
+        TO_ENCODE = u'\u00C9'  # capital E w/ acute accent
+        encoded = TO_ENCODE.encode("latin-1")
+        decoded = self._callFUT(encoded)
+        self.assertEqual(decoded, TO_ENCODE)
+
+    def test_w_bytes_utf8(self):
+        TO_ENCODE = u'\u00C9'  # capital E w/ acute accent
+        encoded = TO_ENCODE.encode("utf-8")
+        decoded = self._callFUT(encoded)
+        self.assertEqual(decoded, TO_ENCODE)
+
+    def test_w_unicode(self):
+        ARG = u'\u00C9'  # capital E w/ acute accent
+        decoded = self._callFUT(ARG)
+        self.assertEqual(decoded, ARG)
+
+    def test_w_object(self):
+        ARG = object()
+        decoded = self._callFUT(ARG)
+        self.assertIs(decoded, ARG)
+
 class DistributionTests(unittest.TestCase):
 
     def _getTargetClass(self):
@@ -59,9 +87,8 @@ class DistributionTests(unittest.TestCase):
         self.assertRaises(NotImplementedError, dist.read)
 
     def test_parse_given_unicode(self):
-        from pkginfo._compat import u
         dist = self._makeOne()
-        dist.parse(u('Metadata-Version: 1.0\nName: lp722928_c3')) # no raise
+        dist.parse(u'Metadata-Version: 1.0\nName: lp722928_c3') # no raise
 
     def test_parse_Metadata_Version_1_0(self):
         from pkginfo.distribution import HEADER_ATTRS_1_0

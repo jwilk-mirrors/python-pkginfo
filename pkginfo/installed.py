@@ -5,12 +5,11 @@ import sys
 import warnings
 
 from .distribution import Distribution
-from ._compat import STRING_TYPES
 
 class Installed(Distribution):
 
     def __init__(self, package, metadata_version=None):
-        if isinstance(package, STRING_TYPES):
+        if isinstance(package, str):
             self.package_name = package
             try:
                 __import__(package)
