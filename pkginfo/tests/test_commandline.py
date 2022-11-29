@@ -1,3 +1,7 @@
+import collections
+import io
+import json as json_module
+import sys
 import unittest
 
 class Test__parse_options(unittest.TestCase):
@@ -7,16 +11,10 @@ class Test__parse_options(unittest.TestCase):
         return _parse_options(args)
 
     def test_empty(self):
-        import io
-        import sys
         from pkginfo.commandline import __doc__ as usage
-        firstline = usage.splitlines()[0]
 
-        # parse_args emits "native" error output.
-        if sys.version_info[0] < 3:
-            buf = io.BytesIO()
-        else:
-            buf = io.StringIO()
+        firstline = usage.splitlines()[0]
+        buf = io.StringIO()
 
         with _Monkey(sys, stderr=buf):
             self.assertRaises(SystemExit, self._callFUT, [])
@@ -30,6 +28,7 @@ class BaseTests(unittest.TestCase):
 
     def _getTargetClass(self):
         from pkginfo.commandline import Base
+
         return Base
 
     def _makeOne(self, options):
@@ -47,19 +46,13 @@ class BaseTests(unittest.TestCase):
 class _FormatterBase(object):
 
     def _capture_output(self, func, *args, **kw):
-        import io
-        import sys
-        # Emulate stdout as wanting "native" strings
-        if sys.version_info[0] < 3:
-            buf = io.BytesIO()
-        else:
-            buf = io.StringIO()
+        buf = io.StringIO()
+
         with _Monkey(sys, stdout=buf):
             func(*args, **kw)
         return buf.getvalue()
 
     def _no_output(self, simple, meta):
-        import sys
         with _Monkey(sys, stdout=object()):  # raise if write
             simple(meta)
 
@@ -101,6 +94,7 @@ class SingleLineTests(unittest.TestCase, _FormatterBase):
 
     def _getTargetClass(self):
         from pkginfo.commandline import SingleLine
+
         return SingleLine
 
     def _makeOne(self, options):
@@ -132,6 +126,7 @@ class CSVTests(unittest.TestCase, _FormatterBase):
 
     def _getTargetClass(self):
         from pkginfo.commandline import CSV
+
         return CSV
 
     def _makeOne(self, options):
@@ -162,6 +157,7 @@ class INITests(unittest.TestCase, _FormatterBase):
 
     def _getTargetClass(self):
         from pkginfo.commandline import INI
+
         return INI
 
     def _makeOne(self, options):
@@ -200,6 +196,7 @@ class JSONtests(unittest.TestCase, _FormatterBase):
 
     def _getTargetClass(self):
         from pkginfo.commandline import JSON
+
         return JSON
 
     def _makeOne(self, options):
@@ -218,37 +215,31 @@ class JSONtests(unittest.TestCase, _FormatterBase):
         self.assertRaises(ValueError, json, meta)
 
     def test___call___wo_fields_wo_list(self):
-        from collections import OrderedDict
 
         json = self._makeOne(_Options(fields=None))
         meta = _Meta(name='foo', version='0.1', foo='Foo')
         json(meta)
-        expected = OrderedDict([
+        expected = collections.OrderedDict([
             ('foo', 'Foo'), ('name', 'foo'), ('version', '0.1')])
         self.assertEqual(expected, json._mapping)
 
     def test___call___w_fields_w_list(self):
-        from collections import OrderedDict
-
         json = self._makeOne(_Options(fields=('foo', 'bar')))
         meta = _Meta(name='foo', version='0.1',
                      foo='Foo', bar=['Bar1', 'Bar2'], baz='Baz')
         json(meta)
-        expected = OrderedDict([
+        expected = collections.OrderedDict([
             ('foo', 'Foo'), ('bar', ['Bar1', 'Bar2'])])
         self.assertEqual(expected, json._mapping)
 
     def test___call___output(self):
-        from collections import OrderedDict
-        import json as json_parser
-
         json = self._makeOne(_Options(fields=None))
         meta = _Meta(name='foo', version='0.1', foo='Foo')
         json(meta)
         output = self._capture_output(json.finish)
-        output = json_parser.loads(
-            output, object_pairs_hook=OrderedDict)
-        expected = OrderedDict([
+        output = json_module.loads(
+            output, object_pairs_hook=collections.OrderedDict)
+        expected = collections.OrderedDict([
             ('foo', 'Foo'), ('name', 'foo'), ('version', '0.1')])
         self.assertEqual(expected, output)
 
@@ -257,6 +248,7 @@ class Test_main(unittest.TestCase):
     def _callFUT(self, args, monkey='simple'):
         from pkginfo.commandline import main
         from pkginfo.commandline import _FORMATTERS
+
         before = _FORMATTERS[monkey]
         dummy = _Formatter()
         _FORMATTERS[monkey] = lambda *options: dummy
@@ -268,6 +260,7 @@ class Test_main(unittest.TestCase):
 
     def test_w_mising_dist(self):
         from pkginfo import commandline as MUT
+
         def _get_metadata(path_or_module, md_version):
             self.assertEqual(path_or_module, 'foo')
             self.assertEqual(md_version, None)
@@ -279,6 +272,7 @@ class Test_main(unittest.TestCase):
 
     def test_w_dist_wo_download_url(self):
         from pkginfo import commandline as MUT
+
         meta = _Meta(download_url=None)
         def _get_metadata(path_or_module, md_version):
             self.assertEqual(path_or_module, '/path/to/foo')
@@ -293,6 +287,7 @@ class Test_main(unittest.TestCase):
 
     def test_w_dist_w_download_url(self):
         from pkginfo import commandline as MUT
+
         meta = _Meta(download_url='http://example.com/dist/foo')
         def _get_metadata(path_or_module, md_version):
             self.assertEqual(path_or_module, '/path/to/foo')

@@ -1,9 +1,15 @@
+import os
+import sys
+import types
 import unittest
+import wsgiref
+import warnings
 
 class InstalledTests(unittest.TestCase):
 
     def _getTargetClass(self):
         from pkginfo.installed import Installed
+
         return Installed
 
     def _makeOne(self, filename=None, metadata_version=None):
@@ -12,8 +18,6 @@ class InstalledTests(unittest.TestCase):
         return self._getTargetClass()(filename)
 
     def test_ctor_w_package_no___file__(self):
-        import sys
-        import warnings
         with warnings.catch_warnings(record=True):
             installed = self._makeOne(sys)
             self.assertEqual(installed.package, sys)
@@ -24,6 +28,7 @@ class InstalledTests(unittest.TestCase):
         import pkginfo
         from pkginfo.tests import _checkSample
         from pkginfo.tests import _defaultMetadataVersion
+
         EXPECTED =  _defaultMetadataVersion()
         installed = self._makeOne(pkginfo)
         self.assertEqual(installed.package, pkginfo)
@@ -32,22 +37,14 @@ class InstalledTests(unittest.TestCase):
         _checkSample(self, installed)
 
     def test_ctor_w_no___package___falls_back_to___name__(self):
-        import sys
-        import wsgiref
-        import warnings
+
         with warnings.catch_warnings(record=True):
             installed = self._makeOne(wsgiref)
             self.assertEqual(installed.package, wsgiref)
             self.assertEqual(installed.package_name, 'wsgiref')
-            if sys.version_info[:2] >= (3, 3):
-                self.assertEqual(installed.metadata_version, None)
-            else:
-                self.assertEqual(installed.metadata_version, '1.0')
+            self.assertEqual(installed.metadata_version, None)
 
     def test_ctor_w_package_no_PKG_INFO(self):
-        import sys
-        import types
-        import warnings
         with warnings.catch_warnings(record=True):
             installed = self._makeOne(types)
             self.assertEqual(installed.package, types)
@@ -57,6 +54,7 @@ class InstalledTests(unittest.TestCase):
     def test_ctor_w_package_and_metadata_version(self):
         import pkginfo
         from pkginfo.tests import _checkSample
+
         installed = self._makeOne(pkginfo, metadata_version='1.2')
         self.assertEqual(installed.metadata_version, '1.2')
         self.assertEqual(installed.package.__name__, 'pkginfo')
@@ -66,6 +64,7 @@ class InstalledTests(unittest.TestCase):
         import pkginfo
         from pkginfo.tests import _checkSample
         from pkginfo.tests import _defaultMetadataVersion
+
         EXPECTED = _defaultMetadataVersion()
         installed = self._makeOne('pkginfo')
         self.assertEqual(installed.metadata_version, EXPECTED)
@@ -76,6 +75,7 @@ class InstalledTests(unittest.TestCase):
     def test_ctor_w_name_and_metadata_version(self):
         import pkginfo
         from pkginfo.tests import _checkSample
+
         installed = self._makeOne('pkginfo', metadata_version='1.2')
         self.assertEqual(installed.metadata_version, '1.2')
         self.assertEqual(installed.package, pkginfo)
@@ -83,7 +83,6 @@ class InstalledTests(unittest.TestCase):
         _checkSample(self, installed)
 
     def test_ctor_w_invalid_name(self):
-        import warnings
         with warnings.catch_warnings(record=True):
             installed = self._makeOne('nonesuch')
             self.assertEqual(installed.package, None)
@@ -92,6 +91,7 @@ class InstalledTests(unittest.TestCase):
 
     def test_ctor_w_egg_info_as_file(self):
         import pkginfo.tests.funny
+
         installed = self._makeOne('pkginfo.tests.funny')
         self.assertEqual(installed.metadata_version, '1.0')
         self.assertEqual(installed.package, pkginfo.tests.funny)
@@ -99,14 +99,13 @@ class InstalledTests(unittest.TestCase):
 
     def test_ctor_w_dist_info(self):
         import wheel
+
         installed = self._makeOne('wheel')
         self.assertEqual(installed.metadata_version, '2.1')
         self.assertEqual(installed.package, wheel)
         self.assertEqual(installed.package_name, 'wheel')
 
     def test_namespaced_pkg_installed_via_setuptools(self):
-        import os
-        import sys
         where, _ = os.path.split(__file__)
         wonky = os.path.join(where, 'wonky')
         oldpath = sys.path[:]
@@ -124,8 +123,6 @@ class InstalledTests(unittest.TestCase):
 
     def test_namespaced_pkg_installed_via_pth(self):
         # E.g., installed by a Linux distro
-        import os
-        import sys
         where, _ = os.path.split(__file__)
         manky = os.path.join(where, 'manky')
         oldpath = sys.path[:]

@@ -17,11 +17,10 @@ else:
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
-EXCLUDED_PY3_VERSIONS = ', '.join('!=3.%d.*' % i for i in range(6))
 
 setup(
     name='pkginfo',
-    version='1.8.4.dev0',
+    version='1.9.0.dev0',
     description='Query metadatdata from sdists / bdists / installed packages.',
     platforms=['Unix', 'Windows'],
     long_description='\n\n'.join([README, CHANGES]),
@@ -34,7 +33,6 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
@@ -51,6 +49,6 @@ setup(
         ]
     },
     packages=['pkginfo', 'pkginfo.tests'],
-    python_requires='>=2.7, ' + EXCLUDED_PY3_VERSIONS,
+    python_requires='>=3.6'
     **extras
 )

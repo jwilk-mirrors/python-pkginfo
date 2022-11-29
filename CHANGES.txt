@@ -1,8 +1,10 @@
 ``pkginfo`` Changelog
 =====================
 
-1.8.4 (unreleased)
+1.9.0 (unreleased)
 ------------------
+
+- Drop support for Python 2.7.
 
 - Switch to use 'pytest' vs. 'nose', which doesn't support Python > 3.9.
 
