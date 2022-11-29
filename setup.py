@@ -49,6 +49,6 @@ setup(
         ]
     },
     packages=['pkginfo', 'pkginfo.tests'],
-    python_requires='>=3.6'
+    python_requires='>=3.6',
     **extras
 )
