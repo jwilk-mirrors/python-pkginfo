@@ -16,10 +16,7 @@ o a "develop" checkout:  in this case,  'path' should point to a directory
 o an installed package:  in this case, 'path' should be the importable name
   of the package.
 """
-try:
-    from configparser import ConfigParser
-except ImportError:  # pragma: NO COVER
-    from ConfigParser import ConfigParser
+from configparser import ConfigParser
 from collections import OrderedDict
 from csv import writer
 import json
