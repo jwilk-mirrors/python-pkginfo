@@ -1,1 +1,3 @@
 graft docs/examples/
+global-include *.pyi
+global-include *.typed

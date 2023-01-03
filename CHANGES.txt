@@ -1,6 +1,11 @@
 ``pkginfo`` Changelog
 =====================
 
+1.9.3 (unreleased)
+------------------
+
+- Added stub files for Python typing support;  verify using `mypy`. LP #1876591.
+
 1.9.2 (2022-11-29)
 ------------------
 
