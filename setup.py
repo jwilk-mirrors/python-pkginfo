@@ -20,7 +20,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 setup(
     name='pkginfo',
-    version='1.9.3',
+    version='1.9.4',
     description='Query metadatdata from sdists / bdists / installed packages.',
     platforms=['Unix', 'Windows'],
     long_description='\n\n'.join([README, CHANGES]),
@@ -49,6 +49,7 @@ setup(
         ]
     },
     packages=['pkginfo', 'pkginfo.tests'],
+    package_data={'pkginfo': ['py.typed', '*.pyi']},
     python_requires='>=3.6',
     **extras
 )
