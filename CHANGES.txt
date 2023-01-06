@@ -4,6 +4,8 @@
 1.9.5 (unreleased)
 ------------------
 
+- Add stricter typing checks, matching those used in `twine`.
+
 - Fix typing errors / gaps reported from `twine` CI failure.  LP #2002104.
 
 1.9.4 (2023-01-05)
