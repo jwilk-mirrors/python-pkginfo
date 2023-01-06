@@ -4,9 +4,9 @@
 1.9.5 (unreleased)
 ------------------
 
-- Add stricter typing checks, matching those used in `twine`.
+- Add stricter typing checks, matching those used in 'twine'.
 
-- Fix typing errors / gaps reported from `twine` CI failure.  LP #2002104.
+- Fix typing errors / gaps reported from 'twine' CI failure.  LP #2002104.
 
 1.9.4 (2023-01-05)
 ------------------
@@ -16,13 +16,13 @@
 1.9.3 (2023-01-03)
 ------------------
 
-- Added stub files for Python typing support;  verify using `mypy`. LP #1876591.
+- Added stub files for Python typing support;  verify using 'mypy'. LP #1876591.
 
 1.9.2 (2022-11-29)
 ------------------
 
 - Drop "universal" wheel support (should be redundant with
-  `python_requires >= 3.6`, but just in case.  LP #1998258.
+  'python_requires >= 3.6', but just in case.  LP #1998258.
 
 1.9.1 (2022-11-29)
 ------------------
