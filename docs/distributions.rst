@@ -3,7 +3,7 @@ Distribution Types
 
 The fundamental abstraction provided by this pacakge is the ``Distribution``
 base class.  Implementations exist for specific cases:  source distributions,
-binary distributions, installed pakcages, and development checkouts.
+binary distributions, installed packages, and development checkouts.
 
 .. doctest::
 
@@ -32,7 +32,7 @@ distutils:
 
   >>> mypackage = SDist('docs/examples/mypackage-0.1.tar.gz')
 
-After creation, the ``SDist`` instance will have attributes corrsponding
+After creation, the ``SDist`` instance will have attributes corresponding
 the the fields defined in the PEP corresponding to the metadata version,
 lower-cased and transliterated into valid Python identifiers by mapping
 hyphens to underscores.  E.g.:
@@ -56,7 +56,7 @@ in their ``PKG-INFO``, will map to the value ``None``:
 
 Fields which are marked "multiple use" under the PEP map onto sequences;
 their names are pluralized to indicate the sequence.  "Multiple use" fields
-with no occurences in the ``PKG-INFO`` file will map onto an empty sequence:
+with no occurrences in the ``PKG-INFO`` file will map onto an empty sequence:
 
 .. doctest::
 
@@ -82,7 +82,7 @@ setup.py at the top level:
   >>> print(myotherpackage.name)
   mypackage
 
-``UnpackedSDist`` objects are most useful in conjuction with distutils to
+``UnpackedSDist`` objects are most useful in conjunction with distutils to
 produce sdists that want complex behavior for determining what metadata to use;
 these sdists normally break when installed with ``pip``, because metadata in an
 sdist is regenerated when pip installed. You can achieve this in your
@@ -147,7 +147,7 @@ assuming that the package on which they were based has a discoverable
 '.egg-info' file / directory.  To be discoverable, the '.egg-info' must
 either be located inside the package (e.g., created via ``setup.py develop``
 under setuptools), or adjacent to the package (e.g., created via
-``setup.py instlall``).
+``setup.py install``).
 
 
 Introspecting Development Checkouts

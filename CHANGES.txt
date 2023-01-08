@@ -1,6 +1,11 @@
 ``pkginfo`` Changelog
 =====================
 
+1.9.6 (unreleased)
+------------------
+
+- Fix various typos in docs / docstrings.  LP #2002232.
+
 1.9.5 (2023-01-06)
 ------------------
 
@@ -22,7 +27,7 @@
 ------------------
 
 - Drop "universal" wheel support (should be redundant with
-  'python_requires >= 3.6', but just in case.  LP #1998258.
+  'python_requires >= 3.6', but just in case).  LP #1998258.
 
 1.9.1 (2022-11-29)
 ------------------
@@ -278,7 +283,7 @@
 - Add tests that the "environment markers" spelled out in the approved
   PEP 345 are captured.
 
-- Add ``Project-URL`` for ``1.2`` PKG-INFO metdata (defined in the accepted
+- Add ``Project-URL`` for ``1.2`` PKG-INFO metadata (defined in the accepted
   version of PEP 345).
 
 

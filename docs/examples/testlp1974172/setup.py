@@ -8,7 +8,7 @@ Package: {NAME}
 This distribution exists to allow testing wheels with the description
 in the "body" of the metadata, rather than in a header.
 
-We make it long enough here, and with enough embeded markup, to try to
+We make it long enough here, and with enough embedded markup, to try to
 trigger that feature during wheel build.
 
 See also:
