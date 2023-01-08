@@ -1,7 +1,7 @@
 ``pkginfo`` Changelog
 =====================
 
-1.9.6 (unreleased)
+1.9.6 (2023-01-08)
 ------------------
 
 - Fix various typos in docs / docstrings.  LP #2002232.
