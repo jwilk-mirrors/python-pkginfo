@@ -10,7 +10,7 @@ else:
         'test_suite': 'pkginfo.tests',
         'zip_safe': False,
         'extras_require': {
-            'testing': ['pytest', 'pytest-cov'],
+            'testing': ['pytest', 'pytest-cov', 'wheel'],
         },
     }
 
