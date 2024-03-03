@@ -3,13 +3,12 @@
 
 def _checkSample(testcase, installed):
     try:
-        import pkg_resources
-    except ImportError: # pragma: NO COVER
-        # no setuptools :(
-        pass
-    else:
-        version = pkg_resources.require('pkginfo')[0].version
-        testcase.assertEqual(installed.version, version)
+        from importlib import metadata as importlib_metadata
+    except ImportError:  # python < 3.8
+        import importlib_metadata
+
+    version = importlib_metadata.version('pkginfo')
+    testcase.assertEqual(installed.version, version)
     testcase.assertEqual(installed.name, 'pkginfo')
     testcase.assertEqual(installed.keywords,
                         'distribution sdist installed metadata' )
