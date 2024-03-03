@@ -1,4 +1,6 @@
+import pathlib
 import shutil
+import sys
 import tempfile
 import unittest
 
@@ -129,10 +131,17 @@ class UnpackedMixin(object):
         return self._getTopDirectory()
 
     def _makeOne(self, filename=None, metadata_version=None):
-
         archive, _, _ = self._getTargetClass()._get_archive(filename)
+
+        # Work around Python 3.12 tarfile warning.
+        kwargs = {}
+        if sys.version_info >= (3, 12):
+            fn_path = pathlib.Path(filename)
+            if ".tar" in fn_path.suffixes:
+                kwargs["filter"] = "data"
+
         try:
-            archive.extractall(self.__tmpdir)
+            archive.extractall(self.__tmpdir, **kwargs)
         finally:
             archive.close()
 
