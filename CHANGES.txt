@@ -1,6 +1,13 @@
 ``pkginfo`` Changelog
 =====================
 
+1.10.0 (unreleased)
+-------------------
+
+- Declare explicit testing dependency on 'wheel'.
+
+- Add support for Metadata 2.3.
+
 1.9.6 (2023-01-08)
 ------------------
 
