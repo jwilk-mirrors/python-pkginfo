@@ -4,6 +4,8 @@
 1.10.0 (unreleased)
 -------------------
 
+- Add support for Python 3.11.
+
 - Drop support for Python 3.6.
 
 - Declare explicit testing dependency on 'wheel'.
