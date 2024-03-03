@@ -111,7 +111,8 @@ class InstalledTests(unittest.TestCase):
         oldpath = sys.path[:]
         try:
             sys.path.append(wonky)
-            import namespaced.wonky
+            with warnings.catch_warnings(record=True):
+                import namespaced.wonky
             installed = self._makeOne('namespaced.wonky')
             self.assertEqual(installed.metadata_version, '1.0')
             self.assertEqual(installed.package, namespaced.wonky)
@@ -128,7 +129,8 @@ class InstalledTests(unittest.TestCase):
         oldpath = sys.path[:]
         try:
             sys.path.append(manky)
-            import namespaced.manky
+            with warnings.catch_warnings(record=True):
+                import namespaced.manky
             installed = self._makeOne('namespaced.manky')
             self.assertEqual(installed.metadata_version, '1.0')
             self.assertEqual(installed.package, namespaced.manky)
