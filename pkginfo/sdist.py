@@ -1,5 +1,6 @@
 import io
 import os
+import pathlib
 import tarfile
 import zipfile
 
@@ -12,32 +13,31 @@ class SDist(Distribution):
         self.metadata_version = metadata_version
         self.extractMetadata()
 
-    @classmethod
-    def _get_archive(cls, fqn):
-        if not os.path.exists(fqn):
-            raise ValueError('No such file: %s' % fqn)
+    @staticmethod
+    def _get_archive(fqp):
+        if not fqp.exists():
+            raise ValueError('No such file: %s' % fqp)
 
-        if zipfile.is_zipfile(fqn):
-            archive = zipfile.ZipFile(fqn)
+        if zipfile.is_zipfile(fqp):
+            archive = zipfile.ZipFile(fqp)
             names = archive.namelist()
             def read_file(name):
                 return archive.read(name)
-        elif tarfile.is_tarfile(fqn):
-            archive = tarfile.TarFile.open(fqn)
+        elif tarfile.is_tarfile(fqp):
+            archive = tarfile.TarFile.open(fqp)
             names = archive.getnames()
             def read_file(name):
                 return archive.extractfile(name).read()
         else:
-            raise ValueError('Not a known archive format: %s' % fqn)
+            raise ValueError('Not a known archive format: %s' % fqp)
 
         return archive, names, read_file
 
 
     def read(self):
-        fqn = os.path.abspath(
-                os.path.normpath(self.filename))
+        fqp = pathlib.Path(self.filename).resolve()
 
-        archive, names, read_file = self._get_archive(fqn)
+        archive, names, read_file = self._get_archive(fqp)
 
         try:
             tuples = [x.split('/') for x in names if 'PKG-INFO' in x]
@@ -50,15 +50,17 @@ class SDist(Distribution):
         finally:
             archive.close()
 
-        raise ValueError('No PKG-INFO in archive: %s' % fqn)
+        raise ValueError('No PKG-INFO in archive: %s' % fqp)
 
 
 class UnpackedSDist(SDist):
     def __init__(self, filename, metadata_version=None):
-        if os.path.isdir(filename):
+        file_path = pathlib.Path(filename)
+
+        if file_path.is_dir():
             pass
-        elif os.path.isfile(filename):
-            filename = os.path.dirname(filename)
+        elif file_path.is_file():
+            filename = file_path.parent
         else:
             raise ValueError('No such file: %s' % filename)
 
