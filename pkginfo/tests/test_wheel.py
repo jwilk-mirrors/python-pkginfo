@@ -1,117 +1,104 @@
-import unittest
+import zipfile
 
-class WheelTests(unittest.TestCase):
+import pytest
 
-    def _getTargetClass(self):
-        from pkginfo.wheel import Wheel
-        return Wheel
+def _make_wheel(filename, metadata_version=None):
+    from pkginfo.wheel import Wheel
 
-    def _makeOne(self, filename=None, metadata_version=None):
-        if metadata_version is not None:
-            return self._getTargetClass()(filename, metadata_version)
-        return self._getTargetClass()(filename)
+    if metadata_version is not None:
+        return Wheel(filename, metadata_version=metadata_version)
+    else:
+        return Wheel(filename)
 
-    def _checkSample(self, wheel, filename):
-        self.assertEqual(wheel.filename, filename)
-        self.assertEqual(wheel.name, 'mypackage')
-        self.assertEqual(wheel.version, '0.1')
-        self.assertEqual(wheel.keywords, None)
+def _checkSample(wheel, filename):
+    assert(wheel.filename == filename)
+    assert(wheel.name == 'mypackage')
+    assert(wheel.version == '0.1')
+    assert(wheel.keywords == None)
 
-    def _checkClassifiers(self, wheel):
-        self.assertEqual(list(wheel.classifiers),
-                         ['Development Status :: 4 - Beta',
-                          'Environment :: Console (Text Based)',
-                         ])
-        self.assertEqual(list(wheel.supported_platforms), [])
+def _checkClassifiers(wheel):
+    assert(
+        list(wheel.classifiers) == [
+            'Development Status :: 4 - Beta',
+            'Environment :: Console (Text Based)',
+        ]
+    )
+    assert(list(wheel.supported_platforms) == [])
 
-    def test_ctor_w_bogus_filename(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/nonesuch-0.1-any.whl' % d
-        self.assertRaises(ValueError, self._makeOne, filename)
+def test_wheel_ctor_w_bogus_filename(examples_dir):
+    filename = str(examples_dir / 'nonesuch-0.1-any.whl')
 
-    def test_ctor_w_non_wheel(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.zip' % d
-        self.assertRaises(ValueError, self._makeOne, filename)
+    with pytest.raises(ValueError):
+        _make_wheel(filename)
 
-    def test_ctor_wo_dist_info(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/nodistinfo-0.1-any.whl' % d
-        self.assertRaises(ValueError, self._makeOne, filename)
+def test_wheel_ctor_w_non_wheel(archive):
+    filename = str(archive)
 
-    def test_ctor_w_valid_wheel(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = ('%s/../../docs/examples/'
-                    'mypackage-0.1-cp26-none-linux_x86_64.whl') % d
-        wheel = self._makeOne(filename)
-        self.assertEqual(wheel.metadata_version, '2.0')
-        self._checkSample(wheel, filename)
-        self._checkClassifiers(wheel)
+    with pytest.raises(ValueError):
+        _make_wheel(filename)
 
-    def test_ctor_w_installed_wheel(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = (
-            '%s/../../docs/examples/mypackage-0.1.dist-info') % d
-        wheel = self._makeOne(filename)
-        self.assertEqual(wheel.metadata_version, '2.0')
-        self._checkSample(wheel, filename)
-        self._checkClassifiers(wheel)
+def test_wheel_ctor_wo_dist_info(examples_dir):
+    filename = str(examples_dir / 'nodistinfo-0.1-any.whl')
 
-    def test_ctor_w_valid_wheel_and_metadata_version(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = ('%s/../../docs/examples/'
-                    'mypackage-0.1-cp26-none-linux_x86_64.whl') % d
-        wheel = self._makeOne(filename, metadata_version='1.1')
-        self.assertEqual(wheel.metadata_version, '1.1')
-        self._checkSample(wheel, filename)
-        self._checkClassifiers(wheel)
+    with pytest.raises(ValueError):
+        _make_wheel(filename)
 
-    def test_ctor_w_valid_wheel_w_description_header(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = ('%s/../../docs/examples/'
-                    'distlib-0.3.1-py2.py3-none-any.whl') % d
-        wheel = self._makeOne(filename, metadata_version='1.1')
-        self.assertEqual(wheel.metadata_version, '1.1')
-        self.assertTrue(wheel.description)
+def test_wheel_ctor_w_valid_wheel(test_wheel):
+    filename = str(test_wheel)
 
-    def test_ctor_w_valid_wheel_w_description_body(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = ('%s/../../docs/examples/'
-                    'testlp1974172-0.0.0-py3-none-any.whl') % d
-        wheel = self._makeOne(filename, metadata_version='2.1')
-        self.assertEqual(wheel.metadata_version, '2.1')
-        self.assertIn(
-            "https://bugs.launchpad.net/pkginfo/+bug/1885458",
-            wheel.description
-        )
+    wheel = _make_wheel(filename)
 
-    def test_ctor_w_valid_installed_wheel(self):
-        import os
-        import shutil
-        import tempfile
-        import zipfile
+    assert(wheel.metadata_version == '2.0')
+    _checkSample(wheel, filename)
+    _checkClassifiers(wheel)
 
-        d, _ = os.path.split(__file__)
-        filename = ('%s/../../docs/examples/'
-                    'mypackage-0.1-cp26-none-linux_x86_64.whl') % d
+def test_wheel_ctor_w_valid_wheel_and_metadata_version(test_wheel):
+    filename = str(test_wheel)
 
-        try:
-            # note: we mock a wheel installation by unzipping
-            test_dir = tempfile.mkdtemp()
-            with zipfile.ZipFile(filename) as zipf:
-                zipf.extractall(test_dir)
-            wheel = self._makeOne(filename)
-            self.assertEqual(wheel.metadata_version, '2.0')
-            self._checkSample(wheel, filename)
-            self._checkClassifiers(wheel)
-        finally:
-            if os.path.exists(test_dir):
-                shutil.rmtree(test_dir)
+    wheel = _make_wheel(filename, metadata_version='1.1')
+
+    assert(wheel.metadata_version == '1.1')
+    _checkSample(wheel, filename)
+    _checkClassifiers(wheel)
+
+def test_wheel_ctor_w_valid_wheel_w_description_header(examples_dir):
+    filename = str(examples_dir / 'distlib-0.3.1-py2.py3-none-any.whl')
+
+    wheel = _make_wheel(filename, metadata_version='1.1')
+
+    assert(wheel.metadata_version == '1.1')
+    assert(wheel.description)
+
+def test_wheel_ctor_w_valid_wheel_w_description_body(examples_dir):
+    filename = str(examples_dir / 'testlp1974172-0.0.0-py3-none-any.whl')
+
+    wheel = _make_wheel(filename, metadata_version='2.1')
+
+    assert(wheel.metadata_version == '2.1')
+    assert(
+        "https://bugs.launchpad.net/pkginfo/+bug/1885458" in
+        wheel.description
+    )
+
+def test_wheel_ctor_w_installed_wheel(examples_dir):
+    filename = str(examples_dir / 'mypackage-0.1.dist-info')
+
+    wheel = _make_wheel(filename)
+
+    assert(wheel.metadata_version == '2.0')
+    _checkSample(wheel, filename)
+    _checkClassifiers(wheel)
+
+def test_wheel_ctor_w_valid_installed_wheel(temp_dir, test_wheel):
+
+    filename = str(test_wheel)
+
+    with zipfile.ZipFile(filename) as zipf:
+        zipf.extractall(temp_dir)
+
+    installed_filename = temp_dir / 'mypackage-0.1.dist-info'
+    wheel = _make_wheel(str(installed_filename))
+
+    assert(wheel.metadata_version == '2.0')
+    _checkSample(wheel, str(installed_filename))
+    _checkClassifiers(wheel)

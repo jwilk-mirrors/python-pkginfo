@@ -1,165 +1,117 @@
 import pathlib
-import shutil
 import sys
-import tempfile
-import unittest
 
-class SDistTests(unittest.TestCase):
+import pytest
 
-    def _getTargetClass(self):
-        from pkginfo.sdist import SDist
-        return SDist
+def _make_sdist(filename=None, metadata_version=None):
+    from pkginfo.sdist import SDist
 
-    def _makeOne(self, filename=None, metadata_version=None):
-        if metadata_version is not None:
-            return self._getTargetClass()(filename, metadata_version)
-        return self._getTargetClass()(filename)
+    if metadata_version is not None:
+        return SDist(filename, metadata_version)
 
-    def _checkSample(self, sdist, filename):
-        self.assertEqual(sdist.filename, filename)
-        self.assertEqual(sdist.name, 'mypackage')
-        self.assertEqual(sdist.version, '0.1')
-        self.assertEqual(sdist.keywords, None)
-        self.assertEqual(list(sdist.supported_platforms), [])
+    return SDist(filename)
 
-    def _checkClassifiers(self, sdist):
-        self.assertEqual(list(sdist.classifiers),
-                         ['Development Status :: 4 - Beta',
-                          'Environment :: Console (Text Based)',
-                         ])
+def _make_unpacked_sdist(filename=None, metadata_version=None):
+    from pkginfo.sdist import UnpackedSDist
 
-    def test_ctor_w_invalid_filename(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/nonesuch-0.1.tar.gz' % d
-        self.assertRaises(ValueError, self._makeOne, filename)
+    if metadata_version is not None:
+        return UnpackedSDist(filename, metadata_version)
 
-    def test_ctor_wo_PKG_INFO(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/nopkginfo-0.1.zip' % d
-        self.assertRaises(ValueError, self._makeOne, filename)
+    return UnpackedSDist(filename)
 
-    def test_ctor_w_tar(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.tar' % d
-        sdist = self._makeOne(filename)
-        self.assertEqual(sdist.metadata_version, '1.0')
-        self._checkSample(sdist, filename)
+def _check_sample(sdist, filename):
+    assert(sdist.filename == filename)
+    assert(sdist.name == 'mypackage')
+    assert(sdist.version == '0.1')
+    assert(sdist.keywords == None)
+    assert(list(sdist.supported_platforms) == [])
 
-    def test_ctor_w_gztar(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.tar.gz' % d
-        sdist = self._makeOne(filename)
-        self.assertEqual(sdist.metadata_version, '1.0')
-        self._checkSample(sdist, filename)
+def _check_classifiers(sdist):
+    assert(
+        list(sdist.classifiers) == [
+            'Development Status :: 4 - Beta',
+            'Environment :: Console (Text Based)',
+        ]
+    )
 
-    def test_ctor_w_gztar_and_metadata_version(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.tar.gz' % d
-        sdist = self._makeOne(filename, metadata_version='1.1')
-        self._checkSample(sdist, filename)
-        self.assertEqual(sdist.metadata_version, '1.1')
-        self._checkClassifiers(sdist)
+def _top_dir(tempdir):
+    file_paths = list(tempdir.glob("*"))
+    assert len(file_paths) == 1
+    return file_paths[0]
 
-    def test_ctor_w_bztar(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.tar.bz2' % d
-        sdist = self._makeOne(filename)
-        self.assertEqual(sdist.metadata_version, '1.0')
-        self._checkSample(sdist, filename)
+def _unpack(tempdir, filename):
+    from pkginfo.sdist import SDist
 
-    def test_ctor_w_bztar_and_metadata_version(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.tar.bz2' % d
-        sdist = self._makeOne(filename, metadata_version='1.1')
-        self.assertEqual(sdist.metadata_version, '1.1')
-        self._checkSample(sdist, filename)
-        self._checkClassifiers(sdist)
+    # Work around Python 3.12 tarfile warning.
+    kwargs = {}
+    if sys.version_info >= (3, 12):
+        fn_path = pathlib.Path(filename)
+        if ".tar" in fn_path.suffixes:
+            kwargs["filter"] = "data"
 
-    def test_ctor_w_zip(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.zip' % d
-        sdist = self._makeOne(filename)
-        self.assertEqual(sdist.metadata_version, '1.0')
-        self._checkSample(sdist, filename)
+    archive, _, _ = SDist._get_archive(filename)
+    try:
+        archive.extractall(tempdir, **kwargs)
+    finally:
+        archive.close()
 
-    def test_ctor_w_zip_and_metadata_version(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.zip' % d
-        sdist = self._makeOne(filename, metadata_version='1.1')
-        self.assertEqual(sdist.metadata_version, '1.1')
-        self._checkSample(sdist, filename)
-        self._checkClassifiers(sdist)
+@pytest.fixture()
+def unpacked_dir(temp_dir, archive):
+    _unpack(temp_dir, archive)
+    return _top_dir(temp_dir)
 
-    def test_ctor_w_bogus(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.bogus' % d
+@pytest.mark.parametrize("factory", [_make_sdist, _make_unpacked_sdist])
+def test_sdist_ctor_w_invalid_filename(examples_dir, factory):
+    filename = examples_dir / 'nonesuch-0.1.tar.gz'
 
-        with self.assertRaises(ValueError):
-            self._makeOne(filename, metadata_version='1.1')
+    with pytest.raises(ValueError):
+        factory(filename)
 
+@pytest.mark.parametrize("factory", [_make_sdist, _make_unpacked_sdist])
+def test_sdist_ctor_wo_PKG_INFO(examples_dir, factory):
+    filename = examples_dir / 'nopkginfo-0.1.zip'
 
-class UnpackedMixin(object):
-    def setUp(self):
-        super(UnpackedMixin, self).setUp()
-        self.__tmpdir = tempfile.mkdtemp()
+    with pytest.raises(ValueError):
+        factory(filename)
 
-    def tearDown(self):
-        shutil.rmtree(self.__tmpdir)
-        super(UnpackedMixin, self).tearDown()
+@pytest.mark.parametrize("factory", [_make_sdist, _make_unpacked_sdist])
+def test_sdist_ctor_w_bogus(examples_dir, factory):
+    filename = examples_dir / 'mypackage-0.1.bogus'
 
-    def _getTargetClass(self):
-        from pkginfo.sdist import UnpackedSDist
-        return UnpackedSDist
+    with pytest.raises(ValueError):
+        factory(filename, metadata_version='1.1')
 
-    def _getTopDirectory(self):
-        import os
-        topnames = os.listdir(self.__tmpdir)
-        assert len(topnames) == 1
-        return os.path.join(self.__tmpdir, topnames[0])
+@pytest.mark.parametrize("w_metadata_version", [False, True])
+def test_sdist_ctor_w_archive(archive, w_metadata_version):
+    if w_metadata_version:
+        sdist = _make_sdist(archive, metadata_version='1.1')
+        assert sdist.metadata_version == '1.1'
+        _check_classifiers(sdist)
+    else:
+        sdist = _make_sdist(archive)
+        assert sdist.metadata_version == '1.0'
+    _check_sample(sdist, archive)
 
-    def _getLoadFilename(self):
-        return self._getTopDirectory()
+@pytest.mark.parametrize("w_metadata_version", [False, True])
+def test_sdist_ctor_w_unpacked_dir(unpacked_dir, w_metadata_version):
+    if w_metadata_version:
+        sdist = _make_unpacked_sdist(unpacked_dir, metadata_version='1.1')
+        assert sdist.metadata_version == '1.1'
+        _check_classifiers(sdist)
+    else:
+        sdist = _make_unpacked_sdist(unpacked_dir)
+        assert sdist.metadata_version == '1.0'
+    _check_sample(sdist, unpacked_dir)
 
-    def _makeOne(self, filename=None, metadata_version=None):
-        archive, _, _ = self._getTargetClass()._get_archive(filename)
+@pytest.mark.parametrize("w_metadata_version", [False, True])
+def test_sdist_ctor_w_unpacked_setup(unpacked_dir, w_metadata_version):
+    setup_py = unpacked_dir / "setup.py"
+    if w_metadata_version:
+        sdist = _make_unpacked_sdist(setup_py, metadata_version='1.1')
+        assert sdist.metadata_version == '1.1'
+        _check_classifiers(sdist)
+    else:
+        sdist = _make_unpacked_sdist(setup_py)
+        assert sdist.metadata_version == '1.0'
+    _check_sample(sdist, unpacked_dir)
 
-        # Work around Python 3.12 tarfile warning.
-        kwargs = {}
-        if sys.version_info >= (3, 12):
-            fn_path = pathlib.Path(filename)
-            if ".tar" in fn_path.suffixes:
-                kwargs["filter"] = "data"
-
-        try:
-            archive.extractall(self.__tmpdir, **kwargs)
-        finally:
-            archive.close()
-
-        load_filename = self._getLoadFilename()
-
-        if metadata_version is not None:
-            return self._getTargetClass()(load_filename, metadata_version)
-        return self._getTargetClass()(load_filename)
-
-    def _checkSample(self, sdist, filename):
-        filename = self._getTopDirectory()
-        super(UnpackedMixin, self)._checkSample(sdist, filename)
-
-
-class UnpackedSDistGivenDirectoryTests(UnpackedMixin, SDistTests):
-    pass
-
-class UnpackedSDistGivenFileSDistTests(UnpackedMixin, SDistTests):
-    def _getLoadFilename(self):
-        import os
-        return os.path.join(self._getTopDirectory(), 'setup.py')

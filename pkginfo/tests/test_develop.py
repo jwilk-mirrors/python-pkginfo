@@ -1,27 +1,23 @@
-import unittest
+import pytest
 
-class DevelopTests(unittest.TestCase):
+def _make_develop(dirname):
+    from pkginfo.develop import Develop
+    return Develop(dirname)
 
-    def _getTargetClass(self):
-        from pkginfo.develop import Develop
-        return Develop
+def test_develop_ctor_w_path():
+    from pkginfo.tests import _checkSample
+    develop = _make_develop('.')
+    _checkSample(None, develop)
 
-    def _makeOne(self, dirname=None):
-        return self._getTargetClass()(dirname)
+def test_develop_ctor_w_invalid_path():
+    import warnings 
 
-    def test_ctor_w_path(self):
-        from pkginfo.tests import _checkSample
-        develop = self._makeOne('.')
-        _checkSample(self, develop)
+    with warnings.catch_warnings(record=True) as warned:
+        develop = _make_develop('/nonesuch')
 
-    def test_ctor_w_invalid_path(self):
-        import warnings 
-        old_filters = warnings.filters[:]
-        warnings.filterwarnings('ignore')
-        try:
-            develop = self._makeOne('/nonesuch')
-            self.assertEqual(develop.metadata_version, None)
-            self.assertEqual(develop.name, None)
-            self.assertEqual(develop.version, None)
-        finally:
-            warnings.filters[:] = old_filters
+    assert(develop.metadata_version == None)
+    assert(develop.name == None)
+    assert(develop.version == None)
+
+    assert len(warned) == 1
+    assert str(warned[0].message).startswith('No PKG-INFO found')

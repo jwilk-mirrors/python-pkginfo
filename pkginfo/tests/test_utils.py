@@ -1,176 +1,161 @@
-import unittest
+import warnings
 
-class Test_get_metadata(unittest.TestCase):
+import pytest
 
-    def _callFUT(self, path, metadata_version=None):
-        from pkginfo.utils import get_metadata
-        if metadata_version is not None:
-            return get_metadata(path, metadata_version)
-        return get_metadata(path)
+def _checkMyPackage(dist, filename):
+    assert(dist.filename == filename)
+    assert(dist.name == 'mypackage')
+    assert(dist.version == '0.1')
+    assert(dist.keywords == None)
+    assert(list(dist.supported_platforms) == [])
 
-    def _checkMyPackage(self, dist, filename):
-        self.assertEqual(dist.filename, filename)
-        self.assertEqual(dist.name, 'mypackage')
-        self.assertEqual(dist.version, '0.1')
-        self.assertEqual(dist.keywords, None)
-        self.assertEqual(list(dist.supported_platforms), [])
+def _checkClassifiers(dist):
+    assert(
+        list(dist.classifiers) == [
+            'Development Status :: 4 - Beta',
+            'Environment :: Console (Text Based)',
+        ]
+    )
 
-    def _checkClassifiers(self, dist):
-        self.assertEqual(list(dist.classifiers),
-                         ['Development Status :: 4 - Beta',
-                          'Environment :: Console (Text Based)',
-                         ])
+@pytest.mark.parametrize("w_metadata_version", [False, True])
+def test_get_metadata_archive(archive, w_metadata_version):
+    from pkginfo.utils import get_metadata
 
-    def test_w_gztar(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.tar.gz' % d
-        dist = self._callFUT(filename)
-        self.assertEqual(dist.metadata_version, '1.0')
-        self._checkMyPackage(dist, filename)
+    filename = str(archive)
 
-    def test_w_gztar_and_metadata_version(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.tar.gz' % d
-        dist = self._callFUT(filename, metadata_version='1.1')
-        self.assertEqual(dist.metadata_version, '1.1')
-        self._checkMyPackage(dist, filename)
-        self._checkClassifiers(dist)
+    if w_metadata_version:
+        dist = get_metadata(filename, metadata_version='1.1')
+        assert(dist.metadata_version == '1.1')
+        _checkClassifiers(dist)
+    else:
+        dist = get_metadata(filename)
+        assert(dist.metadata_version == '1.0')
 
-    def test_w_bztar(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.tar.bz2' % d
-        dist = self._callFUT(filename)
-        self.assertEqual(dist.metadata_version, '1.0')
-        self._checkMyPackage(dist, filename)
+    _checkMyPackage(dist, filename)
 
-    def test_w_bztar_and_metadata_version(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.tar.bz2' % d
-        dist = self._callFUT(filename, metadata_version='1.1')
-        self.assertEqual(dist.metadata_version, '1.1')
-        self._checkMyPackage(dist, filename)
-        self._checkClassifiers(dist)
+def test_get_metadata_w_egg(test_egg):
+    from pkginfo.utils import get_metadata
 
-    def test_w_zip(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.zip' % d
-        dist = self._callFUT(filename)
-        self.assertEqual(dist.metadata_version, '1.0')
-        self._checkMyPackage(dist, filename)
+    filename = str(test_egg)
 
-    def test_w_zip_and_metadata_version(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1.zip' % d
-        dist = self._callFUT(filename, metadata_version='1.1')
-        self.assertEqual(dist.metadata_version, '1.1')
-        self._checkMyPackage(dist, filename)
-        self._checkClassifiers(dist)
+    dist = get_metadata(filename)
 
-    def test_w_egg(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1-py2.6.egg' % d
-        dist = self._callFUT(filename)
-        self.assertEqual(dist.metadata_version, '1.0')
-        self._checkMyPackage(dist, filename)
+    assert(dist.metadata_version == '1.0')
+    _checkMyPackage(dist, filename)
 
-    def test_w_egg_and_metadata_version(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = '%s/../../docs/examples/mypackage-0.1-py2.6.egg' % d
-        dist = self._callFUT(filename, metadata_version='1.1')
-        self.assertEqual(dist.metadata_version, '1.1')
-        self._checkMyPackage(dist, filename)
-        self._checkClassifiers(dist)
+def test_get_metadata_w_egg_and_metadata_version(test_egg):
+    from pkginfo.utils import get_metadata
 
-    def test_w_wheel(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = ('%s/../../docs/examples/'
-                    'mypackage-0.1-cp26-none-linux_x86_64.whl') % d
-        dist = self._callFUT(filename)
-        self.assertEqual(dist.metadata_version, '2.0')
-        self._checkMyPackage(dist, filename)
+    filename = str(test_egg)
 
-    def test_w_wheel_and_metadata_version(self):
-        import os
-        d, _ = os.path.split(__file__)
-        filename = ('%s/../../docs/examples/'
-                    'mypackage-0.1-cp26-none-linux_x86_64.whl') % d
-        dist = self._callFUT(filename, metadata_version='1.1')
-        self.assertEqual(dist.metadata_version, '1.1')
-        self._checkMyPackage(dist, filename)
-        self._checkClassifiers(dist)
+    dist = get_metadata(filename, metadata_version='1.1')
 
-    def test_w_module(self):
-        from pkginfo.tests import _defaultMetadataVersion
-        EXPECTED =  _defaultMetadataVersion()
-        import pkginfo
-        from pkginfo.tests import _checkSample
-        dist = self._callFUT(pkginfo)
-        self.assertEqual(dist.metadata_version, EXPECTED)
-        _checkSample(self, dist)
+    assert(dist.metadata_version == '1.1')
+    _checkMyPackage(dist, filename)
+    _checkClassifiers(dist)
 
-    def test_w_module_and_metadata_version(self):
-        import pkginfo
-        from pkginfo.tests import _checkSample
-        from pkginfo.tests import _checkClassifiers
-        dist = self._callFUT(pkginfo, metadata_version='1.2')
-        self.assertEqual(dist.metadata_version, '1.2')
-        _checkSample(self, dist)
-        _checkClassifiers(self, dist)
+def test_get_metadata_w_wheel(test_wheel):
+    from pkginfo.utils import get_metadata
 
-    def test_w_package_name(self):
-        from pkginfo.tests import _defaultMetadataVersion
-        EXPECTED =  _defaultMetadataVersion()
-        from pkginfo.tests import _checkSample
-        dist = self._callFUT('pkginfo')
-        self.assertEqual(dist.metadata_version, EXPECTED)
-        _checkSample(self, dist)
+    filename = str(test_wheel)
 
-    def test_w_package_name_and_metadata_version(self):
-        from pkginfo.tests import _checkSample
-        from pkginfo.tests import _checkClassifiers
-        dist = self._callFUT('pkginfo', metadata_version='1.2')
-        self.assertEqual(dist.metadata_version, '1.2')
-        _checkSample(self, dist)
-        _checkClassifiers(self, dist)
+    dist = get_metadata(filename)
 
-    def test_w_directory_no_EGG_INFO(self):
-        import os
-        import warnings
-        dir, name = os.path.split(__file__)
-        subdir = os.path.join(dir, 'funny')
-        old_filters = warnings.filters[:]
-        warnings.filterwarnings('ignore')
-        try:
-            dist = self._callFUT(subdir)
-            self.assertEqual(dist.path, subdir)
-            self.assertEqual(dist.name, None)
-            self.assertEqual(dist.version, None)
-        finally:
-            warnings.filters[:] = old_filters
+    assert(dist.metadata_version == '2.0')
+    _checkMyPackage(dist, filename)
 
-    def test_w_directory(self):
-        import os
-        dir, name = os.path.split(__file__)
-        subdir = os.path.join(dir, 'silly')
-        dist = self._callFUT(subdir)
-        self.assertEqual(dist.metadata_version, '1.0')
-        self.assertEqual(dist.name, 'silly')
-        self.assertEqual(dist.version, '0.1')
+def test_get_metadata_w_wheel_and_metadata_version(test_wheel):
+    from pkginfo.utils import get_metadata
 
-    def test_w_directory_and_metadata_version(self):
-        import os
-        dir, name = os.path.split(__file__)
-        subdir = os.path.join(dir, 'silly')
-        dist = self._callFUT(subdir, metadata_version='1.2')
-        self.assertEqual(dist.metadata_version, '1.2')
-        self.assertEqual(dist.name, 'silly')
-        self.assertEqual(dist.version, '0.1')
+    filename = str(test_wheel)
+
+    dist = get_metadata(filename, metadata_version='1.1')
+
+    assert(dist.metadata_version == '1.1')
+    _checkMyPackage(dist, filename)
+    _checkClassifiers(dist)
+
+def test_get_metadata_w_module():
+    import pkginfo
+    from pkginfo.tests import _checkSample
+    from pkginfo.tests import _defaultMetadataVersion
+    from pkginfo.utils import get_metadata
+
+    EXPECTED =  _defaultMetadataVersion()
+
+    dist = get_metadata(pkginfo)
+
+    assert(dist.metadata_version == EXPECTED)
+    _checkSample(None, dist)
+
+def test_get_metadata_w_module_and_metadata_version():
+    import pkginfo
+    from pkginfo.tests import _checkSample
+    from pkginfo.tests import _checkClassifiers
+    from pkginfo.utils import get_metadata
+
+    dist = get_metadata(pkginfo, metadata_version='1.2')
+
+    assert(dist.metadata_version == '1.2')
+    _checkSample(None, dist)
+    _checkClassifiers(None, dist)
+
+def test_get_metadata_w_package_name():
+    from pkginfo.tests import _checkSample
+    from pkginfo.tests import _defaultMetadataVersion
+    from pkginfo.utils import get_metadata
+
+    EXPECTED =  _defaultMetadataVersion()
+
+    dist = get_metadata('pkginfo')
+
+    assert(dist.metadata_version == EXPECTED)
+    _checkSample(None, dist)
+
+def test_get_metadata_w_package_name_and_metadata_version():
+    from pkginfo.tests import _checkSample
+    from pkginfo.tests import _checkClassifiers
+    from pkginfo.utils import get_metadata
+
+    dist = get_metadata('pkginfo', metadata_version='1.2')
+
+    assert(dist.metadata_version == '1.2')
+    _checkSample(None, dist)
+    _checkClassifiers(None, dist)
+
+def test_get_metadata_w_directory_no_EGG_INFO(here):
+    from pkginfo.utils import get_metadata
+
+    subdir = str(here / 'funny')
+
+    with warnings.catch_warnings(record=True) as warned:
+        dist = get_metadata(subdir)
+
+    assert(dist.path == subdir)
+    assert(dist.name == None)
+    assert(dist.version == None)
+
+    assert(len(warned) == 1)
+    assert str(warned[0].message).startswith('No PKG-INFO found')
+
+def test_get_metadata_w_directory(here):
+    from pkginfo.utils import get_metadata
+
+    subdir = str(here / 'silly')
+
+    dist = get_metadata(subdir)
+
+    assert(dist.metadata_version == '1.0')
+    assert(dist.name == 'silly')
+    assert(dist.version == '0.1')
+
+def test_get_metadata_w_directory_and_metadata_version(here):
+    from pkginfo.utils import get_metadata
+
+    subdir = str(here / 'silly')
+
+    dist = get_metadata(subdir, metadata_version='1.2')
+
+    assert(dist.metadata_version == '1.2')
+    assert(dist.name == 'silly')
+    assert(dist.version == '0.1')

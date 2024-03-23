@@ -2,303 +2,279 @@ import collections
 import io
 import json as json_module
 import sys
-import unittest
+from unittest import mock
 
-class Test__parse_options(unittest.TestCase):
+import pytest
 
-    def _callFUT(self, args):
-        from pkginfo.commandline import _parse_options
-        return _parse_options(args)
+def test__parse_options_empty():
+    from pkginfo.commandline import __doc__ as usage
+    from pkginfo.commandline import _parse_options
 
-    def test_empty(self):
-        from pkginfo.commandline import __doc__ as usage
+    firstline = usage.splitlines()[0]
+    buf = io.StringIO()
 
-        firstline = usage.splitlines()[0]
-        buf = io.StringIO()
+    with mock.patch.object(sys, "stderr", buf):
+        with pytest.raises(SystemExit):
+            _parse_options([])
 
-        with _Monkey(sys, stderr=buf):
-            self.assertRaises(SystemExit, self._callFUT, [])
-        self.assertTrue(firstline in buf.getvalue())
+    assert(firstline in buf.getvalue())
 
-    def test_nonempty(self):
-        options, args = self._callFUT(['foo'])
-        self.assertEqual(args, ['foo'])
+def test__parse_options_nonempty():
+    from pkginfo.commandline import _parse_options
 
-class BaseTests(unittest.TestCase):
+    options, args = _parse_options(['foo'])
+    assert(args == ['foo'])
 
-    def _getTargetClass(self):
-        from pkginfo.commandline import Base
+def _make_base(options):
+    from pkginfo.commandline import Base
 
-        return Base
+    return Base(options)
 
-    def _makeOne(self, options):
-        return self._getTargetClass()(options)
+def test_base_ctor_defaults():
+    base = _make_base(_Options(fields=()))
+    assert(base._fields is None)
 
-    def test___init___defaults(self):
-        base = self._makeOne(_Options(fields=()))
-        self.assertTrue(base._fields is None)
+def test_base_ctor_w_fields():
+    fields = object()
+    base = _make_base(_Options(fields=fields))
+    assert(base._fields is fields)
 
-    def test___init___w_fields(self):
-        fields = object()
-        base = self._makeOne(_Options(fields=fields))
-        self.assertTrue(base._fields is fields)
+def _capture_output(func, *args, **kw):
+    buf = io.StringIO()
 
-class _FormatterBase(object):
+    with mock.patch.object(sys, "stdout", buf):
+        func(*args, **kw)
 
-    def _capture_output(self, func, *args, **kw):
-        buf = io.StringIO()
+    return buf.getvalue()
 
-        with _Monkey(sys, stdout=buf):
-            func(*args, **kw)
-        return buf.getvalue()
+def _no_output(simple, meta):
+    with mock.patch.object(sys, "stdout", object()):  # raise if write
+        simple(meta)
 
-    def _no_output(self, simple, meta):
-        with _Monkey(sys, stdout=object()):  # raise if write
-            simple(meta)
+def _make_simple(options):
+    from pkginfo.commandline import Simple
+    return Simple(options)
 
-class SimpleTests(unittest.TestCase, _FormatterBase):
+def test_simple___init__():
+    simple = _make_simple(_Options(fields=None, skip=True))
+    assert(simple._skip)
 
-    def _getTargetClass(self):
-        from pkginfo.commandline import Simple
-        return Simple
+def test_simple__call___w_empty_fields():
+    simple = _make_simple(_Options(fields=(), skip=False))
+    meta = _Meta()
+    _no_output(simple, meta)
 
-    def _makeOne(self, options):
-        return self._getTargetClass()(options)
+def test_simple__call___w_skip_and_value_None_no_fields():
+    simple = _make_simple(_Options(fields=(), skip=True))
+    meta = _Meta(foo=None)
+    _no_output(simple, meta)
 
-    def test___init___(self):
-        simple = self._makeOne(_Options(fields=None, skip=True))
-        self.assertTrue(simple._skip)
+def test_simple__call___w_skip_and_value_empty_tuple_explicit_fields():
+    simple = _make_simple(_Options(fields=('foo',), skip=True))
+    meta = _Meta(foo=(), bar='Bar')
+    _no_output(simple, meta)
 
-    def test___call___w_empty_fields(self):
-        simple = self._makeOne(_Options(fields=(), skip=False))
-        meta = _Meta()
-        self._no_output(simple, meta)
+def test_simple__call___w_skip_but_values_explicit_fields():
+    simple = _make_simple(_Options(fields=('foo',), skip=True))
+    meta = _Meta(foo='Foo')
+    output = _capture_output(simple, meta)
+    assert(output == 'foo: Foo\n')
 
-    def test___call___w_skip_and_value_None_no_fields(self):
-        simple = self._makeOne(_Options(fields=(), skip=True))
-        meta = _Meta(foo=None)
-        self._no_output(simple, meta)
+def _make_single_line(options):
+    from pkginfo.commandline import SingleLine
 
-    def test___call___w_skip_and_value_empty_tuple_explicit_fields(self):
-        simple = self._makeOne(_Options(fields=('foo',), skip=True))
-        meta = _Meta(foo=(), bar='Bar')
-        self._no_output(simple, meta)
+    return SingleLine(options)
 
-    def test___call___w_skip_but_values_explicit_fields(self):
-        simple = self._makeOne(_Options(fields=('foo',), skip=True))
-        meta = _Meta(foo='Foo')
-        output = self._capture_output(simple, meta)
-        self.assertEqual(output, 'foo: Foo\n')
+def test_singleline__init___():
+    single = _make_single_line(
+        _Options(fields=None, item_delim='I', sequence_delim='S'))
+    assert(single._item_delim == 'I')
+    assert(single._sequence_delim == 'S')
 
-class SingleLineTests(unittest.TestCase, _FormatterBase):
+def test_singleline__call__wo_fields_wo_list():
+    single = _make_single_line(
+        _Options(fields=(), item_delim='|',
+                    sequence_delim=object()))  # raise if used
+    meta = _Meta(foo='Foo', bar='Bar')
+    output = _capture_output(single, meta)
+    assert(output == 'Bar|Foo\n')
 
-    def _getTargetClass(self):
-        from pkginfo.commandline import SingleLine
+def test_singleline__call__w_fields_w_list():
+    single = _make_single_line(
+        _Options(fields=('foo', 'bar'), item_delim='|',
+                    sequence_delim='*'))
+    meta = _Meta(foo='Foo', bar=['Bar1', 'Bar2'], baz='Baz')
+    output = _capture_output(single, meta)
+    assert(output == 'Foo|Bar1*Bar2\n')
 
-        return SingleLine
+def _make_csv(options):
+    from pkginfo.commandline import CSV
 
-    def _makeOne(self, options):
-        return self._getTargetClass()(options)
+    return CSV(options)
 
-    def test___init___(self):
-        single = self._makeOne(
-            _Options(fields=None, item_delim='I', sequence_delim='S'))
-        self.assertEqual(single._item_delim, 'I')
-        self.assertEqual(single._sequence_delim, 'S')
+def test_csv__init___():
+    csv = _make_csv(
+        _Options(fields=None, sequence_delim='S'))
+    assert(csv._sequence_delim == 'S')
 
-    def test___call__wo_fields_wo_list(self):
-        single = self._makeOne(
-            _Options(fields=(), item_delim='|',
-                     sequence_delim=object()))  # raise if used
-        meta = _Meta(foo='Foo', bar='Bar')
-        output = self._capture_output(single, meta)
-        self.assertEqual(output, 'Bar|Foo\n')
+def test_csv__call__wo_fields_wo_list():
+    meta = _Meta(foo='Foo', bar='Bar')
+    csv = _make_csv(
+        _Options(fields=None,
+                    sequence_delim=object()))  # raise if used
+    output = _capture_output(csv, meta)
+    assert(output == 'bar,foo\r\nBar,Foo\r\n')
 
-    def test___call__w_fields_w_list(self):
-        single = self._makeOne(
-            _Options(fields=('foo', 'bar'), item_delim='|',
-                     sequence_delim='*'))
-        meta = _Meta(foo='Foo', bar=['Bar1', 'Bar2'], baz='Baz')
-        output = self._capture_output(single, meta)
-        self.assertEqual(output, 'Foo|Bar1*Bar2\n')
+def test_csv__call__w_fields_w_list():
+    meta = _Meta(foo='Foo', bar=['Bar1', 'Bar2'], baz='Baz')
+    csv = _make_csv(
+        _Options(fields=('foo', 'bar'), item_delim='|',
+                    sequence_delim='*'))
+    output = _capture_output(csv, meta)
+    assert(output == 'foo,bar\r\nFoo,Bar1*Bar2\r\n')
 
-class CSVTests(unittest.TestCase, _FormatterBase):
+def _make_ini(options):
+    from pkginfo.commandline import INI
 
-    def _getTargetClass(self):
-        from pkginfo.commandline import CSV
+    return INI(options)
 
-        return CSV
-
-    def _makeOne(self, options):
-        return self._getTargetClass()(options)
-
-    def test___init___(self):
-        csv = self._makeOne(
-            _Options(fields=None, sequence_delim='S'))
-        self.assertEqual(csv._sequence_delim, 'S')
-
-    def test___call__wo_fields_wo_list(self):
-        meta = _Meta(foo='Foo', bar='Bar')
-        csv = self._makeOne(
-            _Options(fields=None,
-                     sequence_delim=object()))  # raise if used
-        output = self._capture_output(csv, meta)
-        self.assertEqual(output, 'bar,foo\r\nBar,Foo\r\n')
-
-    def test___call__w_fields_w_list(self):
-        meta = _Meta(foo='Foo', bar=['Bar1', 'Bar2'], baz='Baz')
-        csv = self._makeOne(
-            _Options(fields=('foo', 'bar'), item_delim='|',
-                     sequence_delim='*'))
-        output = self._capture_output(csv, meta)
-        self.assertEqual(output, 'foo,bar\r\nFoo,Bar1*Bar2\r\n')
-
-class INITests(unittest.TestCase, _FormatterBase):
-
-    def _getTargetClass(self):
-        from pkginfo.commandline import INI
-
-        return INI
-
-    def _makeOne(self, options):
-        return self._getTargetClass()(options)
-
-    def test___call___duplicate(self):
-        ini = self._makeOne(_Options(fields=('foo',)))
-        meta = _Meta(name='foo', version='0.1', foo='Foo')
-        ini._parser.add_section('foo-0.1')
-        self.assertRaises(ValueError, ini, meta)
-
-    def test___call___wo_fields_wo_list(self):
-        ini = self._makeOne(_Options(fields=None))
-        meta = _Meta(name='foo', version='0.1', foo='Foo')
+def test_ini__call___duplicate():
+    ini = _make_ini(_Options(fields=('foo',)))
+    meta = _Meta(name='foo', version='0.1', foo='Foo')
+    ini._parser.add_section('foo-0.1')
+    with pytest.raises(ValueError):
         ini(meta)
-        cp = ini._parser
-        self.assertEqual(cp.sections(), ['foo-0.1'])
-        self.assertEqual(sorted(cp.options('foo-0.1')),
-                         ['foo', 'name', 'version'])
-        self.assertEqual(cp.get('foo-0.1', 'name'), 'foo')
-        self.assertEqual(cp.get('foo-0.1', 'version'), '0.1')
-        self.assertEqual(cp.get('foo-0.1', 'foo'), 'Foo')
 
-    def test___call___w_fields_w_list(self):
-        ini = self._makeOne(_Options(fields=('foo', 'bar')))
-        meta = _Meta(name='foo', version='0.1',
-                     foo='Foo', bar=['Bar1', 'Bar2'], baz='Baz')
-        ini(meta)
-        cp = ini._parser
-        self.assertEqual(cp.sections(), ['foo-0.1'])
-        self.assertEqual(sorted(cp.options('foo-0.1')), ['bar', 'foo'])
-        self.assertEqual(cp.get('foo-0.1', 'foo'), 'Foo')
-        self.assertEqual(cp.get('foo-0.1', 'bar'), 'Bar1\n\tBar2')
+def test_ini__call___wo_fields_wo_list():
+    ini = _make_ini(_Options(fields=None))
+    meta = _Meta(name='foo', version='0.1', foo='Foo')
+    ini(meta)
+    cp = ini._parser
+    assert(cp.sections() == ['foo-0.1'])
+    assert(sorted(cp.options('foo-0.1')) == ['foo', 'name', 'version'])
+    assert(cp.get('foo-0.1', 'name') == 'foo')
+    assert(cp.get('foo-0.1', 'version') == '0.1')
+    assert(cp.get('foo-0.1', 'foo') == 'Foo')
 
-class JSONtests(unittest.TestCase, _FormatterBase):
+def test_ini__call___w_fields_w_list():
+    ini = _make_ini(_Options(fields=('foo', 'bar')))
+    meta = _Meta(
+        name='foo',
+        version='0.1',
+        foo='Foo',
+        bar=['Bar1', 'Bar2'],
+        baz='Baz',
+    )
+    ini(meta)
+    cp = ini._parser
+    assert(cp.sections() == ['foo-0.1'])
+    assert(sorted(cp.options('foo-0.1')) == ['bar', 'foo'])
+    assert(cp.get('foo-0.1', 'foo') == 'Foo')
+    assert(cp.get('foo-0.1', 'bar') == 'Bar1\n\tBar2')
 
-    def _getTargetClass(self):
-        from pkginfo.commandline import JSON
+def _make_json(options):
+    from pkginfo.commandline import JSON
 
-        return JSON
+    return JSON(options)
 
-    def _makeOne(self, options):
-        return self._getTargetClass()(options)
-
-    def test___call___duplicate_with_meta_and_fields(self):
-        json = self._makeOne(_Options(fields=('name',)))
-        meta = _Meta(name='foo', version='0.1', foo='Foo')
-        json._mapping['name'] = 'foo'
-        self.assertRaises(ValueError, json, meta)
-
-    def test___call___duplicate_with_meta_wo_fields(self):
-        json = self._makeOne(_Options(fields=None))
-        meta = _Meta(name='foo', version='0.1', foo='Foo')
-        json._mapping['name'] = 'foo'
-        self.assertRaises(ValueError, json, meta)
-
-    def test___call___wo_fields_wo_list(self):
-
-        json = self._makeOne(_Options(fields=None))
-        meta = _Meta(name='foo', version='0.1', foo='Foo')
+def test_json__call___duplicate_with_meta_and_fields():
+    json = _make_json(_Options(fields=('name',)))
+    meta = _Meta(name='foo', version='0.1', foo='Foo')
+    json._mapping['name'] = 'foo'
+    with pytest.raises(ValueError):
         json(meta)
-        expected = collections.OrderedDict([
-            ('foo', 'Foo'), ('name', 'foo'), ('version', '0.1')])
-        self.assertEqual(expected, json._mapping)
 
-    def test___call___w_fields_w_list(self):
-        json = self._makeOne(_Options(fields=('foo', 'bar')))
-        meta = _Meta(name='foo', version='0.1',
-                     foo='Foo', bar=['Bar1', 'Bar2'], baz='Baz')
+def test_json__call___duplicate_with_meta_wo_fields():
+    json = _make_json(_Options(fields=None))
+    meta = _Meta(name='foo', version='0.1', foo='Foo')
+    json._mapping['name'] = 'foo'
+    with pytest.raises(ValueError):
         json(meta)
-        expected = collections.OrderedDict([
-            ('foo', 'Foo'), ('bar', ['Bar1', 'Bar2'])])
-        self.assertEqual(expected, json._mapping)
 
-    def test___call___output(self):
-        json = self._makeOne(_Options(fields=None))
-        meta = _Meta(name='foo', version='0.1', foo='Foo')
-        json(meta)
-        output = self._capture_output(json.finish)
-        output = json_module.loads(
-            output, object_pairs_hook=collections.OrderedDict)
-        expected = collections.OrderedDict([
-            ('foo', 'Foo'), ('name', 'foo'), ('version', '0.1')])
-        self.assertEqual(expected, output)
+def test_json__call___wo_fields_wo_list():
 
-class Test_main(unittest.TestCase):
+    json = _make_json(_Options(fields=None))
+    meta = _Meta(name='foo', version='0.1', foo='Foo')
+    json(meta)
+    expected = collections.OrderedDict([
+        ('foo', 'Foo'), ('name', 'foo'), ('version', '0.1')])
+    assert(expected == json._mapping)
 
-    def _callFUT(self, args, monkey='simple'):
-        from pkginfo.commandline import main
-        from pkginfo.commandline import _FORMATTERS
+def test_json__call___w_fields_w_list():
+    json = _make_json(_Options(fields=('foo', 'bar')))
+    meta = _Meta(name='foo', version='0.1',
+                    foo='Foo', bar=['Bar1', 'Bar2'], baz='Baz')
+    json(meta)
+    expected = collections.OrderedDict([
+        ('foo', 'Foo'), ('bar', ['Bar1', 'Bar2'])])
+    assert(expected == json._mapping)
 
-        before = _FORMATTERS[monkey]
-        dummy = _Formatter()
-        _FORMATTERS[monkey] = lambda *options: dummy
-        try:
-            main(args)
-        finally:
-            _FORMATTERS[monkey] = before
-        return dummy
+def test_json__call___output():
+    json = _make_json(_Options(fields=None))
+    meta = _Meta(name='foo', version='0.1', foo='Foo')
+    json(meta)
+    output = _capture_output(json.finish)
+    output = json_module.loads(
+        output, object_pairs_hook=collections.OrderedDict)
+    expected = collections.OrderedDict([
+        ('foo', 'Foo'), ('name', 'foo'), ('version', '0.1')])
+    assert(expected == output)
 
-    def test_w_mising_dist(self):
-        from pkginfo import commandline as MUT
+def _call_main(args, monkey='simple'):
+    from pkginfo.commandline import main
 
-        def _get_metadata(path_or_module, md_version):
-            self.assertEqual(path_or_module, 'foo')
-            self.assertEqual(md_version, None)
-            return None
-        with _Monkey(MUT, get_metadata=_get_metadata):
-            formatter = self._callFUT(['foo'])
-        self.assertEqual(formatter._called_with, [])
-        self.assertTrue(formatter._finished)
+    formatter = mock.Mock(spec=["finish"])
 
-    def test_w_dist_wo_download_url(self):
-        from pkginfo import commandline as MUT
+    with mock.patch.dict(
+        "pkginfo.commandline._FORMATTERS",
+        simple=lambda *options: formatter,
+    ):
+        main(args)
 
-        meta = _Meta(download_url=None)
-        def _get_metadata(path_or_module, md_version):
-            self.assertEqual(path_or_module, '/path/to/foo')
-            self.assertEqual(md_version, None)
-            return meta
-        with _Monkey(MUT, get_metadata=_get_metadata):
-            formatter = self._callFUT(
-                ['-d', 'http://example.com', '/path/to/foo'])
-        self.assertEqual(formatter._called_with, [meta])
-        self.assertTrue(formatter._finished)
-        self.assertEqual(meta.download_url, 'http://example.com/foo')
+    return formatter
 
-    def test_w_dist_w_download_url(self):
-        from pkginfo import commandline as MUT
+def test_main_w_missing_dist():
+    from pkginfo import commandline as MUT
 
-        meta = _Meta(download_url='http://example.com/dist/foo')
-        def _get_metadata(path_or_module, md_version):
-            self.assertEqual(path_or_module, '/path/to/foo')
-            self.assertEqual(md_version, None)
-            return meta
-        with _Monkey(MUT, get_metadata=_get_metadata):
-            formatter = self._callFUT(
-                ['-d', 'http://example.com', '/path/to/foo'])
-        self.assertEqual(formatter._called_with, [meta])
-        self.assertTrue(formatter._finished)
-        self.assertEqual(meta.download_url, 'http://example.com/dist/foo')
+    with mock.patch("pkginfo.commandline.get_metadata") as _get_metadata:
+        _get_metadata.return_value = None
+        formatter = _call_main(['foo'])
+
+    formatter.assert_not_called()
+    formatter.finish.assert_called_once_with()
+    _get_metadata.assert_called_once_with("foo", None)
+
+def test_main_w_dist_wo_download_url():
+    from pkginfo import commandline as MUT
+
+    meta = _Meta(download_url=None)
+
+    with mock.patch("pkginfo.commandline.get_metadata") as _get_metadata:
+        _get_metadata.return_value = meta
+        formatter = _call_main(
+            ['-d', 'http://example.com', '/path/to/foo'])
+
+    formatter.assert_called_once_with(meta)
+    formatter.finish.assert_called_once_with()
+    _get_metadata.assert_called_once_with("/path/to/foo", None)
+
+    assert(meta.download_url == 'http://example.com/foo')
+
+def test_main_w_dist_w_download_url():
+    from pkginfo import commandline as MUT
+
+    meta = _Meta(download_url='http://example.com/dist/foo')
+
+    with mock.patch("pkginfo.commandline.get_metadata") as _get_metadata:
+        _get_metadata.return_value = meta
+        formatter = _call_main(
+            ['-d', 'http://example.com', '/path/to/foo'])
+
+    formatter.assert_called_once_with(meta)
+    formatter.finish.assert_called_once_with()
+    _get_metadata.assert_called_once_with("/path/to/foo", None)
+
+    assert(meta.download_url == 'http://example.com/dist/foo')
 
 class _Options(object):
 
@@ -314,32 +290,3 @@ class _Meta(object):
 
     def __iter__(self):
         return iter(sorted(self.__dict__))
-
-class _Monkey(object):
-    # context-manager for replacing module names in the scope of a test.
-
-    def __init__(self, module, **kw):
-        self.module = module
-        self.to_restore = dict([(key, getattr(module, key)) for key in kw])
-        for key, value in kw.items():
-            setattr(module, key, value)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        for key, value in self.to_restore.items():
-            setattr(self.module, key, value)
-
-class _Formatter(object):
-
-    _finished = False
-
-    def __init__(self):
-        self._called_with = []
-
-    def __call__(self, meta):
-        self._called_with.append(meta)
-
-    def finish(self):
-        self._finished = True
