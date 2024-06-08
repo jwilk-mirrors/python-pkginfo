@@ -1,6 +1,12 @@
 ``pkginfo`` Changelog
 =====================
 
+1.11.1 (2024-06-08)
+-------------------
+
+- Updated typing stubs, adding additionaly checks to 'tox -e mypy' to
+  verify that they don't drift in the future.  LP #2068777.
+
 1.11.0 (2024-05-31)
 -------------------
 
