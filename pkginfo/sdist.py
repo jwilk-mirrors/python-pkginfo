@@ -49,16 +49,16 @@ class SDist(Distribution):
         if not fqp.exists():
             raise NoSuchFile(fqp)
 
-        if zipfile.is_zipfile(fqp):
-            archive = zipfile.ZipFile(fqp)
-            names = archive.namelist()
-            def read_file(name):
-                return archive.read(name)
-        elif tarfile.is_tarfile(fqp):
+        if tarfile.is_tarfile(fqp):
             archive = tarfile.TarFile.open(fqp)
             names = archive.getnames()
             def read_file(name):
                 return archive.extractfile(name).read()
+        elif zipfile.is_zipfile(fqp):
+            archive = zipfile.ZipFile(fqp)
+            names = archive.namelist()
+            def read_file(name):
+                return archive.read(name)
         else:
             raise UnknownArchiveFormat(fqp)
 

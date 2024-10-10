@@ -1,10 +1,16 @@
 ``pkginfo`` Changelog
 =====================
 
+1.11.2 (unreleased)
+-------------------
+
+- Swap order of zip/tarball checks to work around archives which fool
+  'zipfile.is_zipfile'.  LP #2084140.
+
 1.11.1 (2024-06-08)
 -------------------
 
-- Updated typing stubs, adding additionaly checks to 'tox -e mypy' to
+- Update typing stubs, adding additional checks to 'tox -e mypy' to
   verify that they don't drift in the future.  LP #2068777.
 
 1.11.0 (2024-05-31)

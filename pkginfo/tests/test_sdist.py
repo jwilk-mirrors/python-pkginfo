@@ -100,6 +100,13 @@ def test_sdist_ctor_w_bogus(examples_dir, factory):
     with pytest.raises(ValueError):
         factory(filename, metadata_version='1.1')
 
+def test_sdist_ctor_w_tarball_fooling_is_zipfile(examples_dir):
+    # See: https://bugs.launchpad.net/pkginfo/+bug/2084140
+    filename = examples_dir / 'broken-tarball.tar.gz'
+
+    sdist = _make_sdist(filename, metadata_version='1.1')
+    assert sdist.name == "ratarmount"
+
 @pytest.mark.parametrize("w_metadata_version", [False, True])
 def test_sdist_ctor_w_archive(archive, w_metadata_version):
     if w_metadata_version:
