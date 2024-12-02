@@ -22,6 +22,7 @@ HEADER_ATTRS_2_0 = HEADER_ATTRS_1_2
 HEADER_ATTRS_2_1: _header_attrs
 HEADER_ATTRS_2_2: _header_attrs
 HEADER_ATTRS_2_3: _header_attrs
+HEADER_ATTRS_2_4: _header_attrs
 HEADER_ATTRS: Dict[str, _header_attrs]
 _metadata_version = Tuple[int, int]
 METADATA_VERSIONS: Sequence[_metadata_version]
@@ -65,6 +66,8 @@ class Distribution:
     provides_extras: Sequence[str]
     description_content_type: str | None
     dynamic: Sequence[str]
+    license_expression: str | None
+    license_file: Sequence[str]
     def extractMetadata(self) -> None: ...
     def read(self) -> bytes: ...
     def parse(self, data: bytes) -> None: ...

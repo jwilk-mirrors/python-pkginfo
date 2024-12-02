@@ -640,5 +640,22 @@ def test_distribution_parse_Dynamic_single():
 def test_distribution_parse_Dynamic_multiple():
     dist = _make_distribution('2.2')
     dist.parse('Dynamic: Platforms\n'
-                'Dynamic: Supported-Platforms')
+               'Dynamic: Supported-Platforms')
     assert list(dist.dynamic) == ['Platforms', 'Supported-Platforms']
+
+# Metadata version 2.4, defined in PEP 639.
+def test_distribution_parse_License_Expression_single():
+    dist = _make_distribution('2.4')
+    dist.parse('License-Expression: MIT')
+    assert dist.license_expression == 'MIT'
+
+def test_distribution_parse_License_File_single():
+    dist = _make_distribution('2.4')
+    dist.parse('License-File: LICENSE.txt')
+    assert list(dist.license_file) == ['LICENSE.txt']
+
+def test_distribution_parse_License_File_multiple():
+    dist = _make_distribution('2.4')
+    dist.parse('License-File: LICENSE.txt\n'
+               'License-File: docs/LICENSE.rst')
+    assert list(dist.license_file) == ['LICENSE.txt', 'docs/LICENSE.rst']

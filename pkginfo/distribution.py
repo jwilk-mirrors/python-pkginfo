@@ -78,6 +78,11 @@ HEADER_ATTRS_2_2 = HEADER_ATTRS_2_1 + ( # PEP 643
 
 HEADER_ATTRS_2_3 = HEADER_ATTRS_2_2  # PEP 685
 
+HEADER_ATTRS_2_4 = HEADER_ATTRS_2_3 + ( # PEP 639
+    ('License-Expression', 'license_expression', False),
+    ('License-File', 'license_file', True),
+)
+
 HEADER_ATTRS = {
     '1.0': HEADER_ATTRS_1_0,
     '1.1': HEADER_ATTRS_1_1,
@@ -86,6 +91,7 @@ HEADER_ATTRS = {
     '2.1': HEADER_ATTRS_2_1,
     '2.2': HEADER_ATTRS_2_2,
     '2.3': HEADER_ATTRS_2_3,
+    '2.4': HEADER_ATTRS_2_4,
 }
 
 def _version_tuple(metadata_version):
@@ -154,6 +160,9 @@ class Distribution(object):
     description_content_type = None
     # version 2.2
     dynamic = ()
+    # version 2.4
+    license_expression = None
+    license_file = ()
 
     def extractMetadata(self):
         data = self.read()
