@@ -129,13 +129,20 @@ def test_installed_ctor_w_egg_info_as_file():
     assert(installed.package_name == 'pkginfo.tests.funny')
 
 def test_installed_ctor_w_dist_info():
+    from packaging import version
     import wheel
 
     installed = _make_installed('wheel')
 
-    assert(installed.metadata_version == '2.1')
     assert(installed.package == wheel)
     assert(installed.package_name == 'wheel')
+
+    # See: https://bugs.launchpad.net/pkginfo/+bug/2090840
+    installed_version = version.Version(installed.version)
+    if installed_version < version.Version('0.44.dev0'):
+        assert(installed.metadata_version == '2.1')
+    else:
+        assert(installed.metadata_version == '2.3')
 
 def test_installed_namespaced_pkg_installed_via_setuptools():
     where, _ = os.path.split(__file__)

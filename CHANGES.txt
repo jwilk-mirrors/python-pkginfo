@@ -1,6 +1,12 @@
 ``pkginfo`` Changelog
 =====================
 
+1.11.3 (unreleased)
+-------------------
+
+- Fix tests broken by bump of 'metadata_version' in 'wheels' >= '0.44.0'.
+  LP #2090840.
+
 1.11.2 (2024-10-10)
 -------------------
 
