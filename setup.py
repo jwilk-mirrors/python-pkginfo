@@ -24,6 +24,7 @@ setup(
     description='Query metadata from sdists / bdists / installed packages.',
     platforms=['Unix', 'Windows'],
     long_description='\n\n'.join([README, CHANGES]),
+    long_description_content_type='text/x-rst',
     keywords='distribution sdist installed metadata',
     url='https://code.launchpad.net/~tseaver/pkginfo/trunk',
     author='Tres Seaver, Agendaless Consulting',
