@@ -4,6 +4,8 @@
 1.11.3 (unreleased)
 -------------------
 
+- Add dependency ordering of tox environments FBO running tests in parallel.
+
 - Fix tests broken by bump of 'metadata_version' in 'wheels' >= '0.44.0'.
   LP #2090840.
 
