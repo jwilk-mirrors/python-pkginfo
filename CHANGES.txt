@@ -1,6 +1,12 @@
 ``pkginfo`` Changelog
 =====================
 
+1.12.1.1 (2025-02-18)
+---------------------
+
+- Fix packaging error which prevents running tests from the released
+  sdist.
+
 1.12.1 (2025-02-18)
 -------------------
 

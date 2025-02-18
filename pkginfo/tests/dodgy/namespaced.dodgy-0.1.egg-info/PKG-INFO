@@ -1,0 +1,51 @@
+Metadata-Version: 2.1
+Name: pkginfo
+Version: 1.12.1.1
+Summary: Query metadata from sdists / bdists / installed packages.
+Home-page: https://code.launchpad.net/~tseaver/pkginfo/trunk
+Author: Tres Seaver, Agendaless Consulting
+Author-email: tseaver@agendaless.com
+License: MIT
+Keywords: distribution sdist installed metadata
+Platform: Unix
+Platform: Windows
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: System :: Software Distribution
+Requires-Python: >=3.9
+Description-Content-Type: text/x-rst
+License-File: LICENSE.txt
+Provides-Extra: testing
+Requires-Dist: pytest; extra == "testing"
+Requires-Dist: pytest-cov; extra == "testing"
+Requires-Dist: wheel; extra == "testing"
+
+``pkginfo`` README
+==================
+
+This package provides an API for querying the distutils metadata written in
+the ``PKG-INFO`` file inside a source distribution (an ``sdist``) or a
+binary distribution (e.g., created by running ``bdist_egg``).  It can
+also query the ``EGG-INFO`` directory of an installed distribution, and
+the ``*.egg-info`` stored in a "development checkout"
+(e.g, created by running ``setup.py develop``).
+
+
+Please see the `pkginfo docs <http://packages.python.org/pkginfo>`_
+for detailed documentation.
+
+
+``pkginfo`` Changelog
+=====================
+
+<elided>
