@@ -1,4 +1,5 @@
 import os
+import pathlib
 import sys
 import types
 import wsgiref
@@ -29,20 +30,6 @@ def test_installed_ctor_w_package_no___file__():
     assert str(warned[0].message).startswith('No PKG-INFO found')
     assert warned[1].category is UnknownMetadataVersion
 
-def test_installed_ctor_w_package():
-    import pkginfo
-    from pkginfo.tests import _checkSample
-    from pkginfo.tests import _defaultMetadataVersion
-
-    EXPECTED =  _defaultMetadataVersion()
-
-    installed = _make_installed(pkginfo)
-
-    assert(installed.package == pkginfo)
-    assert(installed.package_name == 'pkginfo')
-    assert(installed.metadata_version == EXPECTED)
-    _checkSample(None, installed)
-
 def test_installed_ctor_w_no___package___falls_back_to___name__():
     from pkginfo.distribution import UnknownMetadataVersion
 
@@ -70,39 +57,52 @@ def test_installed_ctor_w_package_no_PKG_INFO():
     assert(len(warned) == 2)
     assert str(warned[0].message).startswith('No PKG-INFO found')
     assert warned[1].category is UnknownMetadataVersion
+    
 
-def test_installed_ctor_w_package_and_metadata_version():
-    import pkginfo
+def test_installed_ctor_w_package(dodgy):
     from pkginfo.tests import _checkSample
+    from pkginfo.tests import _defaultMetadataVersion
 
-    installed = _make_installed(pkginfo, metadata_version='1.2')
+    EXPECTED =  _defaultMetadataVersion()
 
-    assert(installed.metadata_version == '1.2')
-    assert(installed.package.__name__ == 'pkginfo')
+    installed = _make_installed(dodgy)
+
+    assert(installed.package is dodgy)
+    assert(installed.package_name == 'namespaced.dodgy')
+    assert(installed.metadata_version == EXPECTED)
     _checkSample(None, installed)
 
-def test_installed_ctor_w_name():
-    import pkginfo
+def test_installed_ctor_w_package_and_metadata_version(dodgy):
+    from pkginfo.tests import _checkSample
+
+    installed = _make_installed(dodgy, metadata_version='1.2')
+
+    assert(installed.package is dodgy)
+    assert(installed.package.__name__ == 'namespaced.dodgy')
+    assert(installed.metadata_version == '1.2')
+    _checkSample(None, installed)
+
+def test_installed_ctor_w_name(dodgy):
     from pkginfo.tests import _checkSample
     from pkginfo.tests import _defaultMetadataVersion
 
     EXPECTED = _defaultMetadataVersion()
 
-    installed = _make_installed('pkginfo')
+    installed = _make_installed('namespaced.dodgy')
 
     assert(installed.metadata_version == EXPECTED)
-    assert(installed.package == pkginfo)
-    assert(installed.package_name == 'pkginfo')
+    assert(installed.package is dodgy)
+    assert(installed.package_name == 'namespaced.dodgy')
     _checkSample(None, installed)
 
-def test_installed_ctor_w_name_and_metadata_version():
-    import pkginfo
+def test_installed_ctor_w_name_and_metadata_version(dodgy):
     from pkginfo.tests import _checkSample
 
-    installed = _make_installed('pkginfo', metadata_version='1.2')
+    installed = _make_installed('namespaced.dodgy', metadata_version='1.2')
+
+    assert(installed.package is dodgy)
     assert(installed.metadata_version == '1.2')
-    assert(installed.package == pkginfo)
-    assert(installed.package_name == 'pkginfo')
+    assert(installed.package_name == 'namespaced.dodgy')
     _checkSample(None, installed)
 
 def test_installed_ctor_w_invalid_name():
@@ -144,45 +144,19 @@ def test_installed_ctor_w_dist_info():
     else:
         assert(installed.metadata_version == '2.3')
 
-def test_installed_namespaced_pkg_installed_via_setuptools():
-    where, _ = os.path.split(__file__)
-    wonky = os.path.join(where, 'wonky')
-    oldpath = sys.path[:]
-    try:
-        sys.path.append(wonky)
+def test_installed_namespaced_pkg_installed_via_setuptools(wonky):
 
-        with warnings.catch_warnings(record=True):
-            import namespaced.wonky
-
-        installed = _make_installed('namespaced.wonky')
-
-    finally:
-        sys.path[:] = oldpath
-        sys.modules.pop('namespaced.wonky', None)
-        sys.modules.pop('namespaced', None)
+    installed = _make_installed('namespaced.wonky')
 
     assert(installed.metadata_version == '1.0')
-    assert(installed.package == namespaced.wonky)
+    assert(installed.package is wonky)
     assert(installed.package_name == 'namespaced.wonky')
 
-def test_installed_namespaced_pkg_installed_via_pth():
+def test_installed_namespaced_pkg_installed_via_pth(manky):
     # E.g., installed by a Linux distro
-    where, _ = os.path.split(__file__)
-    manky = os.path.join(where, 'manky')
-    oldpath = sys.path[:]
-    try:
-        sys.path.append(manky)
 
-        with warnings.catch_warnings(record=True):
-            import namespaced.manky
-
-        installed = _make_installed('namespaced.manky')
-
-    finally:
-        sys.path[:] = oldpath
-        sys.modules.pop('namespaced.manky', None)
-        sys.modules.pop('namespaced', None)
+    installed = _make_installed('namespaced.manky')
 
     assert(installed.metadata_version == '1.0')
-    assert(installed.package == namespaced.manky)
+    assert(installed.package is manky)
     assert(installed.package_name == 'namespaced.manky')

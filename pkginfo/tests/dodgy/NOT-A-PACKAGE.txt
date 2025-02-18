@@ -1,0 +1,5 @@
+THIS IS NOT A PYTHON PACKAGE!!!!
+
+It is meant to be added to sys.path for testing introspection of namespace
+packages, using the `pkginfo` metadata in a known version (see
+https://bugs.launchpad.net/pkginfo/+bug/2098742).

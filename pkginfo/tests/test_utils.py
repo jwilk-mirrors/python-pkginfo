@@ -75,7 +75,7 @@ def test_get_metadata_w_wheel_and_metadata_version(test_wheel):
     _checkMyPackage(dist, filename)
     _checkClassifiers(dist)
 
-def test_get_metadata_w_module():
+def test_get_metadata_w_module(dodgy):
     import pkginfo
     from pkginfo.tests import _checkSample
     from pkginfo.tests import _defaultMetadataVersion
@@ -83,41 +83,40 @@ def test_get_metadata_w_module():
 
     EXPECTED =  _defaultMetadataVersion()
 
-    dist = get_metadata(pkginfo)
+    dist = get_metadata(dodgy)
 
     assert(dist.metadata_version == EXPECTED)
     _checkSample(None, dist)
 
-def test_get_metadata_w_module_and_metadata_version():
-    import pkginfo
+def test_get_metadata_w_module_and_metadata_version(dodgy):
     from pkginfo.tests import _checkSample
     from pkginfo.tests import _checkClassifiers
     from pkginfo.utils import get_metadata
 
-    dist = get_metadata(pkginfo, metadata_version='1.2')
+    dist = get_metadata(dodgy, metadata_version='1.2')
 
     assert(dist.metadata_version == '1.2')
     _checkSample(None, dist)
     _checkClassifiers(None, dist)
 
-def test_get_metadata_w_package_name():
+def test_get_metadata_w_package_name(dodgy):
     from pkginfo.tests import _checkSample
     from pkginfo.tests import _defaultMetadataVersion
     from pkginfo.utils import get_metadata
 
     EXPECTED =  _defaultMetadataVersion()
 
-    dist = get_metadata('pkginfo')
+    dist = get_metadata('namespaced.dodgy')
 
     assert(dist.metadata_version == EXPECTED)
     _checkSample(None, dist)
 
-def test_get_metadata_w_package_name_and_metadata_version():
+def test_get_metadata_w_package_name_and_metadata_version(dodgy):
     from pkginfo.tests import _checkSample
     from pkginfo.tests import _checkClassifiers
     from pkginfo.utils import get_metadata
 
-    dist = get_metadata('pkginfo', metadata_version='1.2')
+    dist = get_metadata('namespaced.dodgy', metadata_version='1.2')
 
     assert(dist.metadata_version == '1.2')
     _checkSample(None, dist)

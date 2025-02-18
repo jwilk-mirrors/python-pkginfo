@@ -1,6 +1,14 @@
 ``pkginfo`` Changelog
 =====================
 
+1.12.1 (unreleased)
+-------------------
+
+- Disuse the metadata of the installed 'pkginfo' package for testing:
+  during creation of the various 'tox' environments, different versions of
+  'setuptools' will overwrite that file with different metadata (version,
+  'Dynamic' headers, etc).  LP #2098742
+
 1.12.0 (2024-12-02)
 -------------------
 
