@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pkginfo
-Version: 1.12.1.1
+Version: 1.13.dev0
 Summary: Query metadata from sdists / bdists / installed packages.
 Home-page: https://code.launchpad.net/~tseaver/pkginfo/trunk
 Author: Tres Seaver, Agendaless Consulting
@@ -12,7 +12,6 @@ Platform: Windows
 Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
-Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
