@@ -1,3 +1,12 @@
-include CHANGES.txt
-graft docs/examples/
+include *.txt
+include .coveragerc
+include tox.ini
+recursive-include docs *.py
+recursive-include docs *.rst
+recursive-include docs Makefile
+recursive-include pkginfo *.py
+recursive-include pkginfo *.txt
+recursive-include pkginfo/tests PKG-INFO
+recursive-include pkginfo/tests *.egg-info
+graft docs/examples
 prune .tox
