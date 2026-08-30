@@ -83,6 +83,11 @@ HEADER_ATTRS_2_4 = HEADER_ATTRS_2_3 + ( # PEP 639
     ('License-File', 'license_file', True),
 )
 
+HEADER_ATTRS_2_5 = HEADER_ATTRS_2_4 + ( # PEP 794
+    ('Import-Name', 'import_names', True),
+    ('Import-Namespace', 'import_namespaces', True),
+)
+
 HEADER_ATTRS = {
     '1.0': HEADER_ATTRS_1_0,
     '1.1': HEADER_ATTRS_1_1,
@@ -92,6 +97,7 @@ HEADER_ATTRS = {
     '2.2': HEADER_ATTRS_2_2,
     '2.3': HEADER_ATTRS_2_3,
     '2.4': HEADER_ATTRS_2_4,
+    '2.5': HEADER_ATTRS_2_5,
 }
 
 def _version_tuple(metadata_version):
@@ -163,6 +169,9 @@ class Distribution(object):
     # version 2.4
     license_expression = None
     license_file = ()
+    # version 2.5
+    import_names = ()
+    import_namespaces = ()
 
     def extractMetadata(self):
         data = self.read()

@@ -4,6 +4,8 @@
 1.13.0 (unreleased)
 -------------------
 
+- Support 'metadata_version' == '2.5' (PEP 794).  LP #2165813
+
 - Drop support for Python 3.8.
 
 1.12.1.1 (2025-02-18)

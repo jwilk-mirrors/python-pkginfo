@@ -659,3 +659,26 @@ def test_distribution_parse_License_File_multiple():
     dist.parse('License-File: LICENSE.txt\n'
                'License-File: docs/LICENSE.rst')
     assert list(dist.license_file) == ['LICENSE.txt', 'docs/LICENSE.rst']
+
+# Metadata version 2.5, defined in PEP 794.
+def test_distribution_parse_Import_Name_single():
+    dist = _make_distribution('2.5')
+    dist.parse('Import-Name: foo')
+    assert list(dist.import_names) == ['foo']
+
+def test_distribution_parse_Import_Name_multiple():
+    dist = _make_distribution('2.5')
+    dist.parse('Import-Name: foo\n'
+               'Import-Name: bar')
+    assert list(dist.import_names) == ['foo', 'bar']
+
+def test_distribution_parse_Import_Namespace_single():
+    dist = _make_distribution('2.5')
+    dist.parse('Import-Namespace: foo')
+    assert list(dist.import_namespaces) == ['foo']
+
+def test_distribution_parse_Import_Namespace_multiple():
+    dist = _make_distribution('2.5')
+    dist.parse('Import-Namespace: foo\n'
+               'Import-Namespace: bar')
+    assert list(dist.import_namespaces) == ['foo', 'bar']
